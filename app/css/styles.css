@@ -218,6 +218,52 @@ body.sidebar-collapsed {
 .checklist-item label { font-size: 0.85rem; color: var(--text-secondary); cursor:pointer; line-height: 1.4; flex-grow:1;}
 .checklist-item input[type="checkbox"]:checked + label { text-decoration: line-through; opacity: 0.5; }
 
+/* ── SIDEBAR PROFESSIONAL UNIFICATION ── */
+.sidebar .checklist-item input[type="checkbox"],
+.sidebar .notion-checkbox {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid #555;
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    margin-top: 4px;
+}
+.sidebar .checklist-item input[type="checkbox"]:checked,
+.sidebar .notion-checkbox:checked {
+    background: #555;
+    border-color: #555;
+}
+.sidebar .checklist-item input[type="checkbox"]:hover,
+.sidebar .notion-checkbox:hover {
+    border-color: #888;
+}
+/* All sidebar icons: uniform muted gray */
+.sidebar .btn-ghost i,
+.sidebar .naked-section i,
+.sidebar .stat-text ~ i {
+    color: #666 !important;
+}
+.sidebar .btn-ghost {
+    color: var(--text-secondary) !important;
+    font-size: 0.82rem;
+}
+.sidebar .btn-ghost:hover {
+    color: var(--text-primary) !important;
+}
+.sidebar .btn-ghost:hover i {
+    color: var(--text-primary) !important;
+}
+/* Sidebar section icon uniformity */
+.sidebar section i[data-lucide] {
+    color: #666 !important;
+}
+
 /* BLOCKS (Layout Hierarchiczny) */
 .blocks-layout { display: flex; flex-direction: column; gap: var(--space-4); }
 
