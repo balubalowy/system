@@ -107,10 +107,10 @@ function initApp() {
     document.getElementById('cloud-status').style.display = 'inline';
 
     if (window.localAgentStats) {
-        document.getElementById('stat-photos').textContent = window.localAgentStats.photos || 0;
-        document.getElementById('stat-excels').textContent = window.localAgentStats.excels || 0;
-        document.getElementById('stat-storms').textContent = window.localAgentStats.storms || 0;
-        document.getElementById('stat-sync').textContent = 'Sync: ' + (window.localAgentStats.lastSync || 'Nigdy');
+        const miniSync = document.getElementById('mini-sync-status');
+        if(miniSync) {
+            miniSync.textContent = (window.localAgentStats.lastSync || '') + ` [Z: ${window.localAgentStats.photos} M:${window.localAgentStats.excels}]`;
+        }
     }
 }
 
@@ -195,10 +195,12 @@ function initDayTimeTrack() {
 
 function initSidebarToggle() {
     const btn = document.getElementById('sidebar-toggle-btn');
-    const cont = document.querySelector('.container');
-    if(!btn || !cont) return;
+    const sidebar = document.querySelector('.sidebar');
+    const body = document.querySelector('body');
+    if(!btn || !sidebar) return;
     btn.addEventListener('click', () => {
-        cont.classList.toggle('sidebar-collapsed');
+        sidebar.classList.toggle('collapsed');
+        body.classList.toggle('sidebar-collapsed');
     });
 }
 

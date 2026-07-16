@@ -59,9 +59,13 @@ body {
     font-family: var(--font-sans); 
     background-color: var(--bg-primary); 
     color: var(--text-primary); 
-    padding: var(--space-4) var(--space-4) var(--space-4) 76px; /* Offset for collapsed drawer */
+    padding: var(--space-4) var(--space-4) var(--space-4) 296px; /* Offset for full 280px drawer + 16px space */
     font-size: 14px; 
     line-height: 1.5; 
+    transition: padding-left 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+body.sidebar-collapsed {
+    padding-left: 76px; /* Offset for 60px mini drawer + 16px space */
 }
 .mono { font-family: var(--font-mono); }
 
