@@ -53,10 +53,10 @@ window.appData = {
             items: [
                 { title: "Excel", level: 75, topics: ["Tabele Przestawne (Pivot)", "Zaawansowane wykresy"] },
                 { title: "Python", level: 5, topics: ["Podstawowe typy", "Operacje Array"] },
-                { title: "VBA", level: 0, topics: ["Makra", "Edytor VBE"] },
+                { title: "VBA", level: 5, topics: ["Makra", "Edytor VBE"] },
                 { title: "Power BI", level: 2, topics: ["Podstawy DAX", "Wizualizacje"] },
                 { title: "SQL", level: 10, topics: ["SELECT/WHERE", "JOINy", "Agregacje"] },
-                { title: "R (Język programowania)", level: 0, topics: ["Wizualizacje R", "Czyszczenie danych"] },
+                { title: "R (Język programowania)", level: 4, topics: ["Wizualizacje R", "Czyszczenie danych"] },
                 { title: "AI (Sztuczna Inteligencja)", level: 50, topics: ["LLMs", "Generative AI", "Prompty"] },
                 { title: "Użytkowanie komputera i telefonu (szybkie pisanie)", level: 80, topics: ["Skróty klawiszowe", "Pisanie bezwzrokowe"] }
             ]

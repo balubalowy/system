@@ -1,5 +1,11 @@
-﻿window.KnowledgeTree = window.KnowledgeTree || {};
+window.KnowledgeTree = window.KnowledgeTree || {};
 Object.assign(window.KnowledgeTree, {
+  "VBA": [
+    "Nagrywanie i edycja makr", "Moduły i zmienne (Dim, Set)", "Pętle (For, Do While) i Warunki", "Manipulacja arkuszem z kodu (Cells, Range)", "Tworzenie własnych funkcji (UDF)", "User Forms i zaawansowane skrypty automatyzujące"
+  ],
+  "R (Język programowania)": [
+    "Składnia bazowa i operacje na wektorach", "Ramki danych (Data Frames) i dplyr", "Czyszczenie i transformacja danych", "Zaawansowana wizualizacja z pakietem ggplot2", "Analiza statystyczna i modele regresji liniowej w R", "Szeregi czasowe i prognozowanie ekonomiczne"
+  ],
   "Finanse Osobiste i Rynki": [
     "Budżetowanie domowe", "Zarządzanie przepływami pieniężnymi", "Zasady oszczędzania", "Fundusz awaryjny", "Konta oszczędnościowe i lokaty", "Wartość pieniądza w czasie (TVM)", "Procent składany", "Zrozumienie i wpływ inflacji", "Zarządzanie długiem konsumenckim", "Karty kredytowe i scoring BIK",
     "Kredyt hipoteczny podstawy", "Koszty okołokredytowe (RRSO)", "Konsolidacja zadłużenia", "Podstawy systemu podatkowego", "Ulgi i odliczenia podatkowe", "Optymalizacja podatkowa osobista", "Emerytura państwowa a prywatna", "IKE i IKZE", "PPE i PPK", "Ubezpieczenia na życie",
