@@ -109,7 +109,12 @@ function initApp() {
     if (window.localAgentStats) {
         const miniSync = document.getElementById('mini-sync-status');
         if(miniSync) {
-            miniSync.textContent = (window.localAgentStats.lastSync || '');
+            const updateMiniSync = () => {
+                const now = new Date();
+                miniSync.textContent = now.toISOString().split('T')[0] + " " + now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
+            };
+            updateMiniSync();
+            setInterval(updateMiniSync, 30000); // Aktualizacja co 30 sekund
         }
         
         const sp = document.getElementById('stat-photos');
