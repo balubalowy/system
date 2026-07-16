@@ -19,6 +19,16 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="js/firebase_init.js"></script>
+
+    <!-- Google Analytics (System Śledzenia Twojego Ruchu) -->
+    <!-- Instrukcja: Załóż darmowe konto na Google Analytics (GA4), skopiuj swój "Identyfikator Pomiaru" (G-XXXXXXXX) i wklej go poniżej w obu miejscach zamiast G-YOUR_MEASUREMENT_ID -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YOUR_MEASUREMENT_ID"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YOUR_MEASUREMENT_ID');
+    </script>
 </head>
 <body>
 
@@ -207,7 +217,6 @@
             
             <!-- Local Agent Stats -->
             <section class="panel-section" style="margin-bottom: var(--space-5); display:flex; justify-content:space-between; align-items:center; background:rgba(43, 191, 113, 0.05); border-color:rgba(43, 191, 113, 0.2);">
-                <div style="display:flex; gap:20px;">
                     <div style="display:flex; flex-direction:column;">
                         <span style="font-size:0.75rem; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.05em;"><i data-lucide="image" style="width:12px; vertical-align:middle;"></i> Zdjęcia na dysku C:</span>
                         <span id="stat-photos" style="font-size:1.2rem; font-weight:700; color:var(--text-primary); font-family:var(--font-mono);">0</span>
@@ -215,6 +224,10 @@
                     <div style="display:flex; flex-direction:column;">
                         <span style="font-size:0.75rem; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.05em;"><i data-lucide="table-2" style="width:12px; vertical-align:middle;"></i> Modele Excel</span>
                         <span id="stat-excels" style="font-size:1.2rem; font-weight:700; color:var(--text-primary); font-family:var(--font-mono);">0</span>
+                    </div>
+                    <div style="display:flex; flex-direction:column;">
+                        <span style="font-size:0.75rem; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.05em;"><i data-lucide="cloud-lightning" style="width:12px; vertical-align:middle;"></i> Pamiętnik Burz</span>
+                        <span id="stat-storms" style="font-size:1.2rem; font-weight:700; color:var(--text-primary); font-family:var(--font-mono);">0</span>
                     </div>
                 </div>
                 <div style="text-align:right;">

@@ -109,6 +109,7 @@ function initApp() {
     if (window.localAgentStats) {
         document.getElementById('stat-photos').textContent = window.localAgentStats.photos || 0;
         document.getElementById('stat-excels').textContent = window.localAgentStats.excels || 0;
+        document.getElementById('stat-storms').textContent = window.localAgentStats.storms || 0;
         document.getElementById('stat-sync').textContent = 'Sync: ' + (window.localAgentStats.lastSync || 'Nigdy');
     }
 }

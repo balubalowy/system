@@ -9,6 +9,7 @@ Write-Host "Rozpoczynam zwiad plikowy Local Agent Bridge..." -ForegroundColor Cy
 
 $photosPath = Join-Path $onedrivePath "Fotografie"
 $excelPath = Join-Path $onedrivePath "Modele Excel"
+$stormsPath = Join-Path $onedrivePath "Pamietnik Burz"
 
 $photosCount = 0
 $excelCount = 0
@@ -27,7 +28,15 @@ if (Test-Path $excelPath) {
     Write-Host "Folder Modele Excel nie zostal znaleziony." -ForegroundColor Yellow
 }
 
-$jsContent = "window.localAgentStats = { photos: $photosCount, excels: $excelCount, lastSync: '$(Get-Date -Format "yyyy-MM-dd HH:mm")' };"
+$stormsCount = 0
+if (Test-Path $stormsPath) {
+    $stormsCount = (Get-ChildItem -Path $stormsPath -Recurse -File).Count
+    Write-Host "Naliczono pamietnikow burz: $stormsCount" -ForegroundColor Green
+} else {
+    Write-Host "Folder Pamietnik Burz nie zostal znaleziony." -ForegroundColor Yellow
+}
+
+$jsContent = "window.localAgentStats = { photos: $photosCount, excels: $excelCount, storms: $stormsCount, lastSync: '$(Get-Date -Format "yyyy-MM-dd HH:mm")' };"
 Set-Content -Path $appDataPath -Value $jsContent -Encoding UTF8
 
 Write-Host "Zapisano dane do local_data.js. Gotowe do wysylki Git Push." -ForegroundColor Cyan
