@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pl" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drzewo Wiedzy - Twój System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css?v=10.12">
+    <style>
+        body { padding-top: 80px; } /* kompensata topbaru */
+        
+        /* Custom scrollbar dla mini-list */
+        .tree-scroll::-webkit-scrollbar { width: 4px; }
+        .tree-scroll::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
+    </style>
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+</head>
+<body>
+    <header class="topbar" style="justify-content: space-between; padding: 0 24px;">
+        <div style="display:flex; align-items:center; gap: 20px;">
+            <a href="index.html" class="btn btn-secondary" style="font-size: 0.85rem; padding: 6px 12px;"><i data-lucide="arrow-left" style="width:16px;"></i> Powrót do Kokpitu</a>
+            <h1 style="font-size: 1.3rem; display:flex; align-items:center; gap:8px;">
+                <i data-lucide="network" style="color:var(--accent-primary);"></i> 
+                Biblioteka Akademicka <span>(Drzewo 2100)</span>
+            </h1>
+        </div>
+        <div>
+            <button class="btn btn-ghost" id="theme-toggle-btn" title="Przełącz Motyw"><i data-lucide="sun-moon"></i></button>
+        </div>
+    </header>
+
+    <main class="main-content" style="max-width: 1600px; margin: 0 auto; padding: var(--space-6);">
+        <div class="knowledge-layout">
+            <!-- LEWE MENU -->
+            <aside class="knowledge-sidebar" id="k-sidebar">
+                <div style="color: var(--text-secondary); font-size: 0.9rem;">
+                    <i data-lucide="loader-2" style="animation: spin 2s linear infinite;"></i> Trwa wczytywanie...
+                </div>
+            </aside>
+            <!-- PRAWE OKNO -->
+            <section class="knowledge-main" id="k-main">
+                <div class="k-empty-state">
+                    <i data-lucide="arrow-left" style="width: 48px; height: 48px; color: var(--border-strong); margin-bottom: 20px;"></i>
+                    <p>Wybierz dziedzinę z menu po lewej, aby rozwinąć drzewo.</p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="js/firebase_init.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/knowledge_tree.js"></script>
+    <script src="js/knowledge_tree_2.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            const themeBtn = document.getElementById('theme-toggle-btn');
+            if(themeBtn) {
+                themeBtn.addEventListener('click', () => {
+                    let theme = document.documentElement.getAttribute('data-theme');
+                    let next = theme === 'dark' ? 'light' : 'dark';
+                    document.documentElement.setAttribute('data-theme', next);
+                    localStorage.setItem('theme', next);
+                });
+            }
+            if(window.lucide) window.lucide.createIcons();
+
+            let localProgress = {};
+            let globalTree = {};
+            
+            db.ref(USER_NODE + 'knowledge').once('value').then(snap => {
+                localProgress = snap.val() || {};
+                renderSidebar();
+            }).catch(e => {
+                renderSidebar();
+            });
+
+            const CATEGORY_COLORS = {
+                "Zarządzanie czasem": "#2BBF71", 
+                "Matematyka": "#FF9F0A",
+                "Algebra liniowa": "#FF9F0A",
+                "Statystyka opisowa": "#0A84FF",
+                "Statystyka matematyczna": "#0A84FF",
+                "Bazy Danych (SQL)": "#BF5AF2",
+                "Wycena spółek (Corporate Finance)": "#32D74B",
+                "Ekonomia": "#32D74B",
+                "Rachunkowość finansowa": "#32D74B",
+                "Rynki finansowe": "#32D74B",
+                "Python (Pandas/Numpy)": "#BF5AF2",
+                "Power BI / R": "#BF5AF2",
+                "Excel Zaawansowany": "#BF5AF2",
+                "Prezentacja Danych": "#FF453A",
+                "Kognitywistyka / ADHD": "#2BBF71",
+                "Angielski (Biznesowy)": "#5E5CE6"
+            };
+
+            function renderSidebar() {
+                const sidebar = document.getElementById('k-sidebar');
+                globalTree = window.KnowledgeTree || {};
+                let keys = Object.keys(globalTree);
+                
+                // --- MIGRACJA HISTORII (Legacy Sync) ---
+                if (window.appData && window.appData.knowledgeAreas) {
+                    Object.values(window.appData.knowledgeAreas).forEach(area => {
+                        area.items.forEach(item => {
+                            if (globalTree[item.title] && !localProgress[item.title] && item.level > 0) {
+                                db.ref(USER_NODE + 'knowledge/' + item.title).set({
+                                    level: item.level,
+                                    updatedAt: Date.now()
+                                });
+                                localProgress[item.title] = { level: item.level };
+                            }
+                        });
+                    });
+                }
+                // --- END MIGRACJA ---
+                
+                if(keys.length === 0) {
+                    sidebar.innerHTML = '<div style="color:var(--text-secondary); text-align:center;">Oczekuje na zapis bazy przez Agenta w tle... (Odśwież)</div>';
+                    return;
+                }
+
+                sidebar.innerHTML = ''; // czyszczenie
+                
+                keys.forEach((cat, idx) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'category-btn';
+                    
+                    const color = CATEGORY_COLORS[cat] || "var(--text-secondary)";
+                    
+                    let level = 0;
+                    if(localProgress[cat] && localProgress[cat].level !== undefined) {
+                        level = localProgress[cat].level;
+                    }
+
+                    btn.innerHTML = `
+                        <span>${cat} <span style="font-family: var(--font-mono); font-size:0.75rem; color:var(--text-secondary); margin-left:8px;">(${level}%)</span></span>
+                        <div class="cat-tag" style="background-color: ${color};"></div>
+                    `;
+                    
+                    btn.onclick = () => {
+                        document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        renderMainArea(cat, color, level);
+                    };
+                    sidebar.appendChild(btn);
+
+                    // Odpal na starcie 1 kateg. (Opcja A z planu)
+                    if(idx === 0) {
+                        btn.click();
+                    }
+                });
+            }
+
+            function renderMainArea(category, color, currentLevel) {
+                const main = document.getElementById('k-main');
+                const items = globalTree[category] || [];
+                
+                const totalItems = items.length;
+                const maxCompletedIndex = Math.floor((currentLevel / 100) * totalItems) - 1;
+
+                let html = `
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border-subtle);">
+                        <h2 style="font-size: 1.5rem; color: var(--text-primary); font-weight: 600; display:flex; align-items:center; gap: 12px;">
+                            <div style="width: 12px; height: 24px; background-color: ${color}; border-radius: 4px;"></div>
+                            ${category}
+                        </h2>
+                        <span style="font-size: 1rem; font-family: var(--font-mono); color: ${color}; background: rgba(0,0,0,0.2); padding: 4px 10px; border-radius: 4px;">Postęp: ${currentLevel}%</span>
+                    </div>
+                    <div class="tree-scroll" style="display:flex; flex-direction:column; gap: 4px;">
+                `;
+
+                items.forEach((item, idx) => {
+                    const isDone = idx <= maxCompletedIndex;
+                    const icon = isDone ? 'check-circle-2' : 'circle';
+                    const itemColor = isDone ? color : 'var(--text-secondary)';
+                    const opacity = isDone ? '1' : '0.4';
+                    
+                    html += `
+                        <div class="knowledge-item interactive" onclick="window.updateKnowledgeProgress('${category}', ${idx}, ${totalItems})" style="opacity: ${opacity}; font-size: 0.95rem; padding: 12px 12px; display:flex; align-items:center; gap:16px; background: ${isDone ? 'rgba(255,255,255,0.03)' : 'transparent'}; border-radius: 6px; cursor: pointer; transition: all 0.2s; border: 1px solid ${isDone ? 'rgba(255,255,255,0.05)' : 'transparent'};">
+                            <i data-lucide="${icon}" style="width: 18px; height: 18px; min-width:18px; color: ${itemColor};"></i>
+                            <span style="color: ${isDone ? 'var(--text-primary)' : 'var(--text-secondary)'};"><strong>${idx+1}.</strong> ${item}</span>
+                        </div>
+                    `;
+                });
+
+                html += `</div>`;
+                main.innerHTML = html;
+                if(window.lucide) window.lucide.createIcons();
+            }
+
+            // Globalna funkcja dla onclick
+            window.updateKnowledgeProgress = function(category, clickedIdx, totalItems) {
+                if(!db || !USER_NODE) return; // zabezpieczenie przed brakiem firebase
+                
+                let oldLevel = 0;
+                if(localProgress[category] && localProgress[category].level !== undefined) {
+                    oldLevel = localProgress[category].level;
+                }
+
+                // Kalkulacja kaskadowa i odklikywania
+                let newLevel = Math.ceil(((clickedIdx + 1) / totalItems) * 100);
+                
+                // Odkliknięcie dokładnie tego samego punktu (lub kliknięcie w mniejszy wywołuje obniżenie)
+                const maxCompletedIdx = Math.floor((oldLevel / 100) * totalItems) - 1;
+                if(clickedIdx === maxCompletedIdx) {
+                    newLevel = Math.ceil((clickedIdx / totalItems) * 100); // cofka
+                }
+
+                // Bezgłośna aktualizacja interfejsu (UX)
+                document.getElementById('k-main').style.opacity = '0.7';
+
+                db.ref(USER_NODE + 'knowledge/' + category).set({
+                    level: newLevel,
+                    updatedAt: Date.now()
+                }).then(() => {
+                    localProgress[category] = { level: newLevel };
+                    document.getElementById('k-main').style.opacity = '1';
+                    
+                    // Złap kolor z paska
+                    const color = CATEGORY_COLORS[category] || "var(--accent-primary)";
+                    
+                    // Zaktualizuj tylko prawy obszar dla płynności
+                    renderMainArea(category, color, newLevel);
+                    
+                    // Cicha aktualizacja bocznego paska
+                    const sidebar = document.getElementById('k-sidebar');
+                    const btns = sidebar.querySelectorAll('.category-btn');
+                    btns.forEach(btn => {
+                        if(btn.innerHTML.includes(category)) {
+                            btn.querySelector('span > span').innerText = `(${newLevel}%)`;
+                        }
+                    });
+                }).catch(e => {
+                    console.error("Błąd zapisu Firebase:", e);
+                    document.getElementById('k-main').style.opacity = '1';
+                });
+            };
+        });
+    </script>
+</body>
+</html>

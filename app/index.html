@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B-Core</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="js/firebase_init.js"></script>
+</head>
+<body>
+
+    <!-- PIN LOCK OVERLAY -->
+    <div id="pin-overlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:var(--bg-primary); z-index:99999; display:flex; flex-direction:column; justify-content:center; align-items:center; color:var(--text-primary);">
+        <i data-lucide="lock" style="width: 48px; height: 48px; margin-bottom: 20px; color: var(--text-secondary);"></i>
+        <h1 style="font-family:var(--font-sans); font-size:1.5rem; font-weight: 500; margin-bottom:20px;">Dostęp Ograniczony</h1>
+        <input type="password" id="pin-input" placeholder="Wprowadź kod dostępu" style="background:var(--bg-tertiary); border:1px solid var(--border-subtle); color:var(--text-primary); padding:12px; font-family:var(--font-mono); font-size:1.2rem; border-radius: var(--radius-sm); margin-bottom:12px; text-align:center; outline:none; width: 250px;">
+        <button id="pin-submit-btn" class="btn btn-primary" style="width: 250px;">Odblokuj System</button>
+        <div id="pin-error" style="color:var(--accent-danger); font-size:0.85rem; margin-top:12px; display:none;">Nieprawidłowy kod. Odmowa dostępu.</div>
+    </div>
+
+    <!-- FOCUS MODE OVERLAY -->
+    <div id="focus-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(28, 28, 30, 0.98); backdrop-filter: blur(10px); z-index:9999; flex-direction:column; justify-content:center; align-items:center; color:var(--text-primary);">
+        <i data-lucide="focus" style="width: 48px; height: 48px; margin-bottom: 20px; color: var(--accent-success);"></i>
+        <h1 style="font-family:var(--font-sans); font-size:2rem; font-weight: 500; margin-bottom:20px;">Focus Mode</h1>
+        <div id="focus-timer-display" style="font-family:var(--font-mono); font-size:8rem; font-weight:700; color:var(--accent-success); text-shadow: 0 0 40px rgba(50, 215, 75, 0.2);">00:00</div>
+        <div style="color:var(--text-secondary); font-size:1.1rem; margin-top:20px;">Zablokowano zewnętrzne bodźce. Praca w toku.</div>
+        
+        <div style="display:flex; gap: 16px; margin-top: 50px;">
+            <button id="focus-pause-btn" class="btn btn-secondary" style="padding: 12px 24px; font-size: 1.1rem;"><i data-lucide="pause"></i> Zastopuj</button>
+            <button id="focus-finish-btn" class="btn btn-primary" style="padding: 12px 24px; font-size: 1.1rem;"><i data-lucide="check"></i> Zakończ i Zapisz (Sync)</button>
+        </div>
+        <button id="focus-exit-btn" class="btn btn-ghost" style="margin-top:30px; color:var(--accent-danger);">Porzuć sesję bez zapisu [ESC]</button>
+    </div>
+
+    <!-- KNOWLEDGE MODAL -->
+    <div id="knowledge-modal" class="modal-overlay">
+        <div class="modal-content" style="position: relative;">
+            <button onclick="document.getElementById('knowledge-modal').style.display='none'" style="position:absolute; top: 15px; right: 15px; background:transparent; border:none; color:var(--text-secondary); cursor:pointer;"><i data-lucide="x"></i></button>
+            <div class="widget-header" style="border-bottom: 1px solid var(--border-subtle); padding-bottom: 15px; margin-bottom: 20px;">
+                <i data-lucide="book-open"></i>
+                <h2 id="modal-title">Tytuł Dziedziny</h2>
+            </div>
+            
+            <div style="margin-bottom: 24px; background: rgba(0,0,0,0.2); padding: 16px; border-radius: var(--radius-sm); border-left: 3px solid var(--accent-info);">
+                <h3 style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:8px; font-weight: 500;">Bieżący etap:</h3>
+                <div id="modal-current-node" style="font-size:1.05rem; font-weight:600; color:var(--text-primary);">Ładowanie...</div>
+            </div>
+
+            <div class="modal-body" id="modal-body-content" style="font-size:0.9rem; line-height:1.6; color:var(--text-secondary); margin-bottom: 24px;">
+                <!-- Treść generowana z JS -->
+            </div>
+
+            <div class="srs-panel" id="srs-panel">
+                <div class="widget-header" style="margin-bottom: 16px;">
+                    <i data-lucide="brain-circuit" style="color: var(--accent-primary);"></i>
+                    <h3 style="font-size:0.9rem; color:var(--text-primary); font-weight: 600;">Moduł Powtórek</h3>
+                </div>
+                
+                <p class="srs-question" id="srs-q">Wczytywanie fiszek...</p>
+                <button class="btn btn-primary start-btn" id="srs-reveal" style="display:none; width:100%; margin-bottom:16px;">Odsłoń odpowiedź</button>
+                <div class="srs-actions" id="srs-actions" style="display:none;">
+                    <button class="btn btn-danger" id="srs-bad">Zapomniałem</button>
+                    <button class="btn btn-secondary" id="srs-mid" style="color: var(--accent-warning); border-color: var(--border-subtle);">Słabo</button>
+                    <button class="btn btn-secondary" id="srs-good" style="color: var(--accent-success); border-color: var(--border-subtle);">Doskonale</button>
+                </div>
+                <div class="srs-status" id="srs-status">W gotowości</div>
+            </div>
+
+            <button class="btn btn-ghost" style="width:100%; margin-top: 8px;" onclick="document.getElementById('knowledge-modal').style.display='none'">Zamknij panel</button>
+        </div>
+    </div>
+
+    <header class="topbar">
+        <div class="logo">
+            <i data-lucide="command" class="symbol"></i>
+            <h1>Twój <span>System</span></h1>
+            <span id="cloud-status" style="margin-left: 10px; font-size:10px; color:var(--accent-success); display:none;"><i data-lucide="cloud-lightning" style="width:12px; height:12px; vertical-align:middle; margin-right:4px;"></i>Synced</span>
+            <button class="btn btn-ghost" id="theme-toggle-btn" style="margin-left: 10px; padding:4px 8px;" title="Przełącz Motyw (Jasny/Ciemny)"><i data-lucide="sun-moon"></i></button>
+        </div>
+        
+        <div class="energy-control">
+            <label>Energia</label>
+            <div class="energy-track" id="energy-track" title="Kliknij, by ustawić energię">
+                <div class="energy-fill" id="energy-fill" style="width: 50%;"></div>
+            </div>
+            <span class="energy-val" id="energy-val-display">5/10</span>
+        </div>
+
+        <div class="top-stats">
+            <a href="knowledge.html" class="btn btn-secondary" style="color: var(--accent-primary); border-color: rgba(43, 191, 113, 0.3);"><i data-lucide="network"></i> Drzewo Wiedzy</a>
+            <button class="btn btn-secondary" id="btn-force-srs-sync"><i data-lucide="refresh-cw"></i> Synchronizuj Pamięć</button>
+            <button class="btn btn-ghost" id="btn-zero-energy" style="color: var(--accent-warning);"><i data-lucide="battery-low"></i> Low Energy</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <section class="naked-section" style="margin-bottom: var(--space-6);">
+                <div style="display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-3); color: var(--text-secondary);">
+                    <i data-lucide="calendar" style="width: 14px;"></i>
+                    <h2 style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">Harmonogram Dnia</h2>
+                </div>
+                <div id="calendar-panel-today" style="font-size:0.85rem; color:var(--text-secondary);">Łączenie z kalendarzem...</div>
+            </section>
+
+            <section class="naked-section" style="margin-bottom: var(--space-6);">
+                <div style="display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-3); color: var(--text-secondary);">
+                    <i data-lucide="list-checks" style="width: 14px;"></i>
+                    <h2 style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">Rutyny</h2>
+                </div>
+                <div class="segmented-control" style="display:flex; background:var(--bg-tertiary); padding:4px; border-radius:var(--radius-sm); margin-bottom:var(--space-3);">
+                    <button class="btn" id="tab-btn-morning" style="flex:1; border:none; background:var(--bg-secondary); color:var(--text-primary); border-radius:4px; box-shadow:var(--elevation-1); font-size:0.8rem; padding:6px;" onclick="document.getElementById('morning-routine').style.display='block'; document.getElementById('evening-routine').style.display='none'; this.style.background='var(--bg-secondary)'; this.style.color='var(--text-primary)'; this.style.boxShadow='var(--elevation-1)'; document.getElementById('tab-btn-evening').style.background='transparent'; document.getElementById('tab-btn-evening').style.color='var(--text-secondary)'; document.getElementById('tab-btn-evening').style.boxShadow='none';"><i data-lucide="sun" style="width:14px; height:14px;"></i> Poranna</button>
+                    <button class="btn" id="tab-btn-evening" style="flex:1; border:none; background:transparent; color:var(--text-secondary); font-size:0.8rem; padding:6px;" onclick="document.getElementById('evening-routine').style.display='block'; document.getElementById('morning-routine').style.display='none'; this.style.background='var(--bg-secondary)'; this.style.color='var(--text-primary)'; this.style.boxShadow='var(--elevation-1)'; document.getElementById('tab-btn-morning').style.background='transparent'; document.getElementById('tab-btn-morning').style.color='var(--text-secondary)'; document.getElementById('tab-btn-morning').style.boxShadow='none';"><i data-lucide="moon" style="width:14px; height:14px;"></i> Wieczorna</button>
+                </div>
+                <div class="checklist" id="morning-routine" style="display:block;"></div>
+                <div class="checklist" id="evening-routine" style="display:none;"></div>
+            </section>
+
+            <section class="naked-section" style="margin-bottom: var(--space-6);">
+                <div style="display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-3);">
+                    <i data-lucide="cloud" style="width: 14px; height: 14px; color: var(--text-secondary);"></i>
+                    <h3 style="font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">iCloud Notes</h3>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:2px;">
+                    <a href="https://www.icloud.com/notes/note/UHJpdmF0ZTo6Tm90ZXM6OmN1cnJlbnRVc2VyOjo3YTAyZmZhYi1lNDk2LTQ1MWQtYWU2ZC1mY2VlNjJlZWI1MmQ=" target="_blank" class="btn btn-ghost" style="justify-content: flex-start; padding: 4px 8px; font-size: 0.85rem;"><i data-lucide="moon-star" style="width:16px;"></i> Sny</a>
+                    <a href="https://www.icloud.com/notes/note/UHJpdmF0ZTo6Tm90ZXM6OmN1cnJlbnRVc2VyOjo5MUNDMTJGMi01MDQwLTRFNkMtOUFGMC0wQzA4NUZBNzM1RkM=" target="_blank" class="btn btn-ghost" style="justify-content: flex-start; padding: 4px 8px; font-size: 0.85rem;"><i data-lucide="stethoscope" style="width:16px;"></i> Zdrowie</a>
+                    <a href="https://www.icloud.com/notes/note/UHJpdmF0ZTo6Tm90ZXM6OmN1cnJlbnRVc2VyOjo5Yjk3ZDI0ZC0zNTQxLTQ1MmEtODJmOS0yNDE3MzExMDhlMTY=" target="_blank" class="btn btn-ghost" style="justify-content: flex-start; padding: 4px 8px; font-size: 0.85rem;"><i data-lucide="sprout" style="width:16px;"></i> Rozwój Osobisty</a>
+                    <a href="https://www.icloud.com/notes/note/UHJpdmF0ZTo6Tm90ZXM6OmN1cnJlbnRVc2VyOjphZjcwZjk1Zi1kYWVkLTQ4ODQtOTM4Yy0xNmE0ZGYzZDcxMzQ=" target="_blank" class="btn btn-ghost" style="justify-content: flex-start; padding: 4px 8px; font-size: 0.85rem;"><i data-lucide="link-2" style="width:16px;"></i> Ważne Linki</a>
+                </div>
+            </section>
+
+            <section class="naked-section" style="margin-bottom: var(--space-6);">
+                <div style="display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-3);">
+                    <i data-lucide="folder-cloud" style="width: 14px; height: 14px; color: var(--text-secondary);"></i>
+                    <h3 style="font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">OneDrive Workspace</h3>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:2px;">
+                    <a href="https://uewrc-my.sharepoint.com/:f:/g/personal/196659_student_ue_wroc_pl/IgCK2YL0jKFNRYAI0-pBkIFXAWH8zOPLfTpT0MQQnPdg2Gg?e=xKFcBC" target="_blank" class="btn btn-ghost" style="justify-content: flex-start; padding: 4px 8px; font-size: 0.85rem;"><i data-lucide="folder" style="width:16px; color: var(--accent-primary);"></i> Antigravity OS</a>
+                    <a href="https://uewrc-my.sharepoint.com/:f:/g/personal/196659_student_ue_wroc_pl/IgDMD7FeGcaZS7LlcJ3h7XbjAQQmRcbvBnl4sQsc3EM6PyY?e=aojfCY" target="_blank" class="btn btn-ghost" style="justify-content: flex-start; padding: 4px 8px; font-size: 0.85rem;"><i data-lucide="folder-code" style="width:16px;"></i> Skrypty Python</a>
+                    <a href="https://uewrc-my.sharepoint.com/:f:/g/personal/196659_student_ue_wroc_pl/IgDWKVrPV0OERJX8UxQcWxfWAQU5QvKP3CUqnC6-O7Q86xQ?e=4ciAWN" target="_blank" class="btn btn-ghost" style="justify-content: flex-start; padding: 4px 8px; font-size: 0.85rem;"><i data-lucide="folder" style="width:16px;"></i> Dokumenty</a>
+                    <a href="https://uewrc-my.sharepoint.com/:f:/g/personal/196659_student_ue_wroc_pl/IgDSpbEHMaIVTaw9DZjJ_jIjAdtLRq2lh6OROUvd40tpl0w?e=XE4cS2" target="_blank" class="btn btn-ghost" style="justify-content: flex-start; padding: 4px 8px; font-size: 0.85rem;"><i data-lucide="table-2" style="width:16px;"></i> Modele Excel</a>
+                    <a href="https://uewrc-my.sharepoint.com/:f:/g/personal/196659_student_ue_wroc_pl/IgBGJhuX5Is9Q5GWjNME6biKAScXxnqsiZLLd9Zhb3KcnUo?e=ypyUoM" target="_blank" class="btn btn-ghost" style="justify-content: flex-start; padding: 4px 8px; font-size: 0.85rem;"><i data-lucide="folder" style="width:16px;"></i> Media</a>
+                    <a href="https://uewrc-my.sharepoint.com/:f:/g/personal/196659_student_ue_wroc_pl/IgBGJhuX5Is9Q5GWjNME6biKAScXxnqsiZLLd9Zhb3KcnUo?e=ypyUoM" target="_blank" class="btn btn-ghost" style="justify-content: flex-start; padding: 4px 8px; font-size: 0.85rem;"><i data-lucide="camera" style="width:16px;"></i> Fotografie</a>
+                    <a href="https://uewrc-my.sharepoint.com/:f:/g/personal/196659_student_ue_wroc_pl/IgAvouBmXk2uSbxOAe-18upfAUYhzBLPMqr79bLmE_8cYnk?e=G3iJu9" target="_blank" class="btn btn-ghost" style="justify-content: flex-start; padding: 4px 8px; font-size: 0.85rem;"><i data-lucide="folder-closed" style="width:16px;"></i> Inne (Zrzuty)</a>
+                </div>
+            </section>
+
+            <section class="naked-section" style="margin-bottom: var(--space-6);">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-3);">
+                    <div style="display: flex; align-items: center; gap: var(--space-2);">
+                        <i data-lucide="inbox" style="width: 14px; height: 14px; color: var(--accent-primary);"></i>
+                        <h3 style="font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">Zrzutnia Zadań</h3>
+                    </div>
+                </div>
+                <a href="inbox.html" class="btn btn-ghost" style="width:100%; justify-content:flex-start; font-size: 0.8rem; color: var(--text-primary); border: 1px solid var(--border-strong);"><i data-lucide="edit-3" style="width:14px;"></i> Otwórz Notatnik</a>
+            </section>
+
+            <section class="naked-section" style="margin-bottom: var(--space-6);">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-3);">
+                    <div style="display: flex; align-items: center; gap: var(--space-2);">
+                        <i data-lucide="library" style="width: 14px; height: 14px; color: var(--text-secondary);"></i>
+                        <h3 style="font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">Baza Czytelnicza</h3>
+                    </div>
+                </div>
+                <div id="reading-list-container" style="display:flex; flex-direction:column; gap:var(--space-1);">
+                    <div style="font-size: 0.85rem; color: var(--text-secondary); padding: 4px 8px;">Synchronizacja bazy...</div>
+                </div>
+                <button class="btn btn-ghost" id="add-reading-btn" style="width:100%; justify-content:flex-start; margin-top:8px; font-size: 0.8rem; color: var(--text-secondary);"><i data-lucide="plus" style="width:14px;"></i> Dodaj pozycję (Enter)</button>
+            </section>
+
+            <section class="naked-section">
+                <div style="display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-3); color: var(--text-secondary);">
+                    <i data-lucide="bot" style="width: 14px;"></i>
+                    <h2 style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">AI Inbox</h2>
+                </div>
+                <textarea id="ai-dump" rows="3" placeholder="Zrzut myśli dla Agenta..." style="width:100%; background:var(--bg-secondary); border:1px solid var(--border-subtle); color:var(--text-primary); padding:10px; font-family:var(--font-sans); font-size:0.85rem; border-radius: var(--radius-sm); resize:vertical; margin-bottom:12px; outline:none;"></textarea>
+                <button class="btn btn-secondary start-block-btn" style="width:100%;" onclick="this.innerHTML='<i data-lucide=\'check\'></i> Otrzymano'; lucide.createIcons(); setTimeout(()=> { this.innerHTML='<i data-lucide=\'send\'></i> Prześlij'; lucide.createIcons();}, 4000)"><i data-lucide="send"></i> Prześlij</button>
+            </section>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            
+            <section class="panel-section" style="margin-bottom: var(--space-5);">
+                <a href="knowledge.html" class="btn btn-secondary" style="width: 100%; display:flex; justify-content:space-between; align-items:center; padding: 20px; font-size: 1.1rem; border-color: var(--accent-primary); background: rgba(43, 191, 113, 0.05); color: var(--text-primary); box-shadow: var(--elevation-1);">
+                    <div style="display:flex; align-items:center; gap: 12px;">
+                        <i data-lucide="network" style="color: var(--accent-primary); width: 24px; height: 24px;"></i>
+                        <span style="font-weight: 600;">Biblioteka Akademicka (2100 Węzłów)</span>
+                    </div>
+                    <i data-lucide="chevron-right" style="color: var(--text-secondary);"></i>
+                </a>
+            </section>
+
+            <section class="panel-section">
+                <div class="section-header" style="flex-direction: column; align-items: flex-start; gap: var(--space-1);">
+                    <h2 style="font-size: 1.4rem; display:flex; align-items:center; gap:8px;">Bloki Pracy <a href="knowledge.html" style="color:var(--text-secondary); opacity: 0.5;" title="Drzewo Wiedzy"><i data-lucide="network"></i></a></h2>
+                    <span class="date-subtitle" id="current-date" style="font-family: var(--font-sans); color: var(--text-secondary); margin-bottom: var(--space-2);">Dzisiaj</span>
+                </div>
+
+                <div class="blocks-layout">
+                    <!-- HERO BLOCK -->
+                    <div class="card block-card hero-block priority" id="block-1">
+                        <div class="hero-header">
+                            <div>
+                                <h3 style="font-size: 1.4rem; font-weight: 600; color: var(--text-primary); margin-bottom: 4px;">Kognitywny</h3>
+                                <span style="font-size: 0.9rem; color: var(--accent-primary);">Główny priorytet na ten moment</span>
+                            </div>
+                            <span class="time-limit" id="timer-1" style="font-size: 2.5rem; font-weight: 700; color: var(--accent-primary);">60:00</span>
+                        </div>
+                        <div class="hero-action">
+                            <div class="suggested-task" id="suggested-priority" style="font-size: 1rem; color: var(--text-primary); max-width: 60%;">Pobieram z kalendarza...</div>
+                            <button class="btn btn-primary start-block-btn" data-target="1" data-time="60" style="padding: 12px 32px; font-size: 1.05rem;"><i data-lucide="play"></i> Rozpocznij sesję</button>
+                        </div>
+                    </div>
+
+                    <!-- SECONDARY BLOCKS -->
+                    <div class="secondary-blocks">
+                        <div class="card block-card admin" id="block-2">
+                            <div class="card-header"><h3 style="font-size: 0.9rem;">Administracja</h3><span class="time-limit" id="timer-2" style="font-size: 1rem;">30:00</span></div>
+                            <div class="action-area" style="background: transparent; padding: 0;">
+                                <div class="suggested-task" id="suggested-admin" style="font-size: 0.8rem; margin-bottom: var(--space-3);">Korespondencja, budżet domowy.</div>
+                                <div class="action-row"><button class="btn btn-secondary start-block-btn" data-target="2" data-time="30"><i data-lucide="play"></i> Start (30m)</button></div>
+                            </div>
+                        </div>
+                        <div class="card block-card light" id="block-3">
+                            <div class="card-header"><h3 style="font-size: 0.9rem;">Zadanie Lekkie</h3><span class="time-limit" id="timer-3" style="font-size: 1rem;">45:00</span></div>
+                            <div class="action-area" style="background: transparent; padding: 0;">
+                                <div class="suggested-task" id="suggested-light" style="font-size: 0.8rem; margin-bottom: var(--space-3);">Pobieram...</div>
+                                <div class="action-row"><button class="btn btn-secondary start-block-btn" data-target="3" data-time="45"><i data-lucide="play"></i> Start (45m)</button></div>
+                            </div>
+                        </div>
+                        <div class="card block-card sensory" id="block-4">
+                            <div class="card-header"><h3 style="font-size: 0.9rem;">Odłączenie</h3><span class="time-limit" id="timer-4" style="font-size: 1rem;">20:00</span></div>
+                            <div class="action-area" style="background: transparent; padding: 0;">
+                                <div class="suggested-task" id="suggested-sensory" style="font-size: 0.8rem; margin-bottom: var(--space-3);">Regeneracja kory przedczołowej.</div>
+                                <div class="action-row"><button class="btn btn-secondary start-block-btn" data-target="4" data-time="20"><i data-lucide="play"></i> Start (20m)</button></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="panel-section">
+                <div class="section-header" style="justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-subtle); padding-bottom: 8px;">
+                    <h2>Rozkład Czasu</h2>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn btn-secondary" id="cal-prev-btn"><i data-lucide="chevron-left"></i> Poprzedni Tydzień</button>
+                        <button class="btn btn-ghost mono" id="cal-current-label" style="pointer-events:none;">Obecny Tydzień</button>
+                        <button class="btn btn-secondary" id="cal-next-btn">Następny Tydzień <i data-lucide="chevron-right"></i></button>
+                        <button class="btn btn-primary" id="cal-month-btn" style="margin-left: 12px;"><i data-lucide="calendar-days"></i> Widok Miesiąca</button>
+                    </div>
+                </div>
+                
+                <!-- Widok Tygodniowy (Siatka) -->
+                <div class="calendar-grid-wrapper" id="calendar-week-view">
+                    <div class="time-axis" id="time-axis"></div>
+                    <div class="days-columns" id="week-columns">
+                        <div class="day-col" id="col-0"><div class="day-name">PON</div><div class="events-container"></div></div>
+                        <div class="day-col" id="col-1"><div class="day-name">WT</div><div class="events-container"></div></div>
+                        <div class="day-col" id="col-2"><div class="day-name">ŚR</div><div class="events-container"></div></div>
+                        <div class="day-col" id="col-3"><div class="day-name">CZW</div><div class="events-container"></div></div>
+                        <div class="day-col" id="col-4"><div class="day-name">PT</div><div class="events-container"></div></div>
+                        <div class="day-col" id="col-5"><div class="day-name">SOB</div><div class="events-container"></div></div>
+                        <div class="day-col" id="col-6"><div class="day-name">NDZ</div><div class="events-container"></div></div>
+                    </div>
+                </div>
+                
+                <!-- Widok Miesięczny (Zminimalizowany List-grid) -->
+                <div id="calendar-month-view" style="display: none; background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 12px; margin-top: 12px;">
+                    <div style="display:grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align:center; color:var(--text-secondary); font-size:0.75rem; margin-bottom:8px;">
+                        <div>PON</div><div>WT</div><div>ŚR</div><div>CZW</div><div>PT</div><div>SOB</div><div>NDZ</div>
+                    </div>
+                    <div id="month-days-grid" style="display:grid; grid-template-columns: repeat(7, 1fr); gap: 4px; grid-auto-rows: minmax(60px, auto);">
+                        <!-- JS generuje kafelki dni -->
+                    </div>
+                </div>
+                
+                <div class="cal-legend" style="display: flex; gap: 16px; margin-top: 16px; font-size: 0.8rem; color: var(--text-secondary);">
+                    <div style="display:flex; align-items:center; gap:6px;"><span style="display:inline-block; width:10px; height:10px; background:#2F81F7; border-radius:50%;"></span> Nauka & Analiza</div>
+                    <div style="display:flex; align-items:center; gap:6px;"><span style="display:inline-block; width:10px; height:10px; background:#3FB950; border-radius:50%;"></span> Projekty & Finanse</div>
+                    <div style="display:flex; align-items:center; gap:6px;"><span style="display:inline-block; width:10px; height:10px; background:#F85149; border-radius:50%;"></span> Pilne zadania</div>
+                    <div style="display:flex; align-items:center; gap:6px;"><span style="display:inline-block; width:10px; height:10px; border:1px solid var(--border-subtle); border-radius:50%; background:rgba(255,255,255,0.05);"></span> Czas Skupienia</div>
+                </div>
+            </section>
+
+            <section class="panel-section">
+                <div class="section-header">
+                    <h2>Analityka i Postęp</h2>
+                </div>
+                <div class="charts-grid">
+                    <div class="card chart-card">
+                        <div class="chart-container">
+                            <canvas id="skillsBarChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="card chart-card">
+                        <div class="chart-container">
+                            <canvas id="energyLineChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="js/knowledge_tree.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

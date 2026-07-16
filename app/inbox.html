@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pl" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zrzutnia Zadań - B-Core</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body { padding-top: 80px; }
+        .inbox-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: var(--space-4);
+        }
+        .inbox-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: var(--space-4);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-2);
+        }
+        .inbox-textarea {
+            width: 100%;
+            height: 250px;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            resize: vertical;
+            outline: none;
+        }
+        .inbox-textarea::placeholder { color: var(--text-secondary); opacity: 0.5; }
+    </style>
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="js/firebase_init.js"></script>
+</head>
+<body>
+    <header class="topbar" style="justify-content: space-between; padding: 0 24px;">
+        <div style="display:flex; align-items:center; gap: 20px;">
+            <a href="index.html" class="btn btn-secondary" style="font-size: 0.85rem; padding: 6px 12px;"><i data-lucide="arrow-left" style="width:16px;"></i> Powrót do Systemu</a>
+            <h1 style="font-size: 1.3rem; display:flex; align-items:center; gap:8px;">
+                <i data-lucide="inbox" style="color:var(--accent-primary);"></i> 
+                Zrzutnia Zadań
+            </h1>
+        </div>
+    </header>
+
+    <main class="main-content" style="max-width: 1600px; margin: 0 auto; padding: var(--space-6);">
+        
+        <p style="color: var(--text-secondary); margin-bottom: var(--space-5);">Wypisuj swoje plany linijka pod linijką. Z samego rana System uderzy tutaj i <b>ściągnie najwyżej znajdujące się zdanie z każdego pola</b> jako sugerowany blok na dzisiaj, skracając przy tym listę, utrzymując porządek.</p>
+
+        <div class="inbox-grid">
+            <div class="inbox-section" style="border-top: 4px solid var(--accent-primary);">
+                <h2 style="font-size: 1.1rem; display:flex; align-items:center; gap:8px;"><i data-lucide="brain"></i> Kognitywny (Priorytet)</h2>
+                <textarea id="inbox-priority" class="inbox-textarea" placeholder="- Napisać szkic w Wordzie...&#10;- Przemyśleć strategię danych..."></textarea>
+            </div>
+            
+            <div class="inbox-section" style="border-top: 4px solid var(--text-secondary);">
+                <h2 style="font-size: 1.1rem; display:flex; align-items:center; gap:8px;"><i data-lucide="briefcase"></i> Administracja</h2>
+                <textarea id="inbox-admin" class="inbox-textarea" placeholder="- Zapłacić rachunek X...&#10;- Odpisać na e-mail..."></textarea>
+            </div>
+            
+            <div class="inbox-section" style="border-top: 4px solid var(--accent-info);">
+                <h2 style="font-size: 1.1rem; display:flex; align-items:center; gap:8px;"><i data-lucide="coffee"></i> Zadania Lekkie</h2>
+                <textarea id="inbox-light" class="inbox-textarea" placeholder="- Uporządkować foldery...&#10;- Wysłuchać wykładu pobocznego..."></textarea>
+            </div>
+            
+            <div class="inbox-section" style="border-top: 4px solid var(--accent-success);">
+                <h2 style="font-size: 1.1rem; display:flex; align-items:center; gap:8px;"><i data-lucide="ear"></i> Sensoryczne (Odłączanie)</h2>
+                <textarea id="inbox-sensory" class="inbox-textarea" placeholder="- Mata z kolcami z ambientem (15 min)...&#10;- Krótki bieg na oczyszczenie..."></textarea>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="js/firebase_init.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            if(window.lucide) window.lucide.createIcons();
+
+            const boxes = ['priority', 'admin', 'light', 'sensory'];
+            let timeout = null;
+
+            // Ładowanie
+            db.ref(USER_NODE + 'inbox').once('value').then(snap => {
+                const data = snap.val() || {};
+                boxes.forEach(k => {
+                    if(data[k]) document.getElementById(`inbox-${k}`).value = data[k];
+                });
+            });
+
+            // Zapis
+            boxes.forEach(k => {
+                const el = document.getElementById(`inbox-${k}`);
+                el.addEventListener('input', () => {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => {
+                        db.ref(USER_NODE + 'inbox/' + k).set(el.value);
+                    }, 800); // Autosave 0.8s
+                });
+            });
+        });
+    </script>
+</body>
+</html>

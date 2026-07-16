@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pl" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B-Core - Logowanie</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css?v=11.0">
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .login-wrapper {
+            display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh;
+            background: var(--bg-primary); padding: var(--space-4);
+        }
+        .login-box {
+            background: var(--bg-secondary); border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md); padding: var(--space-6); width: 100%; max-width: 400px;
+            box-shadow: var(--elevation-2);
+        }
+        .form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+        .form-group input { 
+            background: var(--bg-tertiary); border: 1px solid var(--border-strong);
+            color: var(--text-primary); padding: 12px; border-radius: var(--radius-sm); font-size: 1rem;
+            outline: none; transition: border-color 0.2s;
+        }
+        .form-group input:focus { border-color: var(--accent-primary); }
+    </style>
+</head>
+<body>
+    <div class="login-wrapper">
+        <div style="margin-bottom: 40px; text-align: center; color: var(--text-secondary);">
+            <i data-lucide="shield-alert" style="width: 48px; height: 48px; margin-bottom:12px; color: var(--accent-primary);"></i>
+            <h1 style="font-size: 1.5rem; color: var(--text-primary);">Dostęp Zablokowany</h1>
+            <p style="margin-top: 8px;">Autoryzuj sesję, by wejść do B-Core.<br><span style="font-size:0.8rem;">(Pierwsze logowanie rejestruje Twoje urządzenie)</span></p>
+        </div>
+        <div class="login-box">
+            <div class="form-group">
+                <label style="font-size: 0.9rem; color: var(--text-secondary);">Identyfikator (E-mail)</label>
+                <input type="email" id="email" placeholder="Twój główny adres email">
+            </div>
+            <div class="form-group">
+                <label style="font-size: 0.9rem; color: var(--text-secondary);">Klucz Dostępu (Hasło)</label>
+                <input type="password" id="password" placeholder="Bezpieczne hasło do bazy">
+            </div>
+            <button id="login-btn" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 14px; font-size: 1rem; margin-bottom: 12px;">Wprowadź Kod</button>
+            <div id="msg" style="color: var(--accent-danger); font-size: 0.85rem; text-align: center; min-height: 20px;"></div>
+        </div>
+    </div>
+    
+    <script src="js/firebase_init.js"></script>
+    <script>
+        lucide.createIcons();
+        document.getElementById('login-btn').onclick = () => {
+            const email = document.getElementById('email').value.trim();
+            const pass = document.getElementById('password').value.trim();
+            if(!email || !pass) return;
+            const msg = document.getElementById('msg');
+            msg.innerText = "Deszyfrowanie autoryzacji...";
+            msg.style.color = "var(--text-secondary)";
+            
+            // Auto register or login
+            firebase.auth().signInWithEmailAndPassword(email, pass)
+            .then(() => {
+                window.location.replace('index.html');
+            })
+            .catch(e => {
+                msg.innerText = "Odrzucono: Brak autoryzacji do Systemu."; 
+                msg.style.color = "var(--accent-danger)";
+            });
+        };
+    </script>
+</body>
+</html>
