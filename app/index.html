@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>B-Core</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css?v=19.1">
+    <link rel="stylesheet" href="css/styles.css?v=19.2">
     <script src="js/local_data.js?v=18.3"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
@@ -107,6 +107,7 @@
                 <span id="mini-sync-status" style="font-size: 8px; color:var(--text-secondary); padding-left:4px; font-family:var(--font-mono);">Oczekiwanie...</span>
             </div>
             <button class="btn btn-ghost" id="theme-toggle-btn" style="margin-left: 10px; padding:4px 8px;" title="Przełącz Motyw"><i data-lucide="sun-moon"></i></button>
+            <button class="btn btn-ghost" id="btn-zero-energy" style="margin-left: 6px; padding:4px 8px;" title="Włącz tryb Low Energy (Tryb Baterii)"><i data-lucide="battery-low"></i></button>
         </div>
         
         <div style="flex-grow:1; max-width:400px; margin:0 20px;">
@@ -128,8 +129,7 @@
 
         <div class="top-stats">
             <a href="inbox.html" class="btn btn-ghost" title="Skok do Zrzutni Zadań"><i data-lucide="inbox"></i> Zrzutnia</a>
-            <a href="knowledge.html" class="btn btn-ghost" title="Baza Akademicka"><i data-lucide="network"></i> Wiedza</a>
-            <button class="btn btn-ghost" id="btn-zero-energy" title="Włącz tryb Low Energy (Focus)"><i data-lucide="battery-low"></i> Tryb Baterii</button>
+            <a href="knowledge.html" class="btn btn-ghost" title="Baza Wiedzy"><i data-lucide="network"></i> Wiedza</a>
         </div>
     </header>
 
@@ -365,8 +365,8 @@
     </div>
 
     <script src="js/knowledge_tree.js?v=17.6"></script>
-    <script src="js/data.js?v=19.1"></script>
-    <script src="js/app.js?v=19.1"></script>
+    <script src="js/data.js?v=19.2"></script>
+    <script src="js/app.js?v=19.2"></script>
     <script>
         lucide.createIcons();
 

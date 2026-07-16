@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Drzewo Wiedzy - B-Core</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css?v=19.1">
+    <link rel="stylesheet" href="css/styles.css?v=19.2">
     <style>
         body { padding-top: 80px; }
         .tree-scroll::-webkit-scrollbar { width: 4px; }
@@ -34,6 +34,7 @@
                 <span id="mini-sync-status" style="font-size: 8px; color:var(--text-secondary); padding-left:4px; font-family:var(--font-mono);">Oczekiwanie...</span>
             </div>
             <button class="btn btn-ghost" id="theme-toggle-btn" style="margin-left: 10px; padding:4px 8px;" title="Przełącz Motyw"><i data-lucide="sun-moon"></i></button>
+            <button class="btn btn-ghost" id="btn-zero-energy" style="margin-left: 6px; padding:4px 8px;" title="Włącz tryb Low Energy (Tryb Baterii)"><i data-lucide="battery-low"></i></button>
         </div>
         
         <div style="flex-grow:1; max-width:400px; margin:0 20px;">
@@ -56,14 +57,13 @@
         <div class="top-stats">
             <a href="index.html" class="btn btn-ghost" title="Powrót do Pulpitu"><i data-lucide="layout-dashboard"></i> Pulpit</a>
             <a href="inbox.html" class="btn btn-ghost" title="Skok do Zrzutni Zadań"><i data-lucide="inbox"></i> Zrzutnia</a>
-            <button class="btn btn-ghost" id="btn-zero-energy" title="Włącz tryb Low Energy (Focus)"><i data-lucide="battery-low"></i> Tryb Baterii</button>
         </div>
     </header>
 
     <main style="max-width: 1600px; margin: 0 auto; padding: var(--space-6);">
         <div class="section-header" style="flex-direction: column; align-items: flex-start; gap: var(--space-1); border-bottom: 1px solid var(--border-subtle); padding-bottom: 15px; margin-bottom: 24px;">
-            <h2 style="font-size: 1.5rem; display:flex; align-items:center; gap:12px; font-weight:600;"><i data-lucide="network" style="color:var(--accent-primary); width:24px; height:24px;"></i> Baza Akademicka</h2>
-            <span class="date-subtitle" style="font-family: var(--font-sans); color: var(--text-secondary); margin-bottom: 0;">Syllabus Systemowy</span>
+            <h2 style="font-size: 1.5rem; display:flex; align-items:center; gap:12px; font-weight:600;"><i data-lucide="network" style="color:var(--accent-primary); width:24px; height:24px;"></i> Baza Wiedzy</h2>
+            <span class="date-subtitle" style="font-family: var(--font-sans); color: var(--text-secondary); margin-bottom: 0;">Kierunki Rozwoju</span>
         </div>
         <div class="knowledge-layout">
             <!-- LEWE MENU -->
@@ -272,6 +272,6 @@
             };
         });
     </script>
-    <script src="js/topbar.js?v=19.1"></script>
+    <script src="js/topbar.js?v=19.2"></script>
 </body>
 </html>
