@@ -7,8 +7,12 @@ $onedrivePath = "C:\Users\baluk\OneDrive - Uniwersytet Ekonomiczny we Wrocławiu
 
 Write-Host "Rozpoczynam zwiad plikowy Local Agent Bridge..." -ForegroundColor Cyan
 
-$basePathPattern = "C:\Users\baluk\OneDrive*Ekonomiczny*\hanuenane cz. 3"
-$basePath = (Resolve-Path $basePathPattern).Path
+$basePath = (Get-ChildItem -Path "C:\Users\baluk" -Filter "hanuenane cz. 3" -Recurse -Directory -ErrorAction SilentlyContinue | Select-Object -First 1).FullName
+
+if (-not $basePath) {
+    Write-Host "Brak glownego folderu w komputerze." -ForegroundColor Red
+    exit
+}
 
 $photosPath = Join-Path $basePath "[-] FOTOGRAFIE"
 $excelPath = Join-Path $basePath "[-] MODEL EXCEL"

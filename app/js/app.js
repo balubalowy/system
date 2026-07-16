@@ -102,6 +102,7 @@ function initApp() {
     initSidebarToggle();
     initIdeasEngine();
     initHarvesting();
+    initInteractiveTasks();
     
     setTimeout(() => { initCharts(); }, 500);
     document.getElementById('cloud-status').style.display = 'inline';
@@ -762,6 +763,12 @@ function renderTodayList(events, container) {
     target.style.marginRight = '10px';
     target.innerHTML = '';
     
+    // Draw Hours on Sidebar Timeline
+    for(let h=START_HOUR; h<=END_HOUR; h++) {
+        let topPercent = ((h - START_HOUR) / (END_HOUR - START_HOUR)) * 100;
+        target.innerHTML += `<div style="position:absolute; left: -10px; top: ${topPercent}%; transform:translateY(-50%); font-size: 0.6rem; color: var(--text-secondary); opacity: 0.5; font-family: var(--font-mono);">${h.toString().padStart(2,'0')}:00</div>`;
+    }
+    
     if(todays.length === 0) {
         target.innerHTML = "<div style='padding:10px; font-size: 0.8rem; text-align:center;'>Brak spotkań na dziś. Czysty umysł.</div>";
         return;
@@ -1092,4 +1099,79 @@ function initReadingList() {
             });
         });
     }
+
+// --- INTERACTIVE TASKS ENGINE V16 ---
+function initInteractiveTasks() {
+    const container = document.getElementById('suggested-tasks-container');
+    if(!container) return;
+    
+    const boxes = [
+        { key: 'priority', title: 'Kognitywny', icon: 'brain', color: 'var(--accent-primary)', sub: 'Priorytet główny' },
+        { key: 'admin', title: 'Administracja', icon: 'briefcase', color: 'var(--text-secondary)', sub: 'Baza i opłaty' },
+        { key: 'light', title: 'Zadanie Lekkie', icon: 'coffee', color: 'var(--accent-info)', sub: 'Gdy energia spada' },
+        { key: 'sensory', title: 'Odłączenie', icon: 'ear', color: 'var(--accent-success)', sub: 'Sensoryczna pauza' }
+    ];
+
+    db.ref(USER_NODE + 'inbox').on('value', snap => {
+        const data = snap.val() || {};
+        container.innerHTML = '';
+        let hasAny = false;
+
+        boxes.forEach(b => {
+            if(!data[b.key]) return;
+            let lines = data[b.key].split('\n').map(l => l.trim()).filter(l => l.length > 0);
+            if(lines.length === 0) return;
+            
+            hasAny = true;
+            let topTask = lines[0];
+            if(topTask.startsWith('-')) topTask = topTask.substring(1).trim();
+
+            let html = `
+            <div class="card block-card" style="border-top: 3px solid ${b.color};">
+                <div class="card-header" style="margin-bottom: 8px;">
+                    <div>
+                        <h3 style="font-size:1.1rem; color:var(--text-primary); display:flex; align-items:center;"><i data-lucide="${b.icon}" style="width:16px; color:${b.color}; margin-right:6px;"></i> ${b.title}</h3>
+                        <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:2px;">${b.sub}</div>
+                    </div>
+                </div>
+                <div class="action-area" style="flex-grow:1; display:flex; flex-direction:column; justify-content:center;">
+                    <div class="suggested-task" style="font-size:0.95rem; font-weight:500; color:var(--text-primary); margin-bottom:16px; padding:8px; background:rgba(0,0,0,0.1); border-radius:var(--radius-sm); border-left: 2px solid ${b.color};">${topTask}</div>
+                    <div style="display:flex; gap:8px; margin-top:auto;">
+                        <button class="btn btn-ghost" onclick="actionTask('${b.key}', 'reject')" style="flex:1; color:var(--accent-warning); border:1px solid rgba(255,159,10,0.2);" title="Odrzuć na spód wrzutni"><i data-lucide="x"></i> Cofnij</button>
+                        <button class="btn btn-secondary" onclick="actionTask('${b.key}', 'complete')" style="flex:1; color:var(--accent-success); border:1px solid rgba(43,191,113,0.3);"><i data-lucide="check"></i> Ukończ</button>
+                    </div>
+                </div>
+            </div>`;
+            container.innerHTML += html;
+        });
+
+        if(!hasAny) {
+            container.innerHTML = `<div style="color:var(--text-secondary); padding: 20px; font-size:0.9rem; grid-column: 1 / -1; text-align:center; border: 1px dashed var(--border-subtle); border-radius: var(--radius-md);">Wrzutnia jest pusta. Sektory operacyjne wyczyszczone.</div>`;
+        }
+        if(window.lucide) window.lucide.createIcons();
+    });
 }
+
+window.actionTask = function(key, action) {
+    db.ref(USER_NODE + 'inbox/' + key).once('value').then(snap => {
+        let text = snap.val();
+        if(!text) return;
+        let lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+        if(lines.length === 0) return;
+        
+        let top = lines.shift();
+        
+        if(action === 'reject') {
+            lines.push(top);
+            db.ref(USER_NODE + 'inbox/' + key).set(lines.join('\n'));
+        } else if (action === 'complete') {
+            db.ref(USER_NODE + 'inbox/' + key).set(lines.join('\n'));
+            let cleanTask = top.startsWith('-') ? top.substring(1).trim() : top;
+            db.ref(USER_NODE + 'inbox_completed').push({
+                task: cleanTask,
+                category: key,
+                timestamp: new Date().toISOString()
+            });
+        }
+    });
+};}

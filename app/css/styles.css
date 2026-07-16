@@ -229,7 +229,7 @@ body.sidebar-collapsed {
 .hero-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-4); }
 .hero-action { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-subtle); padding-top: var(--space-4); }
 
-.secondary-blocks { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4); }
+.secondary-blocks { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--space-4); }
 
 .block-card { 
     display: flex; flex-direction: column; gap: var(--space-3); 
@@ -255,7 +255,7 @@ body.sidebar-collapsed {
 .calendar-grid-wrapper { display: flex; height: 700px; background: var(--bg-secondary); border: 1px solid var(--border-subtle); position: relative; margin-bottom: var(--space-4); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--elevation-1); }
 .time-axis { width: 55px; position: relative; border-right: 1px solid var(--border-subtle); background: var(--bg-tertiary); padding-top: 0; }
 .time-slot { position: absolute; width: 100%; border-top: 1px solid var(--border-subtle); color: var(--text-secondary); font-size: 0.7rem; font-family: var(--font-mono); text-align: center; padding-top: 2px; z-index: 2; }
-.current-time-line { position: absolute; left: 0; right: 0; height: 2px; background: #FF3B30; z-index: 20; pointer-events: none; }
+.current-time-line { position: absolute; left: 0; right: 0; height: 2px; background: #FF3B30; z-index: 50; pointer-events: none; }
 .current-time-line::before { content: ''; position: absolute; left: -3px; top: -3px; width: 8px; height: 8px; border-radius: 50%; background: #FF3B30; box-shadow: 0 0 4px #FF3B30;}
 .days-columns { display: grid; grid-template-columns: repeat(7, 1fr); flex-grow: 1; position: relative; background-image: linear-gradient(var(--border-subtle) 1px, transparent 1px); background-size: 100% calc(100% / 15); background-position: 0 0; }
 .day-col { border-right: 1px solid var(--border-subtle); display: flex; flex-direction: column; position: relative;}

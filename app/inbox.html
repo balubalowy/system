@@ -65,25 +65,35 @@
             </ul>
         </div>
 
-        <div class="inbox-grid">
-            <div class="inbox-section" style="border-top: 4px solid var(--accent-primary);">
-                <h2 style="font-size: 1.1rem; display:flex; align-items:center; gap:8px;"><i data-lucide="brain"></i> Kognitywny (Priorytet)</h2>
-                <textarea id="inbox-priority" class="inbox-textarea" placeholder="- Napisać szkic w Wordzie...&#10;- Przemyśleć strategię danych..."></textarea>
+        <div style="display:flex; gap: var(--space-6); align-items: flex-start;">
+            <div class="inbox-grid" style="flex: 2;">
+                <div class="inbox-section" style="border-top: 4px solid var(--accent-primary);">
+                    <h2 style="font-size: 1.1rem; display:flex; align-items:center; gap:8px;"><i data-lucide="brain"></i> Kognitywny (Priorytet)</h2>
+                    <textarea id="inbox-priority" class="inbox-textarea" placeholder="- Napisać szkic w Wordzie...&#10;- Przemyśleć strategię danych..."></textarea>
+                </div>
+                
+                <div class="inbox-section" style="border-top: 4px solid var(--text-secondary);">
+                    <h2 style="font-size: 1.1rem; display:flex; align-items:center; gap:8px;"><i data-lucide="briefcase"></i> Administracja</h2>
+                    <textarea id="inbox-admin" class="inbox-textarea" placeholder="- Zapłacić rachunek X...&#10;- Odpisać na e-mail..."></textarea>
+                </div>
+                
+                <div class="inbox-section" style="border-top: 4px solid var(--accent-info);">
+                    <h2 style="font-size: 1.1rem; display:flex; align-items:center; gap:8px;"><i data-lucide="coffee"></i> Zadania Lekkie</h2>
+                    <textarea id="inbox-light" class="inbox-textarea" placeholder="- Uporządkować foldery...&#10;- Wysłuchać wykładu pobocznego..."></textarea>
+                </div>
+                
+                <div class="inbox-section" style="border-top: 4px solid var(--accent-success);">
+                    <h2 style="font-size: 1.1rem; display:flex; align-items:center; gap:8px;"><i data-lucide="ear"></i> Sensoryczne (Odłączanie)</h2>
+                    <textarea id="inbox-sensory" class="inbox-textarea" placeholder="- Mata z kolcami z ambientem (15 min)...&#10;- Krótki bieg na oczyszczenie..."></textarea>
+                </div>
             </div>
-            
-            <div class="inbox-section" style="border-top: 4px solid var(--text-secondary);">
-                <h2 style="font-size: 1.1rem; display:flex; align-items:center; gap:8px;"><i data-lucide="briefcase"></i> Administracja</h2>
-                <textarea id="inbox-admin" class="inbox-textarea" placeholder="- Zapłacić rachunek X...&#10;- Odpisać na e-mail..."></textarea>
-            </div>
-            
-            <div class="inbox-section" style="border-top: 4px solid var(--accent-info);">
-                <h2 style="font-size: 1.1rem; display:flex; align-items:center; gap:8px;"><i data-lucide="coffee"></i> Zadania Lekkie</h2>
-                <textarea id="inbox-light" class="inbox-textarea" placeholder="- Uporządkować foldery...&#10;- Wysłuchać wykładu pobocznego..."></textarea>
-            </div>
-            
-            <div class="inbox-section" style="border-top: 4px solid var(--accent-success);">
-                <h2 style="font-size: 1.1rem; display:flex; align-items:center; gap:8px;"><i data-lucide="ear"></i> Sensoryczne (Odłączanie)</h2>
-                <textarea id="inbox-sensory" class="inbox-textarea" placeholder="- Mata z kolcami z ambientem (15 min)...&#10;- Krótki bieg na oczyszczenie..."></textarea>
+
+            <!-- Archiwum Ukończonych -->
+            <div class="inbox-section" style="flex: 1; min-width: 300px; height: calc(100vh - 200px); overflow-y:auto; border-top: 4px solid #fff;">
+                <h2 style="font-size: 1.1rem; display:flex; align-items:center; gap:8px; margin-bottom:12px; color:#fff;"><i data-lucide="check-circle" style="color:var(--accent-success);"></i> Archiwum Ukończonych</h2>
+                <div id="completed-archive" style="display:flex; flex-direction:column; gap:8px;">
+                    <div style="font-size:0.85rem; color:var(--text-secondary);">Ładowanie archiwum...</div>
+                </div>
             </div>
         </div>
     </main>
@@ -115,6 +125,30 @@
                     timeout = setTimeout(() => {
                         db.ref(USER_NODE + 'inbox/' + k).set(el.value);
                     }, 800); // Autosave 0.8s
+                });
+            });
+
+            // Archiwum
+            db.ref(USER_NODE + 'inbox_completed').orderByChild('timestamp').on('value', snap => {
+                const data = snap.val();
+                const archive = document.getElementById('completed-archive');
+                archive.innerHTML = '';
+                if(!data) {
+                    archive.innerHTML = '<div style="font-size:0.85rem; color:var(--text-secondary);">Brak ukończonych zadań.</div>';
+                    return;
+                }
+                const tasks = Object.values(data).sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
+                tasks.forEach(t => {
+                    let d = new Date(t.timestamp);
+                    let color = 'var(--text-secondary)';
+                    if(t.category === 'priority') color = 'var(--accent-primary)';
+                    if(t.category === 'light') color = 'var(--accent-info)';
+                    if(t.category === 'sensory') color = 'var(--accent-success)';
+                    
+                    archive.innerHTML += `<div style="padding:10px; background:rgba(0,0,0,0.2); border-radius:var(--radius-sm); border-left: 2px solid ${color};">
+                        <div style="font-size:0.85rem; color:var(--text-primary); margin-bottom:4px;">${t.task}</div>
+                        <div style="font-size:0.7rem; color:var(--text-secondary); font-family:var(--font-mono);">${d.toLocaleDateString()} ${d.toLocaleTimeString().slice(0,5)}</div>
+                    </div>`;
                 });
             });
         });
