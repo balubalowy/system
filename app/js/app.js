@@ -1200,4 +1200,4 @@ window.actionTask = function(key, action) {
             });
         }
     });
-};}
+};
