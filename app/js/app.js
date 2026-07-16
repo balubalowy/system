@@ -742,7 +742,7 @@ function renderTodayList(events, container) {
     target.style.borderRadius = 'var(--radius-sm)';
     target.style.marginLeft = '28px';
     target.style.marginRight = '8px';
-    target.style.overflow = 'hidden';
+    target.style.overflow = 'visible';
     target.innerHTML = '';
     
     // Draw Hours on Sidebar Timeline
@@ -887,10 +887,17 @@ function initCharts() {
             responsive: true,
             maintainAspectRatio: false,
             scales: {
-                x: { max: 100, grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#8B949E', font: { family: 'JetBrains Mono' } } },
+                x: { max: 100, grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#8B949E', font: { family: 'JetBrains Mono' }, callback: function(value) { return value + '%'; } } },
                 y: { grid: { display: false }, ticks: { color: '#C9D1D9', font: { family: 'Inter', size: 11 } } }
             },
-            plugins: { legend: { display: false } },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) { return context.parsed.x + '%'; }
+                    }
+                }
+            },
             // INTERAKCJA ON-CLICK
             onClick: (e, activeElements) => {
                 if (activeElements.length > 0) {
@@ -942,9 +949,16 @@ function initCharts() {
                 maintainAspectRatio: false,
                 scales: {
                     x: { grid: { display: false }, ticks: { color: '#8B949E', font: { family: 'JetBrains Mono', size: 10 } } },
-                    y: { min: 0, max: 10, grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#8B949E', stepSize: 2 } }
+                    y: { min: 0, max: 10, grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#8B949E', font: { family: 'JetBrains Mono' } } }
                 },
-                plugins: { legend: { display: false } }
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) { return context.parsed.y + ' / 10 Energii'; }
+                        }
+                    }
+                }
             }
         });
     });
