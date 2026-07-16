@@ -59,7 +59,7 @@ body {
     font-family: var(--font-sans); 
     background-color: var(--bg-primary); 
     color: var(--text-primary); 
-    padding: var(--space-4); 
+    padding: var(--space-4) var(--space-4) var(--space-4) 76px; /* Offset for collapsed drawer */
     font-size: 14px; 
     line-height: 1.5; 
 }
@@ -85,10 +85,8 @@ body {
 .top-stats { display: flex; gap: var(--space-3); }
 
 /* PROGRESS BAR (Energia) */
-.energy-control { display: flex; align-items: center; gap: var(--space-3); flex-grow: 1; justify-content: center; max-width: 400px; margin: 0 20px;}
-.energy-control label { color: var(--text-secondary); font-size: 0.85rem; font-weight: 500; }
-.energy-track { flex-grow:1; height: 6px; background: var(--border-strong); border-radius: 3px; position: relative; overflow: hidden; cursor:pointer;}
-.energy-fill { height: 100%; background: var(--accent-primary); border-radius: 3px; width: 50%; transition: width 0.3s ease; }
+.energy-track { flex-grow:1; height: 8px !important; background: var(--border-strong); border-radius: 4px; position: relative; overflow: hidden; cursor:pointer;}
+.energy-fill { height: 100%; background: var(--accent-primary); border-radius: 4px; width: 50%; transition: width 0.3s ease; }
 .energy-val { font-family: var(--font-mono); font-weight: 500; color: var(--text-primary); font-size: 0.85rem;}
 
 /* BUTTONS */
@@ -129,8 +127,38 @@ body {
 .btn-danger { color: var(--accent-danger); border-color: rgba(255, 69, 58, 0.3); background: transparent; }
 .btn-danger:hover { background: rgba(255, 69, 58, 0.1); }
 
-/* GRID */
-.container { display: grid; grid-template-columns: 280px 1fr; gap: var(--space-6); }
+/* GRID & FLOATING SIDEBAR */
+.container { display: flex; }
+.sidebar {
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    width: 280px;
+    background: var(--bg-secondary);
+    border-right: 1px solid var(--border-subtle);
+    z-index: 100;
+    padding: var(--space-4) var(--space-4);
+    overflow-y: auto;
+    transition: width 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+}
+.sidebar.collapsed {
+    width: 60px;
+    padding: var(--space-4) 8px;
+    overflow-x: hidden;
+}
+.sidebar.collapsed h2, .sidebar.collapsed h3, .sidebar.collapsed span, .sidebar.collapsed label, .sidebar.collapsed textarea {
+    opacity: 0;
+    pointer-events: none;
+    white-space: nowrap;
+}
+.sidebar.collapsed .sidebar-header { justify-content: center; margin-bottom: 24px;}
+.sidebar.collapsed .segmented-control { display: none !important; }
+.sidebar.collapsed .checklist-item i, .sidebar.collapsed .sidebar-section i { margin: 0 auto; display:block; }
+.main-content {
+    flex-grow: 1;
+    width: 100%;
+}
 
 /* CARDS */
 .widget, .card { 

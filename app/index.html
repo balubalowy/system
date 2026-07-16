@@ -7,14 +7,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
     <script src="js/local_data.js"></script>
-    <style>
-        .container.sidebar-collapsed { grid-template-columns: 60px 1fr; gap: var(--space-6);}
-        .sidebar { overflow: hidden; transition: width 0.2s ease, opacity 0.2s ease;}
-        .container.sidebar-collapsed .sidebar { width: 60px; white-space:nowrap; }
-        .container.sidebar-collapsed .sidebar h2, 
-        .container.sidebar-collapsed .sidebar .checklist-item label, 
-        .container.sidebar-collapsed .sidebar .stat-text { opacity: 0; pointer-events:none; }
-    </style>
     
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -100,30 +92,32 @@
         <div class="logo">
             <i data-lucide="command" class="symbol"></i>
             <h1>B <span>-Core</span></h1>
-            <span id="btn-force-srs-sync" style="margin-left: 10px; font-size:10px; color:var(--text-secondary); cursor:pointer; padding:4px; border-radius:4px;" title="Synchronizuj ręcznie"><i data-lucide="refresh-cw" style="width:12px; height:12px; vertical-align:middle; margin-right:4px;"></i><span id="cloud-status" style="color:var(--accent-success);">Synced</span></span>
+            <div style="display:flex; flex-direction:column; margin-left: 12px; gap: 2px;">
+                <span id="btn-force-srs-sync" style="font-size:10px; color:var(--text-secondary); cursor:pointer; padding:2px 4px; border-radius:4px; line-height: 1;" title="Synchronizuj ręcznie"><i data-lucide="refresh-cw" style="width:10px; height:10px; vertical-align:middle; margin-right:4px;"></i><span id="cloud-status" style="color:var(--accent-success);">Synced</span></span>
+                <span id="mini-sync-status" style="font-size: 8px; color:var(--text-secondary); padding-left:4px; font-family:var(--font-mono);">Oczekiwanie...</span>
+            </div>
             <button class="btn btn-ghost" id="theme-toggle-btn" style="margin-left: 10px; padding:4px 8px;" title="Przełącz Motyw"><i data-lucide="sun-moon"></i></button>
         </div>
         
-        <div class="energy-control" style="display:flex; flex-direction:column; gap:6px; flex-grow:1; max-width:400px; margin:0 20px;">
-            <div style="display:flex; align-items:center; gap:8px;">
+        <div style="flex-grow:1; max-width:400px; margin:0 20px;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom: 6px;">
                 <label style="width:50px; color:var(--text-secondary); font-size:0.85rem; font-weight:500;">Energia</label>
-                <div class="energy-track" id="energy-track" title="Kliknij, by ustawić energię" style="flex-grow:1; height:6px; background:var(--border-strong); border-radius:3px; position:relative; overflow:hidden; cursor:pointer;">
-                    <div class="energy-fill" id="energy-fill" style="width: 50%; height:100%; background:var(--accent-primary); border-radius:3px; transition:width 0.3s ease;"></div>
+                <div class="energy-track" id="energy-track" title="Kliknij, by ustawić energię">
+                    <div class="energy-fill" id="energy-fill" style="width: 50%;"></div>
                 </div>
                 <span class="energy-val" id="energy-val-display" style="width:40px; font-family:var(--font-mono); font-weight:500; font-size:0.85rem;">5/10</span>
             </div>
             <div style="display:flex; align-items:center; gap:8px;">
                 <label style="width:50px; color:var(--accent-info); font-size:0.85rem; font-weight:500;">Dzień</label>
-                <div class="energy-track" style="flex-grow:1; height:6px; background:rgba(255,255,255,0.05); border-radius:3px; position:relative; overflow:hidden;">
-                    <div class="energy-fill" id="time-fill" style="width: 0%; height:100%; background:var(--accent-info); border-radius:3px; transition: width 1s linear;"></div>
-                    <span id="time-val-display" style="position:absolute; left:50%; top:50%; transform:translate(-50%, -50%); font-size:0.6rem; font-weight:600; font-family:var(--font-mono); color:#fff; mix-blend-mode:difference;">--:--</span>
+                <div class="energy-track" style="background:rgba(255,255,255,0.05); pointer-events:none;">
+                    <div class="energy-fill" id="time-fill" style="width: 0%; background:var(--accent-info); transition: width 1s linear;"></div>
+                    <span id="time-val-display" style="position:absolute; left:50%; top:50%; transform:translate(-50%, -50%); font-size:0.6rem; font-weight:600; font-family:var(--font-mono); color:#fff; mix-blend-mode:difference; line-height: 0;">--:--</span>
                 </div>
                 <span style="width:40px;"></span>
             </div>
         </div>
 
         <div class="top-stats">
-            <button class="btn btn-ghost" id="sidebar-toggle-btn" style="color: var(--text-secondary); margin-right: 12px;" title="Schowaj/Wysuń Panel Boczny"><i data-lucide="panel-left-close"></i></button>
             <a href="knowledge.html" class="btn btn-secondary" style="color: var(--accent-primary); border-color: rgba(43, 191, 113, 0.3);" title="Drzewo Wiedzy"><i data-lucide="network"></i></a>
             <button class="btn btn-ghost" id="btn-zero-energy" style="color: var(--accent-warning);" title="Włącz tryb Low Energy"><i data-lucide="battery-low"></i></button>
         </div>
@@ -131,19 +125,25 @@
 
     <div class="container">
         <!-- SIDEBAR -->
+        <!-- SIDEBAR (Najeżdżająca szuflada) -->
         <aside class="sidebar">
-            <section class="naked-section" style="margin-bottom: var(--space-6);">
-                <div style="display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-3); color: var(--text-secondary);">
-                    <i data-lucide="calendar" style="width: 14px;"></i>
-                    <h2 style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">Harmonogram Dnia</h2>
+            <button class="btn btn-ghost" id="sidebar-toggle-btn" style="color: var(--text-secondary); position:absolute; top: 10px; right: 10px; z-index: 200; padding: 4px;" title="Schowaj/Wysuń Panel"><i data-lucide="panel-left-close"></i></button>
+
+            <section class="naked-section sidebar-section" style="margin-bottom: var(--space-6); margin-top: 10px;">
+                <div class="sidebar-header" style="display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-3); color: var(--text-secondary);">
+                    <i data-lucide="calendar" style="width: 14px; flex-shrink: 0;"></i>
+                    <h2 style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; white-space:nowrap;">Plan Dnia</h2>
                 </div>
-                <div id="calendar-panel-today" style="font-size:0.85rem; color:var(--text-secondary);">Łączenie z kalendarzem...</div>
+                <!-- Mini Timeline Container -->
+                <div id="sidebar-timeline" style="position:relative; padding-left: 20px; font-size:0.85rem; color:var(--text-secondary); min-height: 100px;">
+                    <!-- Rysowany przez JS -->
+                </div>
             </section>
 
-            <section class="naked-section" style="margin-bottom: var(--space-6);">
-                <div style="display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-3); color: var(--text-secondary);">
-                    <i data-lucide="list-checks" style="width: 14px;"></i>
-                    <h2 style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">Rutyny</h2>
+            <section class="naked-section sidebar-section" style="margin-bottom: var(--space-6);">
+                <div class="sidebar-header" style="display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-3); color: var(--text-secondary);">
+                    <i data-lucide="list-checks" style="width: 14px; flex-shrink: 0;"></i>
+                    <h2 style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; white-space:nowrap;">Rutyny</h2>
                 </div>
                 <div class="segmented-control" style="display:flex; background:var(--bg-tertiary); padding:4px; border-radius:var(--radius-sm); margin-bottom:var(--space-3);">
                     <button class="btn" id="tab-btn-morning" style="flex:1; border:none; background:var(--bg-secondary); color:var(--text-primary); border-radius:4px; box-shadow:var(--elevation-1); font-size:0.8rem; padding:6px;" onclick="document.getElementById('morning-routine').style.display='block'; document.getElementById('evening-routine').style.display='none'; this.style.background='var(--bg-secondary)'; this.style.color='var(--text-primary)'; this.style.boxShadow='var(--elevation-1)'; document.getElementById('tab-btn-evening').style.background='transparent'; document.getElementById('tab-btn-evening').style.color='var(--text-secondary)'; document.getElementById('tab-btn-evening').style.boxShadow='none';"><i data-lucide="sun" style="width:14px; height:14px;"></i> Poranna</button>
@@ -153,10 +153,10 @@
                 <div class="checklist" id="evening-routine" style="display:none;"></div>
             </section>
 
-            <section class="naked-section" style="margin-bottom: var(--space-6);">
-                <div style="display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-3);">
-                    <i data-lucide="cloud" style="width: 14px; height: 14px; color: var(--text-secondary);"></i>
-                    <h3 style="font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">iCloud Notes</h3>
+            <section class="naked-section sidebar-section" style="margin-bottom: var(--space-6);">
+                <div class="sidebar-header" style="display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-3);">
+                    <i data-lucide="cloud" style="width: 14px; height: 14px; color: var(--text-secondary); flex-shrink: 0;"></i>
+                    <h3 style="font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; white-space:nowrap;">iCloud Notes</h3>
                 </div>
                 <div style="display:flex; flex-direction:column; gap:2px;">
                     <a href="https://www.icloud.com/notes/note/UHJpdmF0ZTo6Tm90ZXM6OmN1cnJlbnRVc2VyOjo3YTAyZmZhYi1lNDk2LTQ1MWQtYWU2ZC1mY2VlNjJlZWI1MmQ=" target="_blank" class="btn btn-ghost" style="justify-content: flex-start; padding: 4px 8px; font-size: 0.85rem;"><i data-lucide="moon-star" style="width:16px;"></i> Sny</a>

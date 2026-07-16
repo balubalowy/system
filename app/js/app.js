@@ -177,15 +177,16 @@ function initDayTimeTrack() {
         timeFill.style.width = pct + '%';
         timeVal.textContent = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
         
-        // Pasek na kalendarzu tygodniowym
+        // Pasek na kalendarzu tygodniowym i Mini Timeline w Szufladzie
         const timeLine = document.getElementById('current-time-line');
-        if(timeLine) {
-            if(pct >= 0 && pct <= 100) {
-                timeLine.style.top = pct + '%';
-                timeLine.style.display = 'block';
-            } else {
-                timeLine.style.display = 'none';
-            }
+        const sidebarLine = document.getElementById('sidebar-red-line');
+        
+        if(pct >= 0 && pct <= 100) {
+            if(timeLine) { timeLine.style.top = pct + '%'; timeLine.style.display = 'block'; }
+            if(sidebarLine) { sidebarLine.style.top = pct + '%'; sidebarLine.style.display = 'block'; }
+        } else {
+            if(timeLine) timeLine.style.display = 'none';
+            if(sidebarLine) sidebarLine.style.display = 'none';
         }
     }
     update();
@@ -739,25 +740,58 @@ function drawTimeAxis() {
 }
 
 function renderTodayList(events, container) {
+    // container is ignored, we hijack the flow to the new sidebar mini-timeline
+    const target = document.getElementById('sidebar-timeline');
+    if(!target) return;
+    
     const todayStr = getTodayStr();
     const todays = events.filter(e => e.dateStr === todayStr);
     
+    // Setting up the grid layout background for 15 minute intervals
+    target.style.height = '400px';
+    target.style.background = 'var(--bg-secondary)';
+    target.style.backgroundImage = 'linear-gradient(var(--border-subtle) 1px, transparent 1px)';
+    target.style.backgroundSize = '100% calc(100% / 15)';
+    target.style.border = '1px solid var(--border-subtle)';
+    target.style.borderRadius = 'var(--radius-sm)';
+    target.style.marginLeft = '-10px';
+    target.style.marginRight = '10px';
+    target.innerHTML = '';
+    
     if(todays.length === 0) {
-        container.innerHTML = "<div style='padding:5px 0'>Brak spotkań na dziś. Czysty umysł.</div>";
+        target.innerHTML = "<div style='padding:10px; font-size: 0.8rem; text-align:center;'>Brak spotkań na dziś. Czysty umysł.</div>";
         return;
     }
-    
-    todays.sort((a,b) => a.startMins - b.startMins);
 
-    let html = "";
     todays.forEach(ev => {
-        html += `
-        <div class="today-timeline-item" style="border-left-color: ${ev.colorHex};">
-            <div class="today-time mono">${ev.timeStr}</div>
-            <div class="today-title">${ev.title}</div>
+        const times = ev.timeStr.split(" - ");
+        if(times.length !== 2) return;
+        const sParts = times[0].split(":");
+        const eParts = times[1].split(":");
+        const realStartMins = parseInt(sParts[0]) * 60 + parseInt(sParts[1]);
+        const realEndMins = parseInt(eParts[0]) * 60 + parseInt(eParts[1]);
+        const durationMins = realEndMins - realStartMins;
+
+        let topPercent = ((realStartMins - (START_HOUR * 60)) / TOTAL_MINS) * 100;
+        let heightPercent = (durationMins / TOTAL_MINS) * 100;
+
+        if (topPercent < 0) {
+            heightPercent += topPercent;
+            topPercent = 0;
+        }
+        if (topPercent + heightPercent > 100) {
+            heightPercent = 100 - topPercent;
+        }
+
+        let html = `<div style="position: absolute; top: ${topPercent}%; left: 2px; right: 2px; height: ${heightPercent}%; background: ${ev.colorHex}; border-radius: 4px; padding: 2px 4px; font-size: 0.65rem; overflow: hidden; color: #fff; opacity: 0.85; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1); border-left: 2px solid rgba(255,255,255,0.4);">
+            <div style="font-weight: bold; line-height: 1.1;">${ev.timeStr}</div>
+            <div style="line-height: 1.1; margin-top:2px; white-space: normal;">${ev.title}</div>
         </div>`;
+        target.innerHTML += html;
     });
-    container.innerHTML = html;
+
+    // Add the red line indicator
+    target.innerHTML += `<div class="current-time-line" id="sidebar-red-line" style="display:none; left: -10px;"></div>`;
 }
 
 function renderWeekGrid(events) {
