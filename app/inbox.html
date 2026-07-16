@@ -22,19 +22,16 @@
             flex-direction: column;
             gap: var(--space-2);
         }
-        .inbox-textarea {
-            width: 100%;
-            height: 250px;
-            background: transparent;
-            border: none;
-            color: var(--text-primary);
-            font-family: var(--font-sans);
-            font-size: 0.95rem;
-            line-height: 1.6;
-            resize: vertical;
-            outline: none;
-        }
-        .inbox-textarea::placeholder { color: var(--text-secondary); opacity: 0.5; }
+        .inbox-textarea { display: none; }
+        .inbox-task-list { display: flex; flex-direction: column; gap: 8px; min-height: 100px; max-height: 300px; overflow-y: auto; padding-right: 4px; }
+        .inbox-task-item { display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: var(--radius-sm); border: 1px solid transparent; transition: border-color 0.2s; }
+        .inbox-task-item:focus-within { border-color: var(--accent-primary); }
+        .inbox-task-input { flex-grow: 1; background: transparent; border: none; color: var(--text-primary); font-family: var(--font-sans); font-size: 0.9rem; outline: none; }
+        .inbox-task-remove { color: var(--text-secondary); cursor: pointer; opacity: 0.5; transition: color 0.2s, opacity 0.2s; background: none; border: none; padding: 4px; }
+        .inbox-task-remove:hover { opacity: 1; color: var(--accent-warning); }
+        .inbox-task-list::-webkit-scrollbar { width: 6px; }
+        .inbox-task-list::-webkit-scrollbar-track { background: transparent; }
+        .inbox-task-list::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
     </style>
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -69,22 +66,26 @@
             <div class="inbox-grid" style="flex: 2;">
                 <div class="inbox-section" style="border-top: 4px solid var(--accent-primary);">
                     <h2 style="font-size: 1.1rem; display:flex; align-items:center; gap:8px;"><i data-lucide="brain"></i> Kognitywny (Priorytet)</h2>
-                    <textarea id="inbox-priority" class="inbox-textarea" placeholder="- Napisać szkic w Wordzie...&#10;- Przemyśleć strategię danych..."></textarea>
+                    <div id="list-priority" class="inbox-task-list"></div>
+                    <button class="btn btn-ghost add-task-btn" data-key="priority" style="margin-top: 8px; font-size: 0.8rem; width:100%; justify-content:center;"><i data-lucide="plus" style="width:14px;"></i> Dodaj zadanie</button>
                 </div>
                 
                 <div class="inbox-section" style="border-top: 4px solid var(--text-secondary);">
                     <h2 style="font-size: 1.1rem; display:flex; align-items:center; gap:8px;"><i data-lucide="briefcase"></i> Administracja</h2>
-                    <textarea id="inbox-admin" class="inbox-textarea" placeholder="- Zapłacić rachunek X...&#10;- Odpisać na e-mail..."></textarea>
+                    <div id="list-admin" class="inbox-task-list"></div>
+                    <button class="btn btn-ghost add-task-btn" data-key="admin" style="margin-top: 8px; font-size: 0.8rem; width:100%; justify-content:center;"><i data-lucide="plus" style="width:14px;"></i> Dodaj zadanie</button>
                 </div>
                 
                 <div class="inbox-section" style="border-top: 4px solid var(--accent-info);">
                     <h2 style="font-size: 1.1rem; display:flex; align-items:center; gap:8px;"><i data-lucide="coffee"></i> Zadania Lekkie</h2>
-                    <textarea id="inbox-light" class="inbox-textarea" placeholder="- Uporządkować foldery...&#10;- Wysłuchać wykładu pobocznego..."></textarea>
+                    <div id="list-light" class="inbox-task-list"></div>
+                    <button class="btn btn-ghost add-task-btn" data-key="light" style="margin-top: 8px; font-size: 0.8rem; width:100%; justify-content:center;"><i data-lucide="plus" style="width:14px;"></i> Dodaj zadanie</button>
                 </div>
                 
                 <div class="inbox-section" style="border-top: 4px solid var(--accent-success);">
                     <h2 style="font-size: 1.1rem; display:flex; align-items:center; gap:8px;"><i data-lucide="ear"></i> Sensoryczne (Odłączanie)</h2>
-                    <textarea id="inbox-sensory" class="inbox-textarea" placeholder="- Mata z kolcami z ambientem (15 min)...&#10;- Krótki bieg na oczyszczenie..."></textarea>
+                    <div id="list-sensory" class="inbox-task-list"></div>
+                    <button class="btn btn-ghost add-task-btn" data-key="sensory" style="margin-top: 8px; font-size: 0.8rem; width:100%; justify-content:center;"><i data-lucide="plus" style="width:14px;"></i> Dodaj zadanie</button>
                 </div>
             </div>
 
@@ -113,18 +114,74 @@
             db.ref(USER_NODE + 'inbox').once('value').then(snap => {
                 const data = snap.val() || {};
                 boxes.forEach(k => {
-                    if(data[k]) document.getElementById(`inbox-${k}`).value = data[k];
+                    const listEl = document.getElementById(`list-${k}`);
+                    if(!listEl) return;
+                    listEl.innerHTML = '';
+                    if(data[k]) {
+                        let lines = data[k].split('\n').filter(l => l.trim().length > 0);
+                        lines.forEach(l => renderTaskRow(listEl, k, l));
+                    }
+                    if(window.lucide) window.lucide.createIcons();
                 });
             });
 
-            // Zapis
-            boxes.forEach(k => {
-                const el = document.getElementById(`inbox-${k}`);
-                el.addEventListener('input', () => {
-                    clearTimeout(timeout);
-                    timeout = setTimeout(() => {
-                        db.ref(USER_NODE + 'inbox/' + k).set(el.value);
-                    }, 800); // Autosave 0.8s
+            function renderTaskRow(container, key, text = "") {
+                const row = document.createElement('div');
+                row.className = 'inbox-task-item';
+                
+                const input = document.createElement('input');
+                input.className = 'inbox-task-input';
+                input.type = 'text';
+                input.value = text.startsWith('- ') ? text.substring(2) : text;
+                input.placeholder = "Wpisz czynność...";
+                
+                const delBtn = document.createElement('button');
+                delBtn.className = 'inbox-task-remove';
+                delBtn.innerHTML = '<i data-lucide="x"></i>';
+                
+                row.appendChild(input);
+                row.appendChild(delBtn);
+                container.appendChild(row);
+                
+                if(window.lucide) window.lucide.createIcons();
+                
+                input.addEventListener('input', () => autoSave(key));
+                input.addEventListener('keydown', (e) => {
+                    if(e.key === 'Enter') {
+                        e.preventDefault();
+                        renderTaskRow(container, key, "");
+                        const allInputs = container.querySelectorAll('.inbox-task-input');
+                        allInputs[allInputs.length - 1].focus();
+                        autoSave(key);
+                    }
+                });
+                
+                delBtn.addEventListener('click', () => {
+                    row.remove();
+                    autoSave(key);
+                });
+                
+                if(text === "") input.focus();
+            }
+
+            function autoSave(key) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    const container = document.getElementById(`list-${key}`);
+                    const inputs = container.querySelectorAll('.inbox-task-input');
+                    const lines = [];
+                    inputs.forEach(inp => {
+                        const val = inp.value.trim();
+                        if(val.length > 0) lines.push("- " + val);
+                    });
+                    db.ref(USER_NODE + 'inbox/' + key).set(lines.join('\n'));
+                }, 800);
+            }
+            
+            document.querySelectorAll('.add-task-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const k = e.currentTarget.getAttribute('data-key');
+                    renderTaskRow(document.getElementById(`list-${k}`), k, "");
                 });
             });
 

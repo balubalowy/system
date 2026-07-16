@@ -1111,6 +1111,7 @@ function initReadingList() {
             });
         });
     }
+}
 
 // --- INTERACTIVE TASKS ENGINE V16.1 ---
 function initInteractiveTasks() {
