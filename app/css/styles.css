@@ -67,12 +67,7 @@ body {
 body.sidebar-collapsed {
     padding-left: 76px; /* Offset for 60px mini drawer + 16px space */
 }
-body.no-sidebar {
-    padding: var(--space-4) !important;
-}
-body.no-sidebar .topbar {
-    margin-left: 280px !important;
-}
+/* Usunięto nadpisanie no-sidebar, by zachować spójny lewy margines 296px na wszystkich stronach */
 .mono { font-family: var(--font-mono); }
 
 /* TOPBAR */
