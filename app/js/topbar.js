@@ -34,6 +34,18 @@ function initEnergySync() {
     if(!energyFill || !energyDisplay || !db || !USER_NODE) return;
 
     const todayStr = getTodayStr();
+
+    // Samonaprawa struktury energii w bazie danych
+    db.ref(USER_NODE + 'energy').once('value').then(snap => {
+        const val = snap.val();
+        if (typeof val === 'number') {
+            const currentVal = val;
+            db.ref(USER_NODE + 'energy').set({
+                [todayStr]: currentVal
+            });
+        }
+    });
+
     const ref = db.ref(USER_NODE + 'energy/' + todayStr);
 
     // Odczyt z chmury dla dzisiejszego dnia

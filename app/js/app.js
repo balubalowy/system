@@ -137,6 +137,17 @@ function initTopBar() {
     const todayStr = getTodayStr();
     if(dateElement) dateElement.textContent = todayStr;
 
+    // Samonaprawa struktury energii w bazie danych
+    db.ref(USER_NODE + 'energy').once('value').then(snap => {
+        const val = snap.val();
+        if (typeof val === 'number') {
+            const currentVal = val;
+            db.ref(USER_NODE + 'energy').set({
+                [todayStr]: currentVal
+            });
+        }
+    });
+
     const track = document.getElementById('energy-track');
     const fill = document.getElementById('energy-fill');
     const display = document.getElementById('energy-val-display');
