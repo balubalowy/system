@@ -734,20 +734,21 @@ function renderTodayList(events, container) {
     const todays = events.filter(e => e.dateStr === todayStr);
     
     // Setting up the grid layout background for 15 minute intervals
-    target.style.height = '400px';
+    target.style.height = '350px';
     target.style.background = 'var(--bg-secondary)';
     target.style.backgroundImage = 'linear-gradient(var(--border-subtle) 1px, transparent 1px)';
     target.style.backgroundSize = '100% calc(100% / 15)';
     target.style.border = '1px solid var(--border-subtle)';
     target.style.borderRadius = 'var(--radius-sm)';
-    target.style.marginLeft = '-10px';
-    target.style.marginRight = '10px';
+    target.style.marginLeft = '28px';
+    target.style.marginRight = '8px';
+    target.style.overflow = 'hidden';
     target.innerHTML = '';
     
     // Draw Hours on Sidebar Timeline
     for(let h=START_HOUR; h<=END_HOUR; h++) {
         let topPercent = ((h - START_HOUR) / (END_HOUR - START_HOUR)) * 100;
-        target.innerHTML += `<div style="position:absolute; left: -10px; top: ${topPercent}%; transform:translateY(-50%); font-size: 0.6rem; color: var(--text-secondary); opacity: 0.5; font-family: var(--font-mono);">${h.toString().padStart(2,'0')}:00</div>`;
+        target.innerHTML += `<div style="position:absolute; left: -28px; top: ${topPercent}%; transform:translateY(-50%); font-size: 0.6rem; color: var(--text-secondary); opacity: 0.5; font-family: var(--font-mono);">${h.toString().padStart(2,'0')}:00</div>`;
     }
     
     if(todays.length === 0) {
@@ -775,7 +776,7 @@ function renderTodayList(events, container) {
             heightPercent = 100 - topPercent;
         }
 
-        let html = `<div style="position: absolute; top: ${topPercent}%; left: 2px; right: 2px; height: ${heightPercent}%; background: ${ev.colorHex}; border-radius: 4px; padding: 2px 4px; font-size: 0.65rem; overflow: hidden; color: #fff; opacity: 0.85; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1); border-left: 2px solid rgba(255,255,255,0.4);">
+        let html = `<div style="position: absolute; top: ${topPercent}%; left: 2px; right: 2px; height: ${heightPercent}%; background: ${ev.colorHex}; border-radius: 4px; padding: 2px 4px; font-size: 0.65rem; overflow: hidden; color: #fff; opacity: 0.85; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1); border-left: 2px solid rgba(255,255,255,0.4); z-index: 10;">
             <div style="font-weight: bold; line-height: 1.1;">${ev.timeStr}</div>
             <div style="line-height: 1.1; margin-top:2px; white-space: normal;">${ev.title}</div>
         </div>`;
@@ -783,7 +784,7 @@ function renderTodayList(events, container) {
     });
 
     // Add the red line indicator
-    target.innerHTML += `<div class="current-time-line" id="sidebar-red-line" style="display:none; left: -10px;"></div>`;
+    target.innerHTML += `<div class="current-time-line" id="sidebar-red-line" style="display:none; left: -28px; z-index: 20;"></div>`;
 }
 
 function renderWeekGrid(events) {
@@ -866,7 +867,7 @@ function initCharts() {
     if(legendContainer) {
         legendContainer.innerHTML = '';
         labels.forEach((lbl, idx) => {
-            legendContainer.innerHTML += `<span style="display:flex; align-items:center; gap:4px;"><span style="width:8px; height:8px; border-radius:50%; background:${bgColors[idx]};"></span> ${lbl}</span>`;
+            legendContainer.innerHTML += `<span style="display:flex; align-items:center; gap:4px;"><span style="width:8px; height:8px; border-radius:50%; background:${bgColors[idx]};"></span> ${lbl} <span style="font-family:var(--font-mono); opacity:0.5; margin-left:2px;">(${data[idx]}%)</span></span>`;
         });
     }
 

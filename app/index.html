@@ -117,8 +117,9 @@
         </div>
 
         <div class="top-stats">
-            <a href="knowledge.html" class="btn btn-secondary" style="color: var(--accent-primary); border-color: rgba(43, 191, 113, 0.3);" title="Drzewo Wiedzy"><i data-lucide="network"></i></a>
-            <button class="btn btn-ghost" id="btn-zero-energy" style="color: var(--accent-warning); border: 1px solid var(--accent-warning);" title="Włącz tryb Low Energy"><i data-lucide="battery-low"></i></button>
+            <a href="inbox.html" class="btn btn-ghost" title="Skok do Zrzutni Zadań"><i data-lucide="inbox"></i> Zrzutnia</a>
+            <a href="knowledge.html" class="btn btn-ghost" title="Baza Akademicka"><i data-lucide="network"></i> Wiedza</a>
+            <button class="btn btn-ghost" id="btn-zero-energy" title="Włącz tryb Low Energy (Focus)"><i data-lucide="battery-low"></i> Tryb Baterii</button>
         </div>
     </header>
 
@@ -244,9 +245,9 @@
         <main class="main-content">
             
             <section class="panel-section">
-                <div class="section-header" style="flex-direction: column; align-items: flex-start; gap: var(--space-1);">
-                    <h2 style="font-size: 1.4rem; display:flex; align-items:center; gap:8px;">Bloki Pracy <a href="knowledge.html" style="color:var(--text-secondary); opacity: 0.5;" title="Drzewo Wiedzy"><i data-lucide="network"></i></a></h2>
-                    <span class="date-subtitle" id="current-date" style="font-family: var(--font-sans); color: var(--text-secondary); margin-bottom: var(--space-2);">Dzisiaj</span>
+                <div class="section-header" style="flex-direction: column; align-items: flex-start; gap: var(--space-1); border-bottom: 1px solid var(--border-subtle); padding-bottom: 15px; margin-bottom: 24px;">
+                    <h2 style="font-size: 1.5rem; display:flex; align-items:center; gap:12px; font-weight:600;"><i data-lucide="layout-dashboard" style="color:var(--accent-primary); width:24px; height:24px;"></i> Pulpit Główny</h2>
+                    <span class="date-subtitle" id="current-date" style="font-family: var(--font-sans); color: var(--text-secondary); margin-bottom: 0;">Dzisiaj</span>
                 </div>
 
                 <div class="blocks-layout" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--space-4);">
@@ -317,12 +318,6 @@
                     </div>
                 </div>
                 
-                <div class="cal-legend" style="display: flex; gap: 16px; margin-top: 16px; font-size: 0.8rem; color: var(--text-secondary);">
-                    <div style="display:flex; align-items:center; gap:6px;"><span style="display:inline-block; width:10px; height:10px; background:#2F81F7; border-radius:50%;"></span> Nauka & Analiza</div>
-                    <div style="display:flex; align-items:center; gap:6px;"><span style="display:inline-block; width:10px; height:10px; background:#3FB950; border-radius:50%;"></span> Projekty & Finanse</div>
-                    <div style="display:flex; align-items:center; gap:6px;"><span style="display:inline-block; width:10px; height:10px; background:#F85149; border-radius:50%;"></span> Pilne zadania</div>
-                    <div style="display:flex; align-items:center; gap:6px;"><span style="display:inline-block; width:10px; height:10px; border:1px solid var(--border-subtle); border-radius:50%; background:rgba(255,255,255,0.05);"></span> Czas Skupienia</div>
-                </div>
             </section>
 
             <section class="panel-section">
