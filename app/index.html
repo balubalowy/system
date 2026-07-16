@@ -80,7 +80,7 @@
     <header class="topbar">
         <div class="logo">
             <i data-lucide="command" class="symbol"></i>
-            <h1>Twój <span>System</span></h1>
+            <h1>B <span>-Core</span></h1>
             <span id="cloud-status" style="margin-left: 10px; font-size:10px; color:var(--accent-success); display:none;"><i data-lucide="cloud-lightning" style="width:12px; height:12px; vertical-align:middle; margin-right:4px;"></i>Synced</span>
             <button class="btn btn-ghost" id="theme-toggle-btn" style="margin-left: 10px; padding:4px 8px;" title="Przełącz Motyw (Jasny/Ciemny)"><i data-lucide="sun-moon"></i></button>
         </div>
@@ -216,8 +216,11 @@
                             <span class="time-limit" id="timer-1" style="font-size: 2.5rem; font-weight: 700; color: var(--accent-primary);">60:00</span>
                         </div>
                         <div class="hero-action">
-                            <div class="suggested-task" id="suggested-priority" style="font-size: 1rem; color: var(--text-primary); max-width: 60%;">Pobieram z kalendarza...</div>
-                            <button class="btn btn-primary start-block-btn" data-target="1" data-time="60" style="padding: 12px 32px; font-size: 1.05rem;"><i data-lucide="play"></i> Rozpocznij sesję</button>
+                            <div class="suggested-task" id="suggested-priority" style="font-size: 1rem; color: var(--text-primary); max-width: 60%; line-height:1.4;">Zadanie zostanie pobrane ze Zrzutni...</div>
+                            <div style="display:flex; gap:8px;">
+                                <a href="knowledge.html" class="btn btn-secondary" style="padding: 12px; font-size: 1.05rem; border-color: var(--accent-primary);" title="Otwórz bibliotekę akademicką (Most)"><i data-lucide="network"></i></a>
+                                <button class="btn btn-primary start-block-btn" data-target="1" data-time="60" style="padding: 12px 32px; font-size: 1.05rem;"><i data-lucide="play"></i> Rozpocznij sesję</button>
+                            </div>
                         </div>
                     </div>
 
@@ -226,7 +229,7 @@
                         <div class="card block-card admin" id="block-2">
                             <div class="card-header"><h3 style="font-size: 0.9rem;">Administracja</h3><span class="time-limit" id="timer-2" style="font-size: 1rem;">30:00</span></div>
                             <div class="action-area" style="background: transparent; padding: 0;">
-                                <div class="suggested-task" id="suggested-admin" style="font-size: 0.8rem; margin-bottom: var(--space-3);">Korespondencja, budżet domowy.</div>
+                                <div class="suggested-task" id="suggested-admin" style="font-size: 0.8rem; margin-bottom: var(--space-3); line-height:1.3;">Zadanie zostanie pobrane ze Zrzutni...</div>
                                 <div class="action-row"><button class="btn btn-secondary start-block-btn" data-target="2" data-time="30"><i data-lucide="play"></i> Start (30m)</button></div>
                             </div>
                         </div>
@@ -317,6 +320,40 @@
     <script src="js/app.js"></script>
     <script>
         lucide.createIcons();
+
+        // 1. SILNIK TRANSFEROWY (Harvesting Zrzutni Zadań)
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof db !== 'undefined') {
+                db.ref(USER_NODE + 'inbox').once('value').then(snap => {
+                    const data = snap.val() || {};
+                    const maps = { priority: 'suggested-priority', admin: 'suggested-admin' };
+                    for (let key in maps) {
+                        if (data[key]) {
+                            const firstLine = data[key].split('\n').map(l => l.trim()).filter(l => l.length > 0)[0];
+                            if (firstLine) {
+                                document.getElementById(maps[key]).innerHTML = `<span style="color:var(--text-secondary); font-size:0.8rem; font-weight:600; display:block; margin-bottom:4px;">[Sugestia z Twojej Zrzutni]</span>${firstLine}`;
+                            }
+                        }
+                    }
+                });
+            }
+        });
+
+        // 2. AWARYJNY ESC (Anty-friction sensoryczny)
+        window.addEventListener('keydown', (e) => {
+            if (e.key === "Escape") {
+                // Zrzucanie Focus Mode
+                const focusOverlay = document.getElementById('focus-overlay');
+                if (focusOverlay && focusOverlay.style.display !== 'none') {
+                    focusOverlay.style.display = 'none';
+                    if (window.clearInterval) clearInterval(window.focusTimerInterval);
+                }
+                
+                // Zrzucanie Modali (np. PIN, Drzewo Wiedzy)
+                const knowledgeModal = document.getElementById('knowledge-modal');
+                if (knowledgeModal) knowledgeModal.style.display = 'none';
+            }
+        });
     </script>
 </body>
 </html>
