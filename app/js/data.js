@@ -33,47 +33,47 @@ window.appData = {
         "Matematyka & Statystyka": {
             title: "Matematyka & Statystyka",
             items: [
-                { title: "rachunek prawdopodobienstwa", level: 40, topics: ["Podstawy", "Wzór Bayesa"] },
-                { title: "statystyka opisowa", level: 75, topics: ["Miary tendencji centralnej", "Wariancja i odchylenie", "Rozkłady empiryczne"] },
-                { title: "statystyka matematyczna", level: 30, topics: ["Rozkłady teoretyczne", "Estymacja", "Weryfikacja hipotez", "Testy T-test/ANOVA"] },
-                { title: "matematyka wyższa", level: 30, topics: ["Macierze", "Układy równań liniowych", "Całki i pochodne"] }
+                { title: "Rachunek prawdopodobieństwa", level: 40, topics: ["Podstawy", "Wzór Bayesa"] },
+                { title: "Statystyka opisowa", level: 75, topics: ["Miary tendencji centralnej", "Wariancja i odchylenie", "Rozkłady empiryczne"] },
+                { title: "Statystyka matematyczna", level: 30, topics: ["Rozkłady teoretyczne", "Estymacja", "Weryfikacja hipotez", "Testy T-test/ANOVA"] },
+                { title: "Matematyka wyższa", level: 30, topics: ["Macierze", "Układy równań liniowych", "Całki i pochodne"] }
             ]
         },
         "Ekonomia & Finanse": {
             title: "Ekonomia & Finanse",
             items: [
-                { title: "meteorologia", level: 10, topics: ["Podstawy synoptyki", "Modele numeryczne", "Niże i wyże"] },
-                { title: "finanse", level: 50, topics: ["Mechanika stóp procentowych", "Wycena spółek"] },
-                { title: "rachunkowość", level: 45, topics: ["Bilans", "Rachunek zysków i strat", "Cash Flow"] },
-                { title: "ekonomia", level: 40, topics: ["Mikroekonomia", "Makroekonomia"] }
+                { title: "Meteorologia", level: 10, topics: ["Podstawy synoptyki", "Modele numeryczne", "Niże i wyże"] },
+                { title: "Finanse", level: 50, topics: ["Mechanika stóp procentowych", "Wycena spółek"] },
+                { title: "Rachunkowość", level: 45, topics: ["Bilans", "Rachunek zysków i strat", "Cash Flow"] },
+                { title: "Ekonomia", level: 40, topics: ["Mikroekonomia", "Makroekonomia"] }
             ]
         },
         "Technologie & Analityka": {
             title: "Technologie & Analityka",
             items: [
-                { title: "excel", level: 75, topics: ["Tabele Przestawne (Pivot)", "Zaawansowane wykresy"] },
-                { title: "python", level: 5, topics: ["Podstawowe typy", "Operacje Array"] },
-                { title: "vba", level: 0, topics: ["Makra", "Edytor VBE"] },
-                { title: "power bi", level: 2, topics: ["Podstawy DAX", "Wizualizacje"] },
-                { title: "sql", level: 10, topics: ["SELECT/WHERE", "JOINy", "Agregacje"] },
-                { title: "R (jezyk pr)", level: 0, topics: ["Wizualizacje R", "Czyszczenie danych"] },
-                { title: "AI (sztuczna inteligencja)", level: 50, topics: ["LLMs", "Generative AI", "Prompty"] },
-                { title: "użytkowanie komputera i telefonu ogółem , np. pisanie szybkie", level: 80, topics: ["Skróty klawiszowe", "Pisanie bezwzrokowe"] }
+                { title: "Excel", level: 75, topics: ["Tabele Przestawne (Pivot)", "Zaawansowane wykresy"] },
+                { title: "Python", level: 5, topics: ["Podstawowe typy", "Operacje Array"] },
+                { title: "VBA", level: 0, topics: ["Makra", "Edytor VBE"] },
+                { title: "Power BI", level: 2, topics: ["Podstawy DAX", "Wizualizacje"] },
+                { title: "SQL", level: 10, topics: ["SELECT/WHERE", "JOINy", "Agregacje"] },
+                { title: "R (Język programowania)", level: 0, topics: ["Wizualizacje R", "Czyszczenie danych"] },
+                { title: "AI (Sztuczna Inteligencja)", level: 50, topics: ["LLMs", "Generative AI", "Prompty"] },
+                { title: "Użytkowanie komputera i telefonu (szybkie pisanie)", level: 80, topics: ["Skróty klawiszowe", "Pisanie bezwzrokowe"] }
             ]
         },
         "Języki & Komunikacja": {
             title: "Języki & Komunikacja",
             items: [
-                { title: "jezyk angielski", level: 35, topics: ["Rozmowa płynna", "Maile formalne"] },
-                { title: "jezyk hiszpanski", level: 10, topics: ["Podstawowe słówka", "Rozumienie tekstu"] },
-                { title: "uzytkowanie polskiego języka", level: 90, topics: ["Precyzja wysławiania", "Tworzenie opisów"] }
+                { title: "Język angielski", level: 35, topics: ["Rozmowa płynna", "Maile formalne"] },
+                { title: "Język hiszpański", level: 10, topics: ["Podstawowe słówka", "Rozumienie tekstu"] },
+                { title: "Użytkowanie polskiego języka", level: 90, topics: ["Precyzja wysławiania", "Tworzenie opisów"] }
             ]
         },
         "Specjalistyczne & Rozwój": {
             title: "Specjalistyczne & Rozwój",
             items: [
-                { title: "tworzenie systemowe, planowanie", level: 65, topics: ["Zarządzanie czasem", "Time-Grid"] },
-                { title: "samorozwój psychiczny, ogarnianie życia, by było git", level: 85, topics: ["Kognitywistyka / ADHD", "Działanie układu dopaminergicznego"] }
+                { title: "Tworzenie systemowe i planowanie", level: 65, topics: ["Zarządzanie czasem", "Time-Grid"] },
+                { title: "Samorozwój i ogarnianie życia (by było git)", level: 85, topics: ["Kognitywistyka / ADHD", "Działanie układu dopaminergicznego"] }
             ]
         }
     }
