@@ -680,14 +680,13 @@ function renderCalendarViews() {
         document.getElementById('calendar-month-view').style.display = 'none';
         
         validDates.forEach((dStr, idx) => {
-            const col = document.getElementById(`col-${idx}`);
-            if(!col) return;
+            const headerEl = document.getElementById(`header-${idx}`);
+            if(!headerEl) return;
             const parts = dStr.split('-');
-            const nameEl = col.querySelector('.day-name');
             const dayNames = ["PON", "WT", "ŚR", "CZW", "PT", "SOB", "NDZ"];
-            nameEl.textContent = `${dayNames[idx]} ${parts[2]}.${parts[1]}`;
-            if(dStr === getTodayStr()) nameEl.style.color = 'var(--accent-primary)';
-            else nameEl.style.color = '';
+            headerEl.textContent = `${dayNames[idx]} ${parts[2]}.${parts[1]}`;
+            if(dStr === getTodayStr()) headerEl.style.color = 'var(--accent-primary)';
+            else headerEl.style.color = 'var(--text-secondary)';
         });
         renderWeekGrid(weeklyEvents);
     } else {

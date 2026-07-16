@@ -7,33 +7,33 @@ $onedrivePath = "C:\Users\baluk\OneDrive - Uniwersytet Ekonomiczny we Wrocławiu
 
 Write-Host "Rozpoczynam zwiad plikowy Local Agent Bridge..." -ForegroundColor Cyan
 
-$photosPath = Join-Path $onedrivePath "Fotografie"
-$excelPath = Join-Path $onedrivePath "Modele Excel"
-$stormsPath = Join-Path $onedrivePath "Pamietnik Burz"
+$photosPath = Join-Path $onedrivePath "[-] FOTOGRAFIE"
+$excelPath = Join-Path $onedrivePath "[-] MODEL EXCEL"
+$stormsPath = Join-Path $onedrivePath "[-] APLIKACJE PYTHON"
 
 $photosCount = 0
 $excelCount = 0
 
-if (Test-Path $photosPath) {
-    $photosCount = (Get-ChildItem -Path $photosPath -Recurse -File).Count
+if (Test-Path -LiteralPath $photosPath) {
+    $photosCount = (Get-ChildItem -LiteralPath $photosPath -Recurse -File).Count
     Write-Host "Naliczono zdjec: $photosCount" -ForegroundColor Green
 } else {
     Write-Host "Folder Fotografie nie zostal znaleziony." -ForegroundColor Yellow
 }
 
-if (Test-Path $excelPath) {
-    $excelCount = (Get-ChildItem -Path $excelPath -Recurse -File).Count
+if (Test-Path -LiteralPath $excelPath) {
+    $excelCount = (Get-ChildItem -LiteralPath $excelPath -Recurse -File).Count
     Write-Host "Naliczono modeli Excel: $excelCount" -ForegroundColor Green
 } else {
     Write-Host "Folder Modele Excel nie zostal znaleziony." -ForegroundColor Yellow
 }
 
 $stormsCount = 0
-if (Test-Path $stormsPath) {
-    $stormsCount = (Get-ChildItem -Path $stormsPath -Recurse -File).Count
-    Write-Host "Naliczono pamietnikow burz: $stormsCount" -ForegroundColor Green
+if (Test-Path -LiteralPath $stormsPath) {
+    $stormsCount = (Get-ChildItem -LiteralPath $stormsPath -Recurse -File).Count
+    Write-Host "Naliczono aplikacji python: $stormsCount" -ForegroundColor Green
 } else {
-    Write-Host "Folder Pamietnik Burz nie zostal znaleziony." -ForegroundColor Yellow
+    Write-Host "Folder Aplikacje Python nie zostal znaleziony." -ForegroundColor Yellow
 }
 
 $jsContent = "window.localAgentStats = { photos: $photosCount, excels: $excelCount, storms: $stormsCount, lastSync: '$(Get-Date -Format "yyyy-MM-dd HH:mm")' };"

@@ -8,9 +8,12 @@
     <link rel="stylesheet" href="css/styles.css">
     <script src="js/local_data.js"></script>
     <style>
-        .container.sidebar-collapsed { grid-template-columns: 0px 1fr; gap: 0;}
-        .sidebar { overflow: hidden; transition: opacity 0.2s ease, padding 0.3s ease; width: 100%; white-space: nowrap;}
-        .container.sidebar-collapsed .sidebar { opacity: 0; pointer-events: none;}
+        .container.sidebar-collapsed { grid-template-columns: 60px 1fr; gap: var(--space-6);}
+        .sidebar { overflow: hidden; transition: width 0.2s ease, opacity 0.2s ease;}
+        .container.sidebar-collapsed .sidebar { width: 60px; white-space:nowrap; }
+        .container.sidebar-collapsed .sidebar h2, 
+        .container.sidebar-collapsed .sidebar .checklist-item label, 
+        .container.sidebar-collapsed .sidebar .stat-text { opacity: 0; pointer-events:none; }
     </style>
     
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -27,7 +30,7 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-YOUR_MEASUREMENT_ID');
+      gtag('config', 'G-505S145DR8');
     </script>
 </head>
 <body>
@@ -101,19 +104,19 @@
             <button class="btn btn-ghost" id="theme-toggle-btn" style="margin-left: 10px; padding:4px 8px;" title="Przełącz Motyw"><i data-lucide="sun-moon"></i></button>
         </div>
         
-        <div class="energy-control" style="display:flex; flex-direction:column; gap:6px;">
+        <div class="energy-control" style="display:flex; flex-direction:column; gap:6px; flex-grow:1; max-width:400px; margin:0 20px;">
             <div style="display:flex; align-items:center; gap:8px;">
-                <label style="width:50px;">Energia</label>
-                <div class="energy-track" id="energy-track" title="Kliknij, by ustawić energię">
-                    <div class="energy-fill" id="energy-fill" style="width: 50%;"></div>
+                <label style="width:50px; color:var(--text-secondary); font-size:0.85rem; font-weight:500;">Energia</label>
+                <div class="energy-track" id="energy-track" title="Kliknij, by ustawić energię" style="flex-grow:1; height:6px; background:var(--border-strong); border-radius:3px; position:relative; overflow:hidden; cursor:pointer;">
+                    <div class="energy-fill" id="energy-fill" style="width: 50%; height:100%; background:var(--accent-primary); border-radius:3px; transition:width 0.3s ease;"></div>
                 </div>
-                <span class="energy-val" id="energy-val-display" style="width:40px;">5/10</span>
+                <span class="energy-val" id="energy-val-display" style="width:40px; font-family:var(--font-mono); font-weight:500; font-size:0.85rem;">5/10</span>
             </div>
             <div style="display:flex; align-items:center; gap:8px;">
-                <label style="width:50px; color:var(--accent-info);">Dzień</label>
-                <div class="energy-track" style="background:rgba(255,255,255,0.05); pointer-events:none; position:relative;">
-                    <div class="energy-fill" id="time-fill" style="width: 0%; background:var(--accent-info); transition: width 1s linear;"></div>
-                    <span id="time-val-display" style="position:absolute; left:50%; top:50%; transform:translate(-50%, -50%); font-size:0.7rem; font-weight:600; font-family:var(--font-mono); color:#fff; mix-blend-mode:difference;">--:--</span>
+                <label style="width:50px; color:var(--accent-info); font-size:0.85rem; font-weight:500;">Dzień</label>
+                <div class="energy-track" style="flex-grow:1; height:6px; background:rgba(255,255,255,0.05); border-radius:3px; position:relative; overflow:hidden;">
+                    <div class="energy-fill" id="time-fill" style="width: 0%; height:100%; background:var(--accent-info); border-radius:3px; transition: width 1s linear;"></div>
+                    <span id="time-val-display" style="position:absolute; left:50%; top:50%; transform:translate(-50%, -50%); font-size:0.6rem; font-weight:600; font-family:var(--font-mono); color:#fff; mix-blend-mode:difference;">--:--</span>
                 </div>
                 <span style="width:40px;"></span>
             </div>
@@ -210,32 +213,37 @@
                 <textarea id="ai-dump" rows="3" placeholder="Szybki pomysł na projekt, skrypt, funkcję... Wrzucasz, zapominasz, do zrobienia." style="width:100%; background:var(--bg-secondary); border:1px solid var(--border-subtle); color:var(--text-primary); padding:10px; font-family:var(--font-sans); font-size:0.85rem; border-radius: var(--radius-sm); resize:vertical; margin-bottom:12px; outline:none;"></textarea>
                 <button class="btn btn-secondary" id="btn-save-idea" style="width:100%; color:var(--accent-info);"><i data-lucide="download-cloud"></i> Wrzuć do Bazy</button>
             </section>
+
+            <!-- Local Agent Stats w Sidebar -->
+            <section class="naked-section" style="margin-top: 30px; border-top: 1px solid var(--border-subtle); padding-top: var(--space-4);">
+                <div style="display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-3); color: var(--text-secondary);">
+                    <i data-lucide="hard-drive" style="width: 14px;"></i>
+                    <h2 style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; white-space:nowrap;">Pamięć Lokalna</h2>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:12px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <i data-lucide="image" style="width:16px; color:var(--accent-primary);"></i>
+                        <span class="stat-text" style="font-size:0.8rem; color:var(--text-secondary); white-space:nowrap;">Zdjęcia C:</span>
+                        <span class="stat-text" id="stat-photos" style="font-size:0.9rem; font-weight:700; color:var(--text-primary); font-family:var(--font-mono); margin-left:auto;">0</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <i data-lucide="table-2" style="width:16px; color:var(--accent-primary);"></i>
+                        <span class="stat-text" style="font-size:0.8rem; color:var(--text-secondary); white-space:nowrap;">Excel:</span>
+                        <span class="stat-text" id="stat-excels" style="font-size:0.9rem; font-weight:700; color:var(--text-primary); font-family:var(--font-mono); margin-left:auto;">0</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <i data-lucide="terminal-square" style="width:16px; color:var(--accent-primary);"></i>
+                        <span class="stat-text" style="font-size:0.8rem; color:var(--text-secondary); white-space:nowrap;">Skrypty .py:</span>
+                        <span class="stat-text" id="stat-storms" style="font-size:0.9rem; font-weight:700; color:var(--text-primary); font-family:var(--font-mono); margin-left:auto;">0</span>
+                    </div>
+                    <div class="stat-text" style="font-size:0.65rem; color:var(--accent-success); margin-top:8px;" id="stat-sync">Sync: Brak</div>
+                </div>
+            </section>
         </aside>
 
         <!-- MAIN CONTENT -->
         <main class="main-content">
             
-            <!-- Local Agent Stats -->
-            <section class="panel-section" style="margin-bottom: var(--space-5); display:flex; justify-content:space-between; align-items:center; background:rgba(43, 191, 113, 0.05); border-color:rgba(43, 191, 113, 0.2);">
-                    <div style="display:flex; flex-direction:column;">
-                        <span style="font-size:0.75rem; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.05em;"><i data-lucide="image" style="width:12px; vertical-align:middle;"></i> Zdjęcia na dysku C:</span>
-                        <span id="stat-photos" style="font-size:1.2rem; font-weight:700; color:var(--text-primary); font-family:var(--font-mono);">0</span>
-                    </div>
-                    <div style="display:flex; flex-direction:column;">
-                        <span style="font-size:0.75rem; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.05em;"><i data-lucide="table-2" style="width:12px; vertical-align:middle;"></i> Modele Excel</span>
-                        <span id="stat-excels" style="font-size:1.2rem; font-weight:700; color:var(--text-primary); font-family:var(--font-mono);">0</span>
-                    </div>
-                    <div style="display:flex; flex-direction:column;">
-                        <span style="font-size:0.75rem; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.05em;"><i data-lucide="cloud-lightning" style="width:12px; vertical-align:middle;"></i> Pamiętnik Burz</span>
-                        <span id="stat-storms" style="font-size:1.2rem; font-weight:700; color:var(--text-primary); font-family:var(--font-mono);">0</span>
-                    </div>
-                </div>
-                <div style="text-align:right;">
-                    <span style="font-size:0.75rem; color:var(--accent-success);"><i data-lucide="hard-drive" style="width:14px; vertical-align:middle;"></i> Local Bridge Active</span><br>
-                    <span style="font-size:0.65rem; color:var(--text-secondary);" id="stat-sync">Sync: Brak</span>
-                </div>
-            </section>
-
             <section class="panel-section">
                 <div class="section-header" style="flex-direction: column; align-items: flex-start; gap: var(--space-1);">
                     <h2 style="font-size: 1.4rem; display:flex; align-items:center; gap:8px;">Bloki Pracy <a href="knowledge.html" style="color:var(--text-secondary); opacity: 0.5;" title="Drzewo Wiedzy"><i data-lucide="network"></i></a></h2>
@@ -299,17 +307,27 @@
                     </div>
                 </div>
                 
-                <!-- Widok Tygodniowy (Siatka) -->
-                <div class="calendar-grid-wrapper" id="calendar-week-view">
-                    <div class="time-axis" id="time-axis"></div>
-                    <div class="days-columns" id="week-columns">
-                        <div class="day-col" id="col-0"><div class="day-name">PON</div><div class="events-container"></div></div>
-                        <div class="day-col" id="col-1"><div class="day-name">WT</div><div class="events-container"></div></div>
-                        <div class="day-col" id="col-2"><div class="day-name">ŚR</div><div class="events-container"></div></div>
-                        <div class="day-col" id="col-3"><div class="day-name">CZW</div><div class="events-container"></div></div>
-                        <div class="day-col" id="col-4"><div class="day-name">PT</div><div class="events-container"></div></div>
-                        <div class="day-col" id="col-5"><div class="day-name">SOB</div><div class="events-container"></div></div>
-                        <div class="day-col" id="col-6"><div class="day-name">NDZ</div><div class="events-container"></div></div>
+                 <div id="calendar-week-view" style="display: flex; flex-direction: column;">
+                    <div class="calendar-headers" style="display:flex; margin-bottom:0; border-bottom:1px solid var(--border-subtle); padding-left:55px; background:var(--bg-tertiary); border-radius: var(--radius-md) var(--radius-md) 0 0;">
+                        <div class="day-header" id="header-0" style="flex:1; text-align:center; font-size:0.8rem; font-weight:500; color:var(--text-secondary); padding: 8px 0; border-right:1px solid var(--border-subtle);">PON 13.07</div>
+                        <div class="day-header" id="header-1" style="flex:1; text-align:center; font-size:0.8rem; font-weight:500; color:var(--text-secondary); padding: 8px 0; border-right:1px solid var(--border-subtle);">WT 14.07</div>
+                        <div class="day-header" id="header-2" style="flex:1; text-align:center; font-size:0.8rem; font-weight:500; color:var(--text-secondary); padding: 8px 0; border-right:1px solid var(--border-subtle);">ŚR 15.07</div>
+                        <div class="day-header" id="header-3" style="flex:1; text-align:center; font-size:0.8rem; font-weight:500; color:var(--text-secondary); padding: 8px 0; border-right:1px solid var(--border-subtle);">CZW 16.07</div>
+                        <div class="day-header" id="header-4" style="flex:1; text-align:center; font-size:0.8rem; font-weight:500; color:var(--text-secondary); padding: 8px 0; border-right:1px solid var(--border-subtle);">PT 17.07</div>
+                        <div class="day-header" id="header-5" style="flex:1; text-align:center; font-size:0.8rem; font-weight:500; color:var(--text-secondary); padding: 8px 0; border-right:1px solid var(--border-subtle);">SOB 18.07</div>
+                        <div class="day-header" id="header-6" style="flex:1; text-align:center; font-size:0.8rem; font-weight:500; color:var(--text-secondary); padding: 8px 0;">NDZ 19.07</div>
+                    </div>
+                    <div class="calendar-grid-wrapper" style="border-top:none; border-top-left-radius:0; border-top-right-radius:0;">
+                        <div class="time-axis" id="time-axis"></div>
+                        <div class="days-columns" id="days-columns">
+                            <div class="day-col" id="col-0"><div class="events-container"></div></div>
+                            <div class="day-col" id="col-1"><div class="events-container"></div></div>
+                            <div class="day-col" id="col-2"><div class="events-container"></div></div>
+                            <div class="day-col" id="col-3"><div class="events-container"></div></div>
+                            <div class="day-col" id="col-4"><div class="events-container"></div></div>
+                            <div class="day-col" id="col-5"><div class="events-container"></div></div>
+                            <div class="day-col" id="col-6"><div class="events-container"></div></div>
+                        </div>
                     </div>
                 </div>
                 
