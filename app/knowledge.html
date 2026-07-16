@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Drzewo Wiedzy - B-Core</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css?v=19.9">
+    <link rel="stylesheet" href="css/styles.css?v=20.0">
     <style>
         .tree-scroll::-webkit-scrollbar { width: 4px; }
         .tree-scroll::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
@@ -107,10 +107,75 @@
             
             db.ref(USER_NODE + 'knowledge').once('value').then(snap => {
                 localProgress = snap.val() || {};
+                
+                // Migracja starej liniowej bazy na nową nieliniową
+                Object.keys(localProgress).forEach(category => {
+                    const progress = localProgress[category];
+                    const treeArr = window.KnowledgeTree ? window.KnowledgeTree[category] : null;
+                    if(progress && treeArr && progress.level > 0 && (!progress.completed || Object.keys(progress.completed).length === 0)) {
+                        const total = treeArr.length;
+                        const maxIdx = Math.floor((progress.level / 100) * total) - 1;
+                        progress.completed = {};
+                        for(let i = 0; i <= maxIdx; i++) {
+                            progress.completed[i] = true;
+                        }
+                    }
+                });
+                
                 renderSidebar();
             }).catch(e => {
                 renderSidebar();
             });
+
+            function getTopicDetails(category, title, item) {
+                // Jeśli item jest obiektem i ma predefiniowane wyzwania (tak jak Excel)
+                if (typeof item === 'object') {
+                    return {
+                        yt: item.yt || null,
+                        challenge: item.challenge || null,
+                        description: null,
+                        subtopics: null
+                    };
+                }
+                
+                // W przeciwnym razie generujemy logiczny opis i 3 podtematy do opanowania:
+                const description = `Wprowadzenie i ustrukturyzowana wiedza do zagadnienia **${title}** w ramach ścieżki **${category}**. Temat ten obejmuje kluczowe zagadnienia teoretyczne oraz zastosowania w analizach i projektach.`;
+                
+                let subtopics = [
+                    "Koncepcja i definicje podstawowe",
+                    "Praktyczna implementacja w zadaniach analitycznych",
+                    "Najczęstsze błędy interpretacyjne i dobre praktyki"
+                ];
+                
+                const lowerCat = category.toLowerCase();
+                
+                if (lowerCat.includes('python') || lowerCat.includes('sql') || lowerCat.includes('vba')) {
+                    subtopics = [
+                        "Składnia i struktura poleceń (Syntaktyka)",
+                        "Debugowanie kodu i optymalizacja wydajności",
+                        "Przykładowe scenariusze wdrożenia w projektach"
+                    ];
+                } else if (lowerCat.includes('matematyk') || lowerCat.includes('statystyk') || lowerCat.includes('algebra') || lowerCat.includes('prawdopodob')) {
+                    subtopics = [
+                        "Wzory matematyczne i dowód twierdzenia",
+                        "Obliczanie i interpretacja wyników próbki",
+                        "Zastosowanie w modelowaniu statystycznym"
+                    ];
+                } else if (lowerCat.includes('finans') || lowerCat.includes('wycena') || lowerCat.includes('rachunkowo') || lowerCat.includes('ekonom')) {
+                    subtopics = [
+                        "Podstawa prawna i standardy sprawozdawczości",
+                        "Wskaźniki finansowe i ich znaczenie w biznesie",
+                        "Symulacja i prognozowanie przyszłych przepływów"
+                    ];
+                }
+                
+                return {
+                    yt: null,
+                    challenge: null,
+                    description: description,
+                    subtopics: subtopics
+                };
+            }
 
             // Category color map
             function getCatColor(cat) {
@@ -129,22 +194,6 @@
                 const sidebar = document.getElementById('k-sidebar');
                 globalTree = window.KnowledgeTree || {};
                 let keys = Object.keys(globalTree);
-                
-                // --- MIGRACJA HISTORII (Legacy Sync) ---
-                if (window.appData && window.appData.knowledgeAreas) {
-                    Object.values(window.appData.knowledgeAreas).forEach(area => {
-                        area.items.forEach(item => {
-                            if (globalTree[item.title] && !localProgress[item.title] && item.level > 0) {
-                                db.ref(USER_NODE + 'knowledge/' + item.title).set({
-                                    level: item.level,
-                                    updatedAt: Date.now()
-                                });
-                                localProgress[item.title] = { level: item.level };
-                            }
-                        });
-                    });
-                }
-                // --- END MIGRACJA ---
                 
                 if(keys.length === 0) {
                     sidebar.innerHTML = '<div style="color:var(--text-secondary); text-align:center;">Oczekuje na zapis bazy przez Agenta w tle... (Odśwież)</div>';
@@ -186,9 +235,8 @@
             function renderMainArea(category, color, currentLevel) {
                 const main = document.getElementById('k-main');
                 const items = globalTree[category] || [];
-                
                 const totalItems = items.length;
-                const maxCompletedIndex = Math.floor((currentLevel / 100) * totalItems) - 1;
+                const completedMap = (localProgress[category] && localProgress[category].completed) || {};
 
                 let html = `
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border-subtle);">
@@ -202,37 +250,50 @@
                 `;
 
                 items.forEach((item, idx) => {
-                    const isDone = idx <= maxCompletedIndex;
+                    const isDone = completedMap[idx] === true;
                     const icon = isDone ? 'check-circle-2' : 'circle';
                     const itemColor = isDone ? color : 'var(--text-secondary)';
-                    const opacity = isDone ? '1' : '0.45';
+                    const opacity = isDone ? '1' : '0.5';
                     const title = typeof item === 'object' ? item.title : item;
-                    const hasDetails = typeof item === 'object' && (item.yt || item.challenge);
+                    const details = getTopicDetails(category, title, item);
                     
                     html += `
-                        <div class="knowledge-item interactive" onclick="${hasDetails ? `window.toggleItemDetails(${idx})` : `window.updateKnowledgeProgress('${category}', ${idx}, ${totalItems})`}" style="opacity: ${opacity}; font-size: 0.95rem; padding: 12px 12px; display:flex; flex-direction:column; gap:4px; background: ${isDone ? 'rgba(255,255,255,0.03)' : 'transparent'}; border-radius: 6px; cursor: pointer; transition: all 0.2s; border: 1px solid ${isDone ? 'rgba(255,255,255,0.05)' : 'transparent'}; margin-bottom: 2px;">
+                        <div class="knowledge-item interactive" onclick="window.toggleItemDetails(${idx})" style="opacity: ${opacity}; font-size: 0.95rem; padding: 12px 12px; display:flex; flex-direction:column; gap:4px; background: ${isDone ? 'rgba(255,255,255,0.03)' : 'transparent'}; border-radius: 6px; cursor: pointer; transition: all 0.2s; border: 1px solid ${isDone ? 'rgba(255,255,255,0.05)' : 'transparent'}; margin-bottom: 2px;">
                             <div style="display:flex; align-items:center; gap:16px; width: 100%;">
-                                <div onclick="event.stopPropagation(); window.updateKnowledgeProgress('${category}', ${idx}, ${totalItems})" style="display:flex; align-items:center; cursor:pointer; padding:4px;" title="${isDone ? 'Oznacz jako nieukończone' : 'Oznacz jako ukończone'}">
-                                    <i data-lucide="${icon}" style="width: 18px; height: 18px; min-width:18px; color: ${itemColor};"></i>
-                                </div>
                                 <span style="color: ${isDone ? 'var(--text-primary)' : 'var(--text-secondary)'}; flex-grow: 1;"><strong>${idx+1}.</strong> ${title}</span>
-                                ${hasDetails ? `<i data-lucide="chevron-down" id="chevron-${idx}" style="width:16px; height:16px; color:var(--text-secondary); transition: transform 0.2s; flex-shrink: 0;"></i>` : ''}
+                                
+                                <div style="display:flex; align-items:center; gap:12px; flex-shrink: 0;">
+                                    <i data-lucide="chevron-down" id="chevron-${idx}" style="width:16px; height:16px; color:var(--text-secondary); transition: transform 0.2s;"></i>
+                                    <div onclick="event.stopPropagation(); window.updateKnowledgeProgress('${category}', ${idx}, ${totalItems})" style="display:flex; align-items:center; cursor:pointer; padding:4px;" title="${isDone ? 'Oznacz jako nieukończone' : 'Oznacz jako ukończone'}">
+                                        <i data-lucide="${icon}" style="width: 18px; height: 18px; min-width:18px; color: ${itemColor};"></i>
+                                    </div>
+                                </div>
                             </div>
-                            ${hasDetails ? `
+                            
                             <div id="details-${idx}" style="display:none; width:100%; margin-top:12px; padding:12px; background:rgba(0,0,0,0.3); border-radius:6px; border:1px solid var(--border-subtle); flex-direction:column; gap:12px;" onclick="event.stopPropagation();">
-                                ${item.yt ? `
+                                ${details.yt ? `
                                 <div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden; border-radius:6px; border: 1px solid var(--border-subtle);">
-                                    <iframe src="${item.yt}" style="position:absolute; top:0; left:0; width:100%; height:100%; border:0;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                    <iframe src="${details.yt}" style="position:absolute; top:0; left:0; width:100%; height:100%; border:0;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                                 </div>
                                 ` : ''}
-                                ${item.challenge ? `
+                                ${details.description ? `
+                                <p style="font-size: 0.9rem; color: var(--text-secondary); margin: 0; line-height: 1.5; font-family:var(--font-sans);">${details.description}</p>
+                                ` : ''}
+                                ${details.challenge ? `
                                 <div style="background: rgba(47, 129, 247, 0.05); border-left: 3px solid ${color}; padding: 12px; border-radius: 0 4px 4px 0;">
                                     <div style="font-weight: 600; font-size: 0.75rem; color: ${color}; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; display:flex; align-items:center; gap:6px;"><i data-lucide="trophy" style="width:12px; height:12px;"></i> Wyzwanie (Challenge)</div>
-                                    <p style="font-size: 0.85rem; color: var(--text-primary); margin: 0; line-height: 1.4; font-family:var(--font-sans);">${item.challenge}</p>
+                                    <p style="font-size: 0.85rem; color: var(--text-primary); margin: 0; line-height: 1.4; font-family:var(--font-sans);">${details.challenge}</p>
+                                </div>
+                                ` : ''}
+                                ${details.subtopics ? `
+                                <div style="background: rgba(255, 255, 255, 0.02); border-left: 3px solid ${color}; padding: 12px; border-radius: 0 4px 4px 0;">
+                                    <div style="font-weight: 600; font-size: 0.75rem; color: ${color}; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; display:flex; align-items:center; gap:6px;"><i data-lucide="list-checks" style="width:12px; height:12px;"></i> Podtematy do opanowania</div>
+                                    <ul style="font-size: 0.85rem; color: var(--text-primary); margin: 0; padding-left: 20px; line-height: 1.6; font-family:var(--font-sans);">
+                                        ${details.subtopics.map(sub => `<li>${sub}</li>`).join('')}
+                                    </ul>
                                 </div>
                                 ` : ''}
                             </div>
-                            ` : ''}
                         </div>
                     `;
                 });
@@ -240,7 +301,7 @@
                 html += `</div>`;
                 main.innerHTML = html;
                 if(window.lucide) window.lucide.createIcons();
-            };
+            }
 
             window.toggleItemDetails = function(idx) {
                 const details = document.getElementById(`details-${idx}`);
@@ -256,29 +317,35 @@
                 }
             };
 
-            // Globalna funkcja dla onclick
             window.updateKnowledgeProgress = function(category, clickedIdx, totalItems) {
                 if(!db || !USER_NODE) return;
                 
-                let oldLevel = 0;
-                if(localProgress[category] && localProgress[category].level !== undefined) {
-                    oldLevel = localProgress[category].level;
+                if(!localProgress[category]) {
+                    localProgress[category] = { level: 0, completed: {} };
                 }
-
-                let newLevel = Math.ceil(((clickedIdx + 1) / totalItems) * 100);
+                if(!localProgress[category].completed) {
+                    localProgress[category].completed = {};
+                }
                 
-                const maxCompletedIdx = Math.floor((oldLevel / 100) * totalItems) - 1;
-                if(clickedIdx === maxCompletedIdx) {
-                    newLevel = Math.ceil((clickedIdx / totalItems) * 100);
+                const wasCompleted = localProgress[category].completed[clickedIdx] === true;
+                if(wasCompleted) {
+                    delete localProgress[category].completed[clickedIdx];
+                } else {
+                    localProgress[category].completed[clickedIdx] = true;
                 }
+                
+                const completedCount = Object.keys(localProgress[category].completed).length;
+                const newLevel = Math.round((completedCount / totalItems) * 100);
+                localProgress[category].level = newLevel;
+                localProgress[category].updatedAt = Date.now();
 
                 document.getElementById('k-main').style.opacity = '0.7';
 
                 db.ref(USER_NODE + 'knowledge/' + category).set({
                     level: newLevel,
+                    completed: localProgress[category].completed,
                     updatedAt: Date.now()
                 }).then(() => {
-                    localProgress[category] = { level: newLevel };
                     document.getElementById('k-main').style.opacity = '1';
                     
                     let color = getCatColor(category);
@@ -308,6 +375,6 @@
             };
         });
     </script>
-    <script src="js/topbar.js?v=19.9"></script>
+    <script src="js/topbar.js?v=20.0"></script>
 </body>
 </html>
