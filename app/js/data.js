@@ -1,16 +1,24 @@
 window.appData = {
     routines: {
         morning: [
-            { id: "m1", title: "Szklanka wody z solą i cytryną (Nawodnienie po śnie)" },
-            { id: "m2", title: "Rozciąganie / Joga (5 min na rozruch stawów)" },
-            { id: "m3", title: "Odsłonięcie okien - naturalne światło (Regulacja rytmu dobowego)" },
-            { id: "m4", title: "Sprawdzenie agendy kalendarza (Tylko plan, zero social mediów)" }
+            { id: "m1", title: "Wypić szklankę wody" },
+            { id: "m2", title: "Wziąć inhalator astma" },
+            { id: "m3", title: "Przepłukać gardło wodą z solą" },
+            { id: "m4", title: "Przepłukać buzię płynem do jamy ustnej" },
+            { id: "m5", title: "Ew. sport (bieg / siłownia)" },
+            { id: "m6", title: "Ciepły prysznic przechodzący w zimny" },
+            { id: "m7", title: "Krople do nosa wziąć" },
+            { id: "m8", title: "Sprawdzić czy zadania na dziś są wklepane" }
         ],
         evening: [
-            { id: "e1", title: "Wyciszenie i blokada ekranów (Godzinę przed snem)" },
-            { id: "e2", title: "Przygotowanie ubrań i miejsca pracy na jutro" },
-            { id: "e3", title: "Refleksja: Co poszło dobrze, co do poprawy (3 zdania)" },
-            { id: "e4", title: "Trening Reaktor Pamięci (Fiszki przed snem - konsolidacja pamięci)" }
+            { id: "e1", title: "Sprawdzić czy zadania na jutro są wklepane (1. raz) i wklepać" },
+            { id: "e2", title: "Wziąć inhalator na astmę" },
+            { id: "e3", title: "Przepłukać gardło wodą z solą" },
+            { id: "e4", title: "Wziąć tabletkę (rupaller) na alergię" },
+            { id: "e5", title: "Umyć się w ciepłej wodzie" },
+            { id: "e6", title: "Sprawdzić czy zadania na jutro są wklepane (2. raz)" },
+            { id: "e7", title: "Zatyczki do uszu na noc" },
+            { id: "e8", title: "Opcjonalnie melatonina / opaska na oczy" }
         ]
     },
     paths: {
