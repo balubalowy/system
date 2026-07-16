@@ -190,6 +190,7 @@ function initDayTimeTrack() {
             if(sidebarLine) sidebarLine.style.display = 'none';
         }
     }
+    window._updateTimeTrack = update;
     update();
     setInterval(update, 60000);
 }
@@ -847,6 +848,9 @@ function renderWeekGrid(events) {
             <div class="mono" style="font-size: 0.60rem;">${ev.timeStr}</div>
         </div>`;
     });
+    
+    // Force red-line re-render after overriding grid
+    if(window._updateTimeTrack) window._updateTimeTrack();
 }
 
 
@@ -1100,54 +1104,61 @@ function initReadingList() {
         });
     }
 
-// --- INTERACTIVE TASKS ENGINE V16 ---
+// --- INTERACTIVE TASKS ENGINE V16.1 ---
 function initInteractiveTasks() {
-    const container = document.getElementById('suggested-tasks-container');
-    if(!container) return;
-    
     const boxes = [
-        { key: 'priority', title: 'Kognitywny', icon: 'brain', color: 'var(--accent-primary)', sub: 'Priorytet główny' },
-        { key: 'admin', title: 'Administracja', icon: 'briefcase', color: 'var(--text-secondary)', sub: 'Baza i opłaty' },
-        { key: 'light', title: 'Zadanie Lekkie', icon: 'coffee', color: 'var(--accent-info)', sub: 'Gdy energia spada' },
-        { key: 'sensory', title: 'Odłączenie', icon: 'ear', color: 'var(--accent-success)', sub: 'Sensoryczna pauza' }
+        { key: 'priority', id: 'suggested-priority', btnColor: 'var(--accent-primary)' },
+        { key: 'admin', id: 'suggested-admin', btnColor: 'var(--text-secondary)' },
+        { key: 'light', id: 'suggested-light', btnColor: 'var(--accent-info)' },
+        { key: 'sensory', id: 'suggested-sensory', btnColor: 'var(--accent-success)' }
     ];
 
     db.ref(USER_NODE + 'inbox').on('value', snap => {
         const data = snap.val() || {};
-        container.innerHTML = '';
-        let hasAny = false;
 
         boxes.forEach(b => {
-            if(!data[b.key]) return;
-            let lines = data[b.key].split('\n').map(l => l.trim()).filter(l => l.length > 0);
-            if(lines.length === 0) return;
+            const el = document.getElementById(b.id);
+            if(!el) return;
             
-            hasAny = true;
+            if(!data[b.key]) {
+                el.innerHTML = '<span style="color:var(--text-secondary); opacity:0.5;">Sektor czysty. Brak zadań.</span>';
+                return;
+            }
+            
+            let lines = data[b.key].split('\n').map(l => l.trim()).filter(l => l.length > 0);
+            if(lines.length === 0) {
+                el.innerHTML = '<span style="color:var(--text-secondary); opacity:0.5;">Sektor czysty. Brak zadań.</span>';
+                return;
+            }
+            
             let topTask = lines[0];
             if(topTask.startsWith('-')) topTask = topTask.substring(1).trim();
+            
+            let queueHtml = '';
+            if(lines.length > 1) {
+                queueHtml = '<div style="margin-top: 12px; padding-top: 8px; border-top: 1px dashed var(--border-subtle); font-size: 0.75rem; color: var(--text-secondary); opacity: 0.6;">';
+                queueHtml += '<div style="margin-bottom: 4px; font-weight: 600;">Kolejka:</div>';
+                for(let i=1; i<Math.min(4, lines.length); i++) {
+                    let qt = lines[i].startsWith('-') ? lines[i].substring(1).trim() : lines[i];
+                    queueHtml += `<div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">- ${qt}</div>`;
+                }
+                if(lines.length > 4) queueHtml += `<div>+ ${lines.length - 4} więcej...</div>`;
+                queueHtml += '</div>';
+            }
 
             let html = `
-            <div class="card block-card" style="border-top: 3px solid ${b.color};">
-                <div class="card-header" style="margin-bottom: 8px;">
-                    <div>
-                        <h3 style="font-size:1.1rem; color:var(--text-primary); display:flex; align-items:center;"><i data-lucide="${b.icon}" style="width:16px; color:${b.color}; margin-right:6px;"></i> ${b.title}</h3>
-                        <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:2px;">${b.sub}</div>
-                    </div>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+                <div style="font-size:0.9rem; font-weight:500; color:var(--text-primary); line-height:1.4;">${topTask}</div>
+                <div style="display:flex; gap:6px;">
+                    <button class="btn btn-ghost" onclick="actionTask('${b.key}', 'reject')" style="padding: 4px 8px; font-size:0.75rem; color:var(--accent-warning); border:1px solid rgba(255,159,10,0.2);" title="Odrzuć na spód wrzutni"><i data-lucide="x" style="width:12px; margin-right:4px;"></i> Cofnij</button>
+                    <button class="btn btn-ghost" onclick="actionTask('${b.key}', 'complete')" style="padding: 4px 8px; font-size:0.75rem; color:var(--accent-success); border:1px solid rgba(43,191,113,0.3);"><i data-lucide="check" style="width:12px; margin-right:4px;"></i> Ukończ</button>
                 </div>
-                <div class="action-area" style="flex-grow:1; display:flex; flex-direction:column; justify-content:center;">
-                    <div class="suggested-task" style="font-size:0.95rem; font-weight:500; color:var(--text-primary); margin-bottom:16px; padding:8px; background:rgba(0,0,0,0.1); border-radius:var(--radius-sm); border-left: 2px solid ${b.color};">${topTask}</div>
-                    <div style="display:flex; gap:8px; margin-top:auto;">
-                        <button class="btn btn-ghost" onclick="actionTask('${b.key}', 'reject')" style="flex:1; color:var(--accent-warning); border:1px solid rgba(255,159,10,0.2);" title="Odrzuć na spód wrzutni"><i data-lucide="x"></i> Cofnij</button>
-                        <button class="btn btn-secondary" onclick="actionTask('${b.key}', 'complete')" style="flex:1; color:var(--accent-success); border:1px solid rgba(43,191,113,0.3);"><i data-lucide="check"></i> Ukończ</button>
-                    </div>
-                </div>
-            </div>`;
-            container.innerHTML += html;
+            </div>
+            ${queueHtml}
+            `;
+            el.innerHTML = html;
         });
 
-        if(!hasAny) {
-            container.innerHTML = `<div style="color:var(--text-secondary); padding: 20px; font-size:0.9rem; grid-column: 1 / -1; text-align:center; border: 1px dashed var(--border-subtle); border-radius: var(--radius-md);">Wrzutnia jest pusta. Sektory operacyjne wyczyszczone.</div>`;
-        }
         if(window.lucide) window.lucide.createIcons();
     });
 }

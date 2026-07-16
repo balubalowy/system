@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>B-Core</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css?v=16.0">
-    <script src="js/local_data.js?v=16.0"></script>
+    <link rel="stylesheet" href="css/styles.css?v=15.2">
+    <script src="js/local_data.js?v=15.2"></script>
     
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -118,7 +118,7 @@
 
         <div class="top-stats">
             <a href="knowledge.html" class="btn btn-secondary" style="color: var(--accent-primary); border-color: rgba(43, 191, 113, 0.3);" title="Drzewo Wiedzy"><i data-lucide="network"></i></a>
-            <button class="btn btn-ghost" id="btn-zero-energy" style="color: var(--accent-warning);" title="Włącz tryb Low Energy"><i data-lucide="battery-low"></i></button>
+            <button class="btn btn-ghost" id="btn-zero-energy" style="color: var(--accent-warning); border: 1px solid var(--accent-warning);" title="Włącz tryb Low Energy"><i data-lucide="battery-low"></i></button>
         </div>
     </header>
 
@@ -241,13 +241,19 @@
         </aside>
 
         <!-- MAIN CONTENT -->
-        <main class="main-content" style="display: flex; flex-direction: column;">
+        <main class="main-content">
             
-            <section class="panel-section" style="flex-grow: 1;">
+            <section class="panel-section">
                 <div class="section-header" style="flex-direction: column; align-items: flex-start; gap: var(--space-1);">
-                    <h2 style="font-size: 1.4rem; display:flex; align-items:center; gap:8px;">Sugestie Zadań z Wrzutni <a href="knowledge.html" style="color:var(--text-secondary); opacity: 0.5;" title="Drzewo Wiedzy"><i data-lucide="network"></i></a></h2>
+                    <h2 style="font-size: 1.4rem; display:flex; align-items:center; gap:8px;">Bloki Pracy <a href="knowledge.html" style="color:var(--text-secondary); opacity: 0.5;" title="Drzewo Wiedzy"><i data-lucide="network"></i></a></h2>
                     <span class="date-subtitle" id="current-date" style="font-family: var(--font-sans); color: var(--text-secondary); margin-bottom: var(--space-2);">Dzisiaj</span>
                 </div>
+
+                <div class="blocks-layout">
+                    <!-- HERO BLOCK -->
+                    <div class="card block-card hero-block priority" id="block-1">
+                        <div class="hero-header">
+                            <div>
                                 <h3 style="font-size: 1.4rem; font-weight: 600; color: var(--text-primary); margin-bottom: 4px;">Kognitywny</h3>
                                 <span style="font-size: 0.9rem; color: var(--accent-primary);">Główny priorytet na ten moment</span>
                             </div>
@@ -342,7 +348,7 @@
                 </div>
             </section>
 
-            <section class="panel-section" style="flex-grow: 1;">
+            <section class="panel-section">
                 <div class="section-header">
                     <h2>Analityka i Postęp</h2>
                 </div>
@@ -365,7 +371,7 @@
 
     <script src="js/knowledge_tree.js"></script>
     <script src="js/data.js"></script>
-    <script src="js/app.js?v=16.0"></script>
+    <script src="js/app.js?v=15.2"></script>
     <script>
         lucide.createIcons();
 
