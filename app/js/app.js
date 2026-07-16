@@ -595,10 +595,12 @@ function initCalendar() {
     drawTimeAxis();
     bindCalendarControls();
     
-    const calPanelToday = document.getElementById('calendar-panel-today');
+    const calPanelToday = document.getElementById('sidebar-timeline');
     const proxyUrlV2 = "https://script.google.com/macros/s/AKfycbx5x6wNjwrWdAysQoroCW-OhsvDWgUU8Z17MPEWfoeeb9iXLyeKZoAQ666-gpq838NmPA/exec";
 
-    calPanelToday.innerHTML = "Wczytywanie Hubu Czasu...";
+    if(calPanelToday) {
+        calPanelToday.innerHTML = "<div style='padding:10px; font-size:0.85rem; color:var(--text-secondary);'>Wczytywanie Hubu Czasu...</div>";
+    }
     
     fetch(proxyUrlV2)
       .then(res => res.json())
