@@ -6,6 +6,12 @@
     <title>B-Core</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
+    <script src="js/local_data.js"></script>
+    <style>
+        .container.sidebar-collapsed { grid-template-columns: 0px 1fr; gap: 0;}
+        .sidebar { overflow: hidden; transition: opacity 0.2s ease, padding 0.3s ease; width: 100%; white-space: nowrap;}
+        .container.sidebar-collapsed .sidebar { opacity: 0; pointer-events: none;}
+    </style>
     
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -81,22 +87,32 @@
         <div class="logo">
             <i data-lucide="command" class="symbol"></i>
             <h1>B <span>-Core</span></h1>
-            <span id="cloud-status" style="margin-left: 10px; font-size:10px; color:var(--accent-success); display:none;"><i data-lucide="cloud-lightning" style="width:12px; height:12px; vertical-align:middle; margin-right:4px;"></i>Synced</span>
-            <button class="btn btn-ghost" id="theme-toggle-btn" style="margin-left: 10px; padding:4px 8px;" title="Przełącz Motyw (Jasny/Ciemny)"><i data-lucide="sun-moon"></i></button>
+            <span id="btn-force-srs-sync" style="margin-left: 10px; font-size:10px; color:var(--text-secondary); cursor:pointer; padding:4px; border-radius:4px;" title="Synchronizuj ręcznie"><i data-lucide="refresh-cw" style="width:12px; height:12px; vertical-align:middle; margin-right:4px;"></i><span id="cloud-status" style="color:var(--accent-success);">Synced</span></span>
+            <button class="btn btn-ghost" id="theme-toggle-btn" style="margin-left: 10px; padding:4px 8px;" title="Przełącz Motyw"><i data-lucide="sun-moon"></i></button>
         </div>
         
-        <div class="energy-control">
-            <label>Energia</label>
-            <div class="energy-track" id="energy-track" title="Kliknij, by ustawić energię">
-                <div class="energy-fill" id="energy-fill" style="width: 50%;"></div>
+        <div class="energy-control" style="display:flex; flex-direction:column; gap:6px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+                <label style="width:50px;">Energia</label>
+                <div class="energy-track" id="energy-track" title="Kliknij, by ustawić energię">
+                    <div class="energy-fill" id="energy-fill" style="width: 50%;"></div>
+                </div>
+                <span class="energy-val" id="energy-val-display" style="width:40px;">5/10</span>
             </div>
-            <span class="energy-val" id="energy-val-display">5/10</span>
+            <div style="display:flex; align-items:center; gap:8px;">
+                <label style="width:50px; color:var(--accent-info);">Dzień</label>
+                <div class="energy-track" style="background:rgba(255,255,255,0.05); pointer-events:none; position:relative;">
+                    <div class="energy-fill" id="time-fill" style="width: 0%; background:var(--accent-info); transition: width 1s linear;"></div>
+                    <span id="time-val-display" style="position:absolute; left:50%; top:50%; transform:translate(-50%, -50%); font-size:0.7rem; font-weight:600; font-family:var(--font-mono); color:#fff; mix-blend-mode:difference;">--:--</span>
+                </div>
+                <span style="width:40px;"></span>
+            </div>
         </div>
 
         <div class="top-stats">
-            <a href="knowledge.html" class="btn btn-secondary" style="color: var(--accent-primary); border-color: rgba(43, 191, 113, 0.3);"><i data-lucide="network"></i> Drzewo Wiedzy</a>
-            <button class="btn btn-secondary" id="btn-force-srs-sync"><i data-lucide="refresh-cw"></i> Synchronizuj Pamięć</button>
-            <button class="btn btn-ghost" id="btn-zero-energy" style="color: var(--accent-warning);"><i data-lucide="battery-low"></i> Low Energy</button>
+            <button class="btn btn-ghost" id="sidebar-toggle-btn" style="color: var(--text-secondary); margin-right: 12px;" title="Schowaj/Wysuń Panel Boczny"><i data-lucide="panel-left-close"></i></button>
+            <a href="knowledge.html" class="btn btn-secondary" style="color: var(--accent-primary); border-color: rgba(43, 191, 113, 0.3);" title="Drzewo Wiedzy"><i data-lucide="network"></i></a>
+            <button class="btn btn-ghost" id="btn-zero-energy" style="color: var(--accent-warning);" title="Włącz tryb Low Energy"><i data-lucide="battery-low"></i></button>
         </div>
     </header>
 
@@ -177,26 +193,34 @@
             </section>
 
             <section class="naked-section">
-                <div style="display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-3); color: var(--text-secondary);">
-                    <i data-lucide="bot" style="width: 14px;"></i>
-                    <h2 style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">AI Inbox</h2>
+                <div style="display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-3); color: var(--accent-info);">
+                    <i data-lucide="lightbulb" style="width: 14px;"></i>
+                    <h2 style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">Zrzutnia Pomysłów</h2>
                 </div>
-                <textarea id="ai-dump" rows="3" placeholder="Zrzut myśli dla Agenta..." style="width:100%; background:var(--bg-secondary); border:1px solid var(--border-subtle); color:var(--text-primary); padding:10px; font-family:var(--font-sans); font-size:0.85rem; border-radius: var(--radius-sm); resize:vertical; margin-bottom:12px; outline:none;"></textarea>
-                <button class="btn btn-secondary start-block-btn" style="width:100%;" onclick="this.innerHTML='<i data-lucide=\'check\'></i> Otrzymano'; lucide.createIcons(); setTimeout(()=> { this.innerHTML='<i data-lucide=\'send\'></i> Prześlij'; lucide.createIcons();}, 4000)"><i data-lucide="send"></i> Prześlij</button>
+                <textarea id="ai-dump" rows="3" placeholder="Szybki pomysł na projekt, skrypt, funkcję... Wrzucasz, zapominasz, do zrobienia." style="width:100%; background:var(--bg-secondary); border:1px solid var(--border-subtle); color:var(--text-primary); padding:10px; font-family:var(--font-sans); font-size:0.85rem; border-radius: var(--radius-sm); resize:vertical; margin-bottom:12px; outline:none;"></textarea>
+                <button class="btn btn-secondary" id="btn-save-idea" style="width:100%; color:var(--accent-info);"><i data-lucide="download-cloud"></i> Wrzuć do Bazy</button>
             </section>
         </aside>
 
         <!-- MAIN CONTENT -->
         <main class="main-content">
             
-            <section class="panel-section" style="margin-bottom: var(--space-5);">
-                <a href="knowledge.html" class="btn btn-secondary" style="width: 100%; display:flex; justify-content:space-between; align-items:center; padding: 20px; font-size: 1.1rem; border-color: var(--accent-primary); background: rgba(43, 191, 113, 0.05); color: var(--text-primary); box-shadow: var(--elevation-1);">
-                    <div style="display:flex; align-items:center; gap: 12px;">
-                        <i data-lucide="network" style="color: var(--accent-primary); width: 24px; height: 24px;"></i>
-                        <span style="font-weight: 600;">Biblioteka Akademicka (2100 Węzłów)</span>
+            <!-- Local Agent Stats -->
+            <section class="panel-section" style="margin-bottom: var(--space-5); display:flex; justify-content:space-between; align-items:center; background:rgba(43, 191, 113, 0.05); border-color:rgba(43, 191, 113, 0.2);">
+                <div style="display:flex; gap:20px;">
+                    <div style="display:flex; flex-direction:column;">
+                        <span style="font-size:0.75rem; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.05em;"><i data-lucide="image" style="width:12px; vertical-align:middle;"></i> Zdjęcia na dysku C:</span>
+                        <span id="stat-photos" style="font-size:1.2rem; font-weight:700; color:var(--text-primary); font-family:var(--font-mono);">0</span>
                     </div>
-                    <i data-lucide="chevron-right" style="color: var(--text-secondary);"></i>
-                </a>
+                    <div style="display:flex; flex-direction:column;">
+                        <span style="font-size:0.75rem; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.05em;"><i data-lucide="table-2" style="width:12px; vertical-align:middle;"></i> Modele Excel</span>
+                        <span id="stat-excels" style="font-size:1.2rem; font-weight:700; color:var(--text-primary); font-family:var(--font-mono);">0</span>
+                    </div>
+                </div>
+                <div style="text-align:right;">
+                    <span style="font-size:0.75rem; color:var(--accent-success);"><i data-lucide="hard-drive" style="width:14px; vertical-align:middle;"></i> Local Bridge Active</span><br>
+                    <span style="font-size:0.65rem; color:var(--text-secondary);" id="stat-sync">Sync: Brak</span>
+                </div>
             </section>
 
             <section class="panel-section">
@@ -321,25 +345,7 @@
     <script>
         lucide.createIcons();
 
-        // 1. SILNIK TRANSFEROWY (Harvesting Zrzutni Zadań)
-        document.addEventListener('DOMContentLoaded', () => {
-            if (typeof db !== 'undefined') {
-                db.ref(USER_NODE + 'inbox').once('value').then(snap => {
-                    const data = snap.val() || {};
-                    const maps = { priority: {id: 'suggested-priority', block: 'block-1'}, admin: {id: 'suggested-admin', block: 'block-2'} };
-                    for (let key in maps) {
-                        if (data[key]) {
-                            const firstLine = data[key].split('\n').map(l => l.trim()).filter(l => l.length > 0)[0];
-                            if (firstLine) {
-                                document.getElementById(maps[key].id).innerHTML = `<span style="color:var(--text-secondary); font-size:0.8rem; font-weight:600; display:block; margin-bottom:4px;">[Sugestia z Twojej Zrzutni]</span><a href="#" onclick="document.querySelector('#${maps[key].block} h3').innerText = '${firstLine.replace(/'/g, "\\'")}'; this.innerHTML='<i data-lucide=\\\'check\\\'></i> Gotowe'; this.style.color='var(--accent-success)'; this.style.borderColor='transparent'; this.style.pointerEvents='none'; setTimeout(() => { document.getElementById('${maps[key].id}').style.display='none'; }, 1500); if(window.lucide) lucide.createIcons(); return false;" style="color:var(--accent-info); text-decoration:none; display:inline-block; padding: 6px 12px; background: rgba(0, 190, 255, 0.05); border: 1px solid rgba(0, 190, 255, 0.2); border-radius:4px; font-weight:500; transition:all 0.2s;">${firstLine} <i data-lucide="arrow-up-right" style="width:14px; height:14px; vertical-align:middle;"></i></a>`;
-                            }
-                        }
-                    }
-                });
-            }
-        });
-
-        // 2. AWARYJNY ESC (Anty-friction sensoryczny)
+        // AWARYJNY ESC (Anty-friction sensoryczny)
         window.addEventListener('keydown', (e) => {
             if (e.key === "Escape") {
                 // Zrzucanie Focus Mode

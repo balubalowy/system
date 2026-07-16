@@ -98,9 +98,19 @@ function initApp() {
     initSRS();
     initCalendar();
     initReadingList();
+    initDayTimeTrack();
+    initSidebarToggle();
+    initIdeasEngine();
+    initHarvesting();
     
     setTimeout(() => { initCharts(); }, 500);
     document.getElementById('cloud-status').style.display = 'inline';
+
+    if (window.localAgentStats) {
+        document.getElementById('stat-photos').textContent = window.localAgentStats.photos || 0;
+        document.getElementById('stat-excels').textContent = window.localAgentStats.excels || 0;
+        document.getElementById('stat-sync').textContent = 'Sync: ' + (window.localAgentStats.lastSync || 'Nigdy');
+    }
 }
 
 function getTodayStr() {
@@ -145,6 +155,113 @@ function initTopBar() {
         db.ref(USER_NODE + 'energy/' + todayStr).set(2); // low energy fallback
         document.documentElement.style.filter = 'grayscale(100%)';
         setTimeout(() => document.documentElement.style.filter = 'none', 3000); // wizualny feedback
+    });
+}
+
+function initDayTimeTrack() {
+    const timeFill = document.getElementById('time-fill');
+    const timeVal = document.getElementById('time-val-display');
+    if(!timeFill) return;
+    
+    function update() {
+        const now = new Date();
+        const start = 7 * 60; // 07:00 (420 mins)
+        const end = 22 * 60;  // 22:00 (1320 mins)
+        const current = now.getHours() * 60 + now.getMinutes();
+        
+        let pct = ((current - start) / (end - start)) * 100;
+        if(pct < 0) pct = 0;
+        if(pct > 100) pct = 100;
+        
+        timeFill.style.width = pct + '%';
+        timeVal.textContent = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+        
+        // Pasek na kalendarzu tygodniowym
+        const timeLine = document.getElementById('current-time-line');
+        if(timeLine) {
+            if(pct >= 0 && pct <= 100) {
+                timeLine.style.top = pct + '%';
+                timeLine.style.display = 'block';
+            } else {
+                timeLine.style.display = 'none';
+            }
+        }
+    }
+    update();
+    setInterval(update, 60000);
+}
+
+function initSidebarToggle() {
+    const btn = document.getElementById('sidebar-toggle-btn');
+    const cont = document.querySelector('.container');
+    if(!btn || !cont) return;
+    btn.addEventListener('click', () => {
+        cont.classList.toggle('sidebar-collapsed');
+    });
+}
+
+function initIdeasEngine() {
+    const btn = document.getElementById('btn-save-idea');
+    const dump = document.getElementById('ai-dump');
+    if(!btn || !dump) return;
+    
+    btn.addEventListener('click', () => {
+        const text = dump.value.trim();
+        if(!text) return;
+        
+        btn.innerHTML = '<i data-lucide="loader"></i> Zapisywanie...';
+        if(window.lucide) lucide.createIcons();
+        
+        db.ref(USER_NODE + 'ideas').push({
+            text: text,
+            date: new Date().toISOString(),
+            status: 'idea'
+        }).then(() => {
+            dump.value = '';
+            btn.innerHTML = '<i data-lucide="check"></i> Zapisano w bazie';
+            btn.style.color = 'var(--accent-success)';
+            if(window.lucide) lucide.createIcons();
+            setTimeout(() => {
+                btn.innerHTML = '<i data-lucide="download-cloud"></i> Wrzuć do Bazy';
+                btn.style.color = '';
+                if(window.lucide) lucide.createIcons();
+            }, 3000);
+        });
+    });
+}
+
+function initHarvesting() {
+    db.ref(USER_NODE + 'inbox').once('value').then(snap => {
+        const data = snap.val() || {};
+        const maps = { priority: {id: 'suggested-priority', block: 'block-1'}, admin: {id: 'suggested-admin', block: 'block-2'} };
+        for (let key in maps) {
+            if (data[key]) {
+                const lines = data[key].split('\\n').map(l => l.trim()).filter(l => l.length > 0);
+                if (lines.length > 0) {
+                    const container = document.getElementById(maps[key].id);
+                    container.innerHTML = `<span style="color:var(--text-secondary); font-size:0.8rem; font-weight:600; display:block; margin-bottom:6px;">[Zrzutnia Zadań]</span><div style="display:flex; flex-wrap:wrap; gap:6px;"></div>`;
+                    const flexWrap = container.querySelector('div');
+                    
+                    lines.slice(0, 5).forEach(line => {
+                        const a = document.createElement('a');
+                        a.href = "#";
+                        a.innerHTML = `${line.substring(0, 50)}${line.length > 50 ? '...' : ''} <i data-lucide="arrow-up-right" style="width:14px; height:14px; vertical-align:middle;"></i>`;
+                        a.style.cssText = "color:var(--accent-info); text-decoration:none; display:inline-block; padding: 4px 8px; font-size:0.8rem; background: rgba(0, 190, 255, 0.05); border: 1px solid rgba(0, 190, 255, 0.2); border-radius:4px; transition:all 0.2s;";
+                        a.onclick = function(e) {
+                            e.preventDefault();
+                            document.querySelector(`#${maps[key].block} h3`).innerText = line;
+                            a.innerHTML = '<i data-lucide="check"></i> Gotowe';
+                            a.style.color = 'var(--accent-success)';
+                            a.style.pointerEvents = 'none';
+                            if(window.lucide) window.lucide.createIcons();
+                            setTimeout(() => { a.style.display = 'none'; }, 1500);
+                        };
+                        flexWrap.appendChild(a);
+                    });
+                    if(window.lucide) window.lucide.createIcons();
+                }
+            }
+        }
     });
 }
 
@@ -647,6 +764,12 @@ function renderWeekGrid(events) {
     for(let i=0; i<7; i++) {
         const col = document.getElementById(`col-${i}`).querySelector('.events-container');
         if(col) col.innerHTML = '';
+        
+        // Dodaj current-time-line dla dzisiejszej kolumny
+        const dStr = generateDatesForWeek(currentWeekOffset)[i];
+        if(dStr === getTodayStr() && col) {
+            col.innerHTML += `<div class="current-time-line" id="current-time-line" style="display:none;"></div>`;
+        }
     }
 
     events.forEach(ev => {
