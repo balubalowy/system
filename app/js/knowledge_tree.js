@@ -24,7 +24,81 @@ window.KnowledgeTree = {
     "Rzadkość zasobów i koszt alternatywny", "Popyt, Podaż i równowaga rynkowa", "Elastyczność cenowa i dochodowa", "Teoria użyteczności konsumenta", "Krzywe obojętności i budżet", "Koszty produkcji (Krańcowe, Zmienne)", "Struktury rynkowe (Konkurencja, Monopol, Oligopol)", "PKB (Produkt Krajowy Brutto)", "Inflacja i wskaźnik CPI", "Bezrobocie", "Cykle koniunkturalne", "Polityka fiskalna państwa", "Rola Banku Centralnego i polityka monetarna", "Handel międzynarodowy i kursy walutowe", "Wzrost i rozwój gospodarczy"
   ],
   "Excel": [
-    "Podstawy interfejsu i skróty klawiszowe", "Adresowanie względne i bezwzględne ($)", "Formatowanie warunkowe", "Formuły matematyczne i statystyczne", "Funkcje logiczne (JEŻELI, ORAZ, LUB, IFS)", "Funkcje wyszukiwania i odwołania (VLOOKUP, XLOOKUP, INDEX/MATCH)", "Funkcje tekstowe i daty", "Zarządzanie nazwami i poprawność danych", "Narzędzia danych (Tekst jako kolumny, Usuń duplikaty)", "Tabele Przestawne (Pivot Tables)", "Wykresy i wizualizacja (Dashboards)", "Wprowadzenie do Power Query (Pobieranie i transformacja)", "M z Power Query (Zarys)", "Ochrona skoroszytu i arkuszy", "Współdzielenie i recenzja plików"
+    {
+      "title": "Podstawy interfejsu i skróty klawiszowe",
+      "yt": "https://www.youtube.com/embed/S_8TzH-B0cQ",
+      "challenge": "Otwórz Excela, wpisz w komórce A1 'Test', a następnie za pomocą skrótu Ctrl+Enter zatwierdź wpis bez schodzenia w dół. Następnie użyj Ctrl+Z."
+    },
+    {
+      "title": "Adresowanie względne i bezwzględne ($)",
+      "yt": "https://www.youtube.com/embed/9BqFkX8Gz1g",
+      "challenge": "Wpisz w A1 wartość 100, w B1 wpisz formułę =A1*1.23. Zablokuj kolumnę i wiersz komórki A1 za pomocą znaku $, czyli =$A$1*1.23, a następnie przeciągnij formułę w dół i zaobserwuj zachowanie odwołań."
+    },
+    {
+      "title": "Formatowanie warunkowe",
+      "yt": "https://www.youtube.com/embed/1vR_sM3-dMs",
+      "challenge": "Stwórz kolumnę z liczbami 1-10. Użyj formatowania warunkowego, aby automatycznie pokolorować tło komórek na zielono, jeśli wartość jest większa niż 5."
+    },
+    {
+      "title": "Formuły matematyczne i statystyczne",
+      "yt": "https://www.youtube.com/embed/0S4x6e2nZ1o",
+      "challenge": "Oblicz sumę, średnią oraz wartość maksymalną dla zakresu danych A1:A10 za pomocą formuł =SUMA(), =ŚREDNIA() i =MAX()."
+    },
+    {
+      "title": "Funkcje logiczne (JEŻELI, ORAZ, LUB, IFS)",
+      "yt": "https://www.youtube.com/embed/Fw07a9X_d5E",
+      "challenge": "Napisz formułę, która w komórce B1 wypisze 'Zdał', jeśli w A1 wartość wynosi minimum 50, a w przeciwnym wypadku wypisze 'Poprawka'."
+    },
+    {
+      "title": "Funkcje wyszukiwania i odwołania (VLOOKUP, XLOOKUP, INDEX/MATCH)",
+      "yt": "https://www.youtube.com/embed/uGvV6L-x-D8",
+      "challenge": "Użyj nowej funkcji XLOOKUP, aby znaleźć cenę produktu na podstawie jego nazwy w tabeli słownikowej. Zabezpiecz wyszukiwanie na wypadek braku produktu w słowniku."
+    },
+    {
+      "title": "Funkcje tekstowe i daty",
+      "yt": "https://www.youtube.com/embed/v9C007mK1J4",
+      "challenge": "Połącz tekst z komórki A1 (imię) i B1 (nazwisko) w jedną komórkę C1 za pomocą operatora & lub funkcji ZŁĄCZ.TEKSTY, wstawiając spację pomiędzy nimi."
+    },
+    {
+      "title": "Zarządzanie nazwami i poprawność danych",
+      "yt": "https://www.youtube.com/embed/Pj13iFjM2iI",
+      "challenge": "Stwórz rozwijaną listę wyboru (Data Validation) w komórce A1, dopuszczającą tylko wartości z zakresu: Poniedziałek, Wtorek, Środa."
+    },
+    {
+      "title": "Narzędzia danych (Tekst jako kolumny, Usuń duplikaty)",
+      "yt": "https://www.youtube.com/embed/a7G-z8G2HnI",
+      "challenge": "Zaimportuj tekst 'Jan Kowalski;31;Wrocław' i rozdziel go na trzy kolumny, używając średnika jako separatora w kreatorze 'Tekst jako kolumny'."
+    },
+    {
+      "title": "Tabele Przestawne (Pivot Tables)",
+      "yt": "https://www.youtube.com/embed/HqI5Y1F0mXg",
+      "challenge": "Stwórz tabelę przestawną z danych sprzedażowych. Przeciągnij 'Kategorię' do wierszy, a 'Wartość' do wartości, aby podsumować sprzedaż w podziale na kategorie."
+    },
+    {
+      "title": "Wykresy i wizualizacja (Dashboards)",
+      "yt": "https://www.youtube.com/embed/3eJ4F8vN5iM",
+      "challenge": "Stwórz wykres słupkowy na podstawie tabeli przestawnej i dodaj fragmentator (Slicer) dla roku, aby filtrować dane na wykresie jednym kliknięciem."
+    },
+    {
+      "title": "Wprowadzenie do Power Query (Pobieranie i transformacja)",
+      "yt": "https://www.youtube.com/embed/_rV2C2g4q9M",
+      "challenge": "Pobierz dane z pliku CSV za pomocą edytora Power Query, zamień kropki na przecinki w kolumnie numerycznej i załaduj wynik bezpośrednio do nowego arkusza."
+    },
+    {
+      "title": "M z Power Query (Zarys)",
+      "yt": "https://www.youtube.com/embed/aP9pQj2P33I",
+      "challenge": "Otwórz Edytor Zaawansowany w Power Query i dopisz własny krok przekształcenia typu danych za pomocą funkcji Table.TransformColumnTypes."
+    },
+    {
+      "title": "Ochrona skoroszytu i arkuszy",
+      "yt": "https://www.youtube.com/embed/33dZ8x4B-34",
+      "challenge": "Zablokuj arkusz hasłem, pozwalając użytkownikom na edycję tylko wybranej komórki A1 (poprzez odznaczenie właściwości 'Zablokuj' w formacie komórki przed włączeniem ochrony)."
+    },
+    {
+      "title": "Współdzielenie i recenzja plików",
+      "yt": "https://www.youtube.com/embed/p17J5C9z4wM",
+      "challenge": "Udostępnij skoroszyt na OneDrive, włącz śledzenie zmian (Track Changes) i dodaj komentarz z oznaczeniem @ w wybranej komórce."
+    }
   ],
   "Python": [
     "Składnia, zmienne i podstawowe typy (int, float, str)", "Struktury danych (Listy, Słowniki, Zbiory, Krotki)", "Instrukcje warunkowe (if/elif/else)", "Pętle (for, while)", "Comprehensions (List/Dict comprehensions)", "Funkcje (def, *args, **kwargs, lambda)", "Obsługa błędów (try/except) i plików", "Programowanie obiektowe (Klasy, Metody)", "Biblioteka Numpy (Tablice wielowymiarowe)", "Biblioteka Pandas (DataFrames i Series)", "Filtrowanie i czyszczenie danych w Pandas", "Grupowanie i łączenie danych (merge/groupby)", "Wizualizacja z Matplotlib", "Wizualizacja z Seaborn", "Tworzenie wirtualnych środowisk i zarządzanie pakietami (pip/conda)"

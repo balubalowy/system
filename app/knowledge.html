@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Drzewo Wiedzy - B-Core</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css?v=19.8">
+    <link rel="stylesheet" href="css/styles.css?v=19.9">
     <style>
         .tree-scroll::-webkit-scrollbar { width: 4px; }
         .tree-scroll::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
@@ -205,12 +205,34 @@
                     const isDone = idx <= maxCompletedIndex;
                     const icon = isDone ? 'check-circle-2' : 'circle';
                     const itemColor = isDone ? color : 'var(--text-secondary)';
-                    const opacity = isDone ? '1' : '0.4';
+                    const opacity = isDone ? '1' : '0.45';
+                    const title = typeof item === 'object' ? item.title : item;
+                    const hasDetails = typeof item === 'object' && (item.yt || item.challenge);
                     
                     html += `
-                        <div class="knowledge-item interactive" onclick="window.updateKnowledgeProgress('${category}', ${idx}, ${totalItems})" style="opacity: ${opacity}; font-size: 0.95rem; padding: 12px 12px; display:flex; align-items:center; gap:16px; background: ${isDone ? 'rgba(255,255,255,0.03)' : 'transparent'}; border-radius: 6px; cursor: pointer; transition: all 0.2s; border: 1px solid ${isDone ? 'rgba(255,255,255,0.05)' : 'transparent'};">
-                            <i data-lucide="${icon}" style="width: 18px; height: 18px; min-width:18px; color: ${itemColor};"></i>
-                            <span style="color: ${isDone ? 'var(--text-primary)' : 'var(--text-secondary)'};"><strong>${idx+1}.</strong> ${item}</span>
+                        <div class="knowledge-item interactive" onclick="${hasDetails ? `window.toggleItemDetails(${idx})` : `window.updateKnowledgeProgress('${category}', ${idx}, ${totalItems})`}" style="opacity: ${opacity}; font-size: 0.95rem; padding: 12px 12px; display:flex; flex-direction:column; gap:4px; background: ${isDone ? 'rgba(255,255,255,0.03)' : 'transparent'}; border-radius: 6px; cursor: pointer; transition: all 0.2s; border: 1px solid ${isDone ? 'rgba(255,255,255,0.05)' : 'transparent'}; margin-bottom: 2px;">
+                            <div style="display:flex; align-items:center; gap:16px; width: 100%;">
+                                <div onclick="event.stopPropagation(); window.updateKnowledgeProgress('${category}', ${idx}, ${totalItems})" style="display:flex; align-items:center; cursor:pointer; padding:4px;" title="${isDone ? 'Oznacz jako nieukończone' : 'Oznacz jako ukończone'}">
+                                    <i data-lucide="${icon}" style="width: 18px; height: 18px; min-width:18px; color: ${itemColor};"></i>
+                                </div>
+                                <span style="color: ${isDone ? 'var(--text-primary)' : 'var(--text-secondary)'}; flex-grow: 1;"><strong>${idx+1}.</strong> ${title}</span>
+                                ${hasDetails ? `<i data-lucide="chevron-down" id="chevron-${idx}" style="width:16px; height:16px; color:var(--text-secondary); transition: transform 0.2s; flex-shrink: 0;"></i>` : ''}
+                            </div>
+                            ${hasDetails ? `
+                            <div id="details-${idx}" style="display:none; width:100%; margin-top:12px; padding:12px; background:rgba(0,0,0,0.3); border-radius:6px; border:1px solid var(--border-subtle); flex-direction:column; gap:12px;" onclick="event.stopPropagation();">
+                                ${item.yt ? `
+                                <div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden; border-radius:6px; border: 1px solid var(--border-subtle);">
+                                    <iframe src="${item.yt}" style="position:absolute; top:0; left:0; width:100%; height:100%; border:0;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                </div>
+                                ` : ''}
+                                ${item.challenge ? `
+                                <div style="background: rgba(47, 129, 247, 0.05); border-left: 3px solid ${color}; padding: 12px; border-radius: 0 4px 4px 0;">
+                                    <div style="font-weight: 600; font-size: 0.75rem; color: ${color}; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; display:flex; align-items:center; gap:6px;"><i data-lucide="trophy" style="width:12px; height:12px;"></i> Wyzwanie (Challenge)</div>
+                                    <p style="font-size: 0.85rem; color: var(--text-primary); margin: 0; line-height: 1.4; font-family:var(--font-sans);">${item.challenge}</p>
+                                </div>
+                                ` : ''}
+                            </div>
+                            ` : ''}
                         </div>
                     `;
                 });
@@ -218,7 +240,21 @@
                 html += `</div>`;
                 main.innerHTML = html;
                 if(window.lucide) window.lucide.createIcons();
-            }
+            };
+
+            window.toggleItemDetails = function(idx) {
+                const details = document.getElementById(`details-${idx}`);
+                const chevron = document.getElementById(`chevron-${idx}`);
+                if(details) {
+                    if(details.style.display === 'none' || details.style.display === '') {
+                        details.style.display = 'flex';
+                        if(chevron) chevron.style.transform = 'rotate(180deg)';
+                    } else {
+                        details.style.display = 'none';
+                        if(chevron) chevron.style.transform = 'rotate(0deg)';
+                    }
+                }
+            };
 
             // Globalna funkcja dla onclick
             window.updateKnowledgeProgress = function(category, clickedIdx, totalItems) {
@@ -272,6 +308,6 @@
             };
         });
     </script>
-    <script src="js/topbar.js?v=19.8"></script>
+    <script src="js/topbar.js?v=19.9"></script>
 </body>
 </html>

@@ -1128,7 +1128,9 @@ function showKnowledgeModal(meta) {
         index = Math.floor((meta.currentLevel / 100) * totalNodes);
         if(index >= totalNodes) index = totalNodes - 1;
         if(index < 0) index = 0;
-        currentTopicStr = `Etap ${index+1}/${totalNodes}: ${treeArr[index]}`;
+        const nodeItem = treeArr[index];
+        const nodeTitle = typeof nodeItem === 'object' ? nodeItem.title : nodeItem;
+        currentTopicStr = `Etap ${index+1}/${totalNodes}: ${nodeTitle}`;
     }
 
     currentNode.textContent = currentTopicStr;
