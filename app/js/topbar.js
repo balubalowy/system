@@ -1,4 +1,9 @@
 // topbar.js - Obsługa dynamicznego paska górnego na podstronach (inbox, knowledge)
+function getTodayStr() {
+    const tzoffset = (new Date()).getTimezoneOffset() * 60000;
+    return (new Date(Date.now() - tzoffset)).toISOString().split('T')[0];
+}
+
 function updateTimeProgress() {
     const timeFill = document.getElementById('time-fill');
     const timeDisplay = document.getElementById('time-val-display');
@@ -28,9 +33,10 @@ function initEnergySync() {
     
     if(!energyFill || !energyDisplay || !db || !USER_NODE) return;
 
-    const ref = db.ref(USER_NODE + 'energy');
+    const todayStr = getTodayStr();
+    const ref = db.ref(USER_NODE + 'energy/' + todayStr);
 
-    // Odczyt z chmury
+    // Odczyt z chmury dla dzisiejszego dnia
     ref.on('value', snap => {
         const val = snap.val() !== null ? snap.val() : 5;
         energyFill.style.width = (val * 10) + '%';
@@ -67,7 +73,8 @@ function initZeroEnergy() {
     const zeroBtn = document.getElementById('btn-zero-energy');
     if(!zeroBtn || !db || !USER_NODE) return;
     zeroBtn.addEventListener('click', () => {
-        db.ref(USER_NODE + 'energy').set(2);
+        const todayStr = getTodayStr();
+        db.ref(USER_NODE + 'energy/' + todayStr).set(2);
         document.documentElement.style.filter = 'grayscale(100%)';
         setTimeout(() => document.documentElement.style.filter = 'none', 3000);
     });
