@@ -3,3 +3,4 @@ dane/
 .agents/
 push.bat
 AntyGravity.code-workspace
+.private/
