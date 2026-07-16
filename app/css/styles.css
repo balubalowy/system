@@ -67,6 +67,9 @@ body {
 body.sidebar-collapsed {
     padding-left: 76px; /* Offset for 60px mini drawer + 16px space */
 }
+body.no-sidebar {
+    padding: var(--space-4) !important;
+}
 .mono { font-family: var(--font-mono); }
 
 /* TOPBAR */

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Drzewo Wiedzy - B-Core</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css?v=18.8">
+    <link rel="stylesheet" href="css/styles.css?v=18.9">
     <style>
         body { padding-top: 80px; }
         .tree-scroll::-webkit-scrollbar { width: 4px; }
@@ -16,17 +16,39 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
 </head>
-<body>
+<body class="no-sidebar">
     <header class="topbar">
         <div class="logo">
             <i data-lucide="command" class="symbol"></i>
             <h1>B <span>-Core</span></h1>
+            <div style="display:flex; flex-direction:column; margin-left: 12px; gap: 2px;">
+                <span id="btn-force-srs-sync" style="font-size:10px; color:var(--text-secondary); cursor:pointer; padding:2px 4px; border-radius:4px; line-height: 1;" title="Synchronizuj ręcznie"><i data-lucide="refresh-cw" style="width:10px; height:10px; vertical-align:middle; margin-right:4px;"></i><span id="cloud-status" style="color:var(--accent-success);">Synced</span></span>
+                <span id="mini-sync-status" style="font-size: 8px; color:var(--text-secondary); padding-left:4px; font-family:var(--font-mono);">Oczekiwanie...</span>
+            </div>
             <button class="btn btn-ghost" id="theme-toggle-btn" style="margin-left: 10px; padding:4px 8px;" title="Przełącz Motyw"><i data-lucide="sun-moon"></i></button>
+        </div>
+        
+        <div style="flex-grow:1; max-width:400px; margin:0 20px;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom: 6px;">
+                <label style="width:50px; color:var(--text-secondary); font-size:0.85rem; font-weight:500;">Energia</label>
+                <div class="energy-track" id="energy-track" title="Kliknij, by ustawić energię">
+                    <div class="energy-fill" id="energy-fill" style="width: 50%;"></div>
+                </div>
+                <span class="energy-val" id="energy-val-display" style="width:40px; font-family:var(--font-mono); font-weight:500; font-size:0.85rem;">5/10</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+                <label style="width:50px; color:var(--accent-info); font-size:0.85rem; font-weight:500;">Dzień</label>
+                <div class="energy-track" style="background:rgba(255,255,255,0.05); pointer-events:none;">
+                    <div class="energy-fill" id="time-fill" style="width: 0%; background:var(--accent-info); transition: width 1s linear;"></div>
+                </div>
+                <span id="time-val-display" style="width:40px; font-family:var(--font-mono); font-weight:500; font-size:0.85rem; color:#fff;">--:--</span>
+            </div>
         </div>
 
         <div class="top-stats">
             <a href="index.html" class="btn btn-ghost" title="Powrót do Pulpitu"><i data-lucide="layout-dashboard"></i> Pulpit</a>
             <a href="inbox.html" class="btn btn-ghost" title="Skok do Zrzutni Zadań"><i data-lucide="inbox"></i> Zrzutnia</a>
+            <button class="btn btn-ghost" id="btn-zero-energy" title="Włącz tryb Low Energy (Focus)"><i data-lucide="battery-low"></i> Tryb Baterii</button>
         </div>
     </header>
 
@@ -242,5 +264,6 @@
             };
         });
     </script>
+    <script src="js/topbar.js?v=18.9"></script>
 </body>
 </html>
