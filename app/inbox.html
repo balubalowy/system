@@ -194,7 +194,19 @@
                     archive.innerHTML = '<div style="font-size:0.85rem; color:var(--text-secondary);">Brak ukończonych zadań.</div>';
                     return;
                 }
-                const tasks = Object.values(data).sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
+                window.restoreTask = function(firebaseKey, cat, encodedTask) {
+                    const taskStr = decodeURIComponent(encodedTask);
+                    db.ref(USER_NODE + 'inbox_completed/' + firebaseKey).remove().then(() => {
+                        db.ref(USER_NODE + 'inbox/' + cat).once('value').then(s => {
+                            let text = s.val() || "";
+                            let lines = text.split('\n').filter(l => l.trim() !== "");
+                            lines.push("- " + taskStr);
+                            db.ref(USER_NODE + 'inbox/' + cat).set(lines.join('\n'));
+                        });
+                    });
+                };
+
+                const tasks = Object.entries(data).map(([k,v]) => ({key: k, ...v})).sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
                 tasks.forEach(t => {
                     let d = new Date(t.timestamp);
                     let color = 'var(--text-secondary)';
@@ -202,11 +214,17 @@
                     if(t.category === 'light') color = 'var(--accent-info)';
                     if(t.category === 'sensory') color = 'var(--accent-success)';
                     
-                    archive.innerHTML += `<div style="padding:10px; background:rgba(0,0,0,0.2); border-radius:var(--radius-sm); border-left: 2px solid ${color};">
-                        <div style="font-size:0.85rem; color:var(--text-primary); margin-bottom:4px;">${t.task}</div>
-                        <div style="font-size:0.7rem; color:var(--text-secondary); font-family:var(--font-mono);">${d.toLocaleDateString()} ${d.toLocaleTimeString().slice(0,5)}</div>
+                    archive.innerHTML += `<div style="padding:10px; background:rgba(0,0,0,0.2); border-radius:var(--radius-sm); border-left: 2px solid ${color}; margin-bottom:8px; display:flex; justify-content:space-between; align-items:flex-start;">
+                        <div>
+                            <div style="font-size:0.85rem; color:var(--text-primary); margin-bottom:4px; padding-right:8px;">${t.task}</div>
+                            <div style="font-size:0.7rem; color:var(--text-secondary); font-family:var(--font-mono);">${d.toLocaleDateString()} ${d.toLocaleTimeString().slice(0,5)}</div>
+                        </div>
+                        <button onclick="restoreTask('${t.key}', '${t.category}', '${encodeURIComponent(t.task)}')" style="background:none; border:none; color:var(--accent-info); cursor:pointer; padding:4px;" title="Przywróć do zrzutni">
+                            <i data-lucide="rotate-ccw" style="width:14px; margin-top:2px;"></i>
+                        </button>
                     </div>`;
                 });
+                lucide.createIcons();
             });
         });
     </script>
