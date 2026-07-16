@@ -326,12 +326,12 @@
             if (typeof db !== 'undefined') {
                 db.ref(USER_NODE + 'inbox').once('value').then(snap => {
                     const data = snap.val() || {};
-                    const maps = { priority: 'suggested-priority', admin: 'suggested-admin' };
+                    const maps = { priority: {id: 'suggested-priority', block: 'block-1'}, admin: {id: 'suggested-admin', block: 'block-2'} };
                     for (let key in maps) {
                         if (data[key]) {
                             const firstLine = data[key].split('\n').map(l => l.trim()).filter(l => l.length > 0)[0];
                             if (firstLine) {
-                                document.getElementById(maps[key]).innerHTML = `<span style="color:var(--text-secondary); font-size:0.8rem; font-weight:600; display:block; margin-bottom:4px;">[Sugestia z Twojej Zrzutni]</span>${firstLine}`;
+                                document.getElementById(maps[key].id).innerHTML = `<span style="color:var(--text-secondary); font-size:0.8rem; font-weight:600; display:block; margin-bottom:4px;">[Sugestia z Twojej Zrzutni]</span><a href="#" onclick="document.querySelector('#${maps[key].block} h3').innerText = '${firstLine.replace(/'/g, "\\'")}'; this.style.color='var(--accent-success)'; return false;" style="color:var(--accent-info); text-decoration:none; display:inline-block; padding: 6px 12px; background: rgba(0, 190, 255, 0.05); border: 1px solid rgba(0, 190, 255, 0.2); border-radius:4px; font-weight:500; transition:all 0.2s;">${firstLine} <i data-lucide="arrow-up-right" style="width:14px; height:14px; vertical-align:middle;"></i></a>`;
                             }
                         }
                     }
