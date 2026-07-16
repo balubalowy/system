@@ -10,26 +10,25 @@ const CATEGORY_COLORS = {
 
 // --- BAZA "SYSTEMU ŻYCIA" (GIGANTYCZNY DECK) ---
 const HUGE_DECK = {
-    "s1": { q: "P-value", a: "Prawdopodobieństwo uzyskania statystyki testowej równej lub bardziej ekstremalnej niż obserwowana, przy założeniu, że H0 jest prawdziwa.", interval:0, ef:2.5 },
-    "s2": { q: "Wariancja a Odch. Std.", a: "Wariancja to średnia kwadratów odchyleń od średniej. Odch. Std. to jej pierwiastek (wraca do pierwotnej jednostki).", interval:0, ef:2.5 },
-    "s3": { q: "Rozkład Normalny (3 sigmy)", a: "68% obs. w 1 odch. std., 95% w 2, a 99.7% w 3.", interval:0, ef:2.5 },
-    "s4": { q: "Błąd I i II rodzaju", a: "I: Odrzucenie prawdziwej H0 (alfa). II: Przyjęcie fałszywej H0 (beta).", interval:0, ef:2.5 },
-    "p1": { q: "Pandas: Usunięcie braków", a: "df.dropna()", interval:0, ef:2.5 },
-    "p2": { q: "Pandas: Grupowanie (Miasto i średnia Cen)", a: "df.groupby('Miasto')['Ceny'].mean()", interval:0, ef:2.5 },
-    "p3": { q: "Pandas: Odczyt CSV i Excel", a: "pd.read_csv('plik.csv'), pd.read_excel('plik.xlsx')", interval:0, ef:2.5 },
-    "p4": { q: "Numpy: Tablica zer (2 wiersze, 3 kol)", a: "np.zeros((2, 3))", interval:0, ef:2.5 },
-    "e1": { q: "VLOOKUP a XLOOKUP", a: "XLOOKUP szuka w obie strony (lewo/prawo), nie wymaga liczenia numeru kolumny, radzi sobie z wstawianiem nowych wierszy.", interval:0, ef:2.5 },
-    "e2": { q: "Funkcja SUMIFS", a: "Sumuje wartości tylko gdy spełnione jest wiele kryteriów (np. suma dla Region=Wawa ORAZ Rok=2026).", interval:0, ef:2.5 },
-    "e3": { q: "Skrót: Twarde blokowanie komórki ($)", a: "Klawisz F4. Pozwala na zablokowanie rzędu/kolumny przy przeciąganiu wzoru.", interval:0, ef:2.5 },
-    "f1": { q: "EBITDA", a: "Zysk operacyjny przed odsetkami, podatkami i amortyzacją. Proxy cash-flow na działalności operacyjnej firmy.", interval:0, ef:2.5 },
-    "f2": { q: "Wycena modelem DCF", a: "Suma przyszłych, przewidywanych przepływów pieniężnych (FCF) zdyskontowanych na dzisiaj przy użyciu WACC.", interval:0, ef:2.5 },
-    "f3": { q: "Risk-Free Rate (Stopa wolna od ryzyka)", a: "Rentowność superbezpiecznych aktywów (głównie 10-letnie obligacje skarbowe USA/Państwa), podstawa do obliczania WACC.", interval:0, ef:2.5 },
-    "f4": { q: "CAPM (Capital Asset Pricing Model)", a: "Wzór na koszt kapitału własnego: R_f + Beta * (R_m - R_f). Gdzie R_m to rynkowa stopa zwrotu.", interval:0, ef:2.5 },
-    "l1": { q: "Zasada 5 minut dla ADHD", a: "Bariera rozpoczęcia pracy to iluzja dopaminowa. Zobowiąż się tylko na 5 minut bez oceny. Ciało migdałowate w mózgu puści strach.", interval:0, ef:2.5 },
-    "l2": { q: "Dopamina poranna", a: "Żadnych ekranów (social media/newsy) przed pierwszą głęboką pracą. Scrollowanie ustawia tani Baseline dopaminy na cały dzień, niszcząc zapał do trudnych akcji.", interval:0, ef:2.5 },
-    "l3": { q: "Prawo Parkinsona", a: "Praca rozszerza się tak, aby wypełnić czas dostępny na jej ukończenie. Skracaj deadliny celowo.", interval:0, ef:2.5 }
+    "s1": { q: "P-value", a: "Prawdopodobieństwo uzyskania statystyki testowej równej lub bardziej ekstremalnej niż obserwowana, przy założeniu, że H0 jest prawdziwa.", interval:0, ef:2.5, topic: "Statystyka matematyczna", category: "Matematyka & Statystyka" },
+    "s2": { q: "Wariancja a Odch. Std.", a: "Wariancja to średnia kwadratów odchyleń od średniej. Odch. Std. to jej pierwiastek (wraca do pierwotnej jednostki).", interval:0, ef:2.5, topic: "Statystyka opisowa", category: "Matematyka & Statystyka" },
+    "s3": { q: "Rozkład Normalny (3 sigmy)", a: "68% obs. w 1 odch. std., 95% w 2, a 99.7% w 3.", interval:0, ef:2.5, topic: "Statystyka opisowa", category: "Matematyka & Statystyka" },
+    "s4": { q: "Błąd I i II rodzaju", a: "I: Odrzucenie prawdziwej H0 (alfa). II: Przyjęcie fałszywej H0 (beta).", interval:0, ef:2.5, topic: "Statystyka matematyczna", category: "Matematyka & Statystyka" },
+    "p1": { q: "Pandas: Usunięcie braków", a: "df.dropna()", interval:0, ef:2.5, topic: "Python (Pandas/Numpy)", category: "Technologie & Analityka" },
+    "p2": { q: "Pandas: Grupowanie (Miasto i średnia Cen)", a: "df.groupby('Miasto')['Ceny'].mean()", interval:0, ef:2.5, topic: "Python (Pandas/Numpy)", category: "Technologie & Analityka" },
+    "p3": { q: "Pandas: Odczyt CSV i Excel", a: "pd.read_csv('plik.csv'), pd.read_excel('plik.xlsx')", interval:0, ef:2.5, topic: "Python (Pandas/Numpy)", category: "Technologie & Analityka" },
+    "p4": { q: "Numpy: Tablica zer (2 wiersze, 3 kol)", a: "np.zeros((2, 3))", interval:0, ef:2.5, topic: "Python (Pandas/Numpy)", category: "Technologie & Analityka" },
+    "e1": { q: "VLOOKUP a XLOOKUP", a: "XLOOKUP szuka w obie strony (lewo/prawo), nie wymaga liczenia numeru kolumny, radzi sobie z wstawianiem nowych wierszy.", interval:0, ef:2.5, topic: "Excel Zaawansowany", category: "Technologie & Analityka" },
+    "e2": { q: "Funkcja SUMIFS", a: "Sumuje wartości tylko gdy spełnione jest wiele kryteriów (np. suma dla Region=Wawa ORAZ Rok=2026).", interval:0, ef:2.5, topic: "Excel Zaawansowany", category: "Technologie & Analityka" },
+    "e3": { q: "Skrót: Twarde blokowanie komórki ($)", a: "Klawisz F4. Pozwala na zablokowanie rzędu/kolumny przy przeciąganiu wzoru.", interval:0, ef:2.5, topic: "Excel Zaawansowany", category: "Technologie & Analityka" },
+    "f1": { q: "EBITDA", a: "Zysk operacyjny przed odsetkami, podatkami i amortyzacją. Proxy cash-flow na działalności operacyjnej firmy.", interval:0, ef:2.5, topic: "Ekonomia", category: "Ekonomia & Finanse" },
+    "f2": { q: "Wycena modelem DCF", a: "Suma przyszłych, przewidywanych przepływów pieniężnych (FCF) zdyskontowanych na dzisiaj przy użyciu WACC.", interval:0, ef:2.5, topic: "Wycena spółek (Corporate Finance)", category: "Ekonomia & Finanse" },
+    "f3": { q: "Risk-Free Rate (Stopa wolna od ryzyka)", a: "Rentowność superbezpiecznych aktywów (głównie 10-letnie obligacje skarbowe USA/Państwa), podstawa do obliczania WACC.", interval:0, ef:2.5, topic: "Rynki finansowe", category: "Ekonomia & Finanse" },
+    "f4": { q: "CAPM (Capital Asset Pricing Model)", a: "Wzór na koszt kapitału własnego: R_f + Beta * (R_m - R_f). Gdzie R_m to rynkowa stopa zwrotu.", interval:0, ef:2.5, topic: "Wycena spółek (Corporate Finance)", category: "Ekonomia & Finanse" },
+    "l1": { q: "Zasada 5 minut dla ADHD", a: "Bariera rozpoczęcia pracy to iluzja dopaminowa. Zobowiąż się tylko na 5 minut bez oceny. Ciało migdałowate w mózgu puści strach.", interval:0, ef:2.5, topic: "Kognitywistyka / ADHD", category: "Specjalistyczne & Rozwój" },
+    "l2": { q: "Dopamina poranna", a: "Żadnych ekranów (social media/newsy) przed pierwszą głęboką pracą. Scrollowanie ustawia tani Baseline dopaminy na cały dzień, niszcząc zapał do trudnych akcji.", interval:0, ef:2.5, topic: "Kognitywistyka / ADHD", category: "Specjalistyczne & Rozwój" },
+    "l3": { q: "Prawo Parkinsona", a: "Praca rozszerza się tak, aby wypełnić czas dostępny na jej ukończenie. Skracaj deadliny celowo.", interval:0, ef:2.5, topic: "Zarządzanie czasem", category: "Specjalistyczne & Rozwój" }
 };
-
 
 // --- FIREBASE INIT ---
 // Konfiguracja przeniesiona do firebase_init.js by zasilać inne podstrony (np. knowledge.html, inbox.html)
@@ -486,25 +485,42 @@ function initSRS() {
     
     window.refreshSRS = loadDueCard;
 
+    function formatCardContent(text) {
+        if (!text) return "";
+        // Zamiana adresów url obrazków na tagi img
+        const urlRegex = /(https?:\/\/[^\s]+?\.(?:png|jpg|jpeg|gif|webp))/gi;
+        let formatted = text.replace(urlRegex, '<img src="$1" style="max-width:100%; border-radius:6px; margin-top:8px; display:block;" />');
+        return formatted;
+    }
+
+    function renderCardFace(element, prefix, text) {
+        element.innerHTML = `<strong>${prefix}:</strong> ${formatCardContent(text)}`;
+        if (window.renderMathInElement) {
+            window.renderMathInElement(element, {
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "$", right: "$", display: false}
+                ],
+                throwOnError: false
+            });
+        }
+    }
+
     function loadDueCard() {
         const todayStr = getTodayStr();
-        const activeCat = window.ACTIVE_SRS_CATEGORY || "all";
+        const activeTopic = window.ACTIVE_SRS_TOPIC || "all";
         
         dbSrsRef.once('value').then(snap => {
             const deck = snap.val();
             let dueCards = [];
             
             for(let key in deck) {
-                // Heurystyka prefiksowa: dopasowanie kategorii z litery klucza
-                let itemCat = "Unknown";
-                if(key.startsWith('s')) itemCat = "Matematyka & Statystyka";
-                if(key.startsWith('f')) itemCat = "Ekonomia & Finanse";
-                if(key.startsWith('p') || key.startsWith('e')) itemCat = "Technologie & Analityka";
-                if(key.startsWith('l')) itemCat = "Specjalistyczne & Rozwój";
+                const card = deck[key];
+                const cardTopic = card.topic || "Unknown";
                 
-                if(deck[key].nextReview <= todayStr) {
-                    if(activeCat === "all" || activeCat === itemCat) {
-                        dueCards.push({ key: key, data: deck[key] });
+                if(card.nextReview <= todayStr) {
+                    if(activeTopic === "all" || activeTopic.toLowerCase() === cardTopic.toLowerCase()) {
+                        dueCards.push({ key: key, data: card });
                     }
                 }
             }
@@ -514,7 +530,9 @@ function initSRS() {
                 currentCardKey = rnd.key;
                 currentCardData = rnd.data;
                 
-                qDisplay.textContent = rnd.data.q;
+                qDisplay.innerHTML = "";
+                renderCardFace(qDisplay, "P", rnd.data.q);
+                
                 revealBtn.style.display = 'block';
                 actionsPanel.style.display = 'none';
                 statusText.textContent = `Fiszek w kolejce dożywiania mózgu: ${dueCards.length}`;
@@ -528,7 +546,23 @@ function initSRS() {
     }
 
     revealBtn.addEventListener('click', () => {
-        qDisplay.innerHTML = `<strong>P:</strong> ${currentCardData.q} <br><br> <strong style="color:#3FB950">Odp:</strong> ${currentCardData.a}`;
+        qDisplay.innerHTML = "";
+        
+        let combinedDiv = document.createElement('div');
+        combinedDiv.innerHTML = `<div style="margin-bottom:12px; font-weight:600; color:var(--text-secondary);">Trening pamięci:</div>`;
+        
+        let qDiv = document.createElement('div');
+        qDiv.style.marginBottom = "16px";
+        renderCardFace(qDiv, "Pytanie", currentCardData.q);
+        
+        let aDiv = document.createElement('div');
+        renderCardFace(aDiv, "Odpowiedź", currentCardData.a);
+        
+        combinedDiv.appendChild(qDiv);
+        combinedDiv.appendChild(aDiv);
+        
+        qDisplay.appendChild(combinedDiv);
+        
         revealBtn.style.display = 'none';
         actionsPanel.style.display = 'grid';
     });
@@ -561,6 +595,44 @@ function initSRS() {
     document.getElementById('srs-bad').addEventListener('click', () => processSM2(0));
     document.getElementById('srs-mid').addEventListener('click', () => processSM2(3));
     document.getElementById('srs-good').addEventListener('click', () => processSM2(5));
+
+    // SYSTEM DODAWANIA WŁASNYCH FISZEK
+    const btnAdd = document.getElementById('btn-add-custom-srs');
+    const inputQ = document.getElementById('new-srs-q');
+    const inputA = document.getElementById('new-srs-a');
+
+    if(btnAdd && inputQ && inputA) {
+        btnAdd.onclick = () => {
+            const qVal = inputQ.value.trim();
+            const aVal = inputA.value.trim();
+            const activeTopic = window.ACTIVE_SRS_TOPIC || "all";
+            const activeCat = window.ACTIVE_SRS_CATEGORY || "all";
+            
+            if(!qVal || !aVal) {
+                alert("Wpisz zarówno pytanie, jak i odpowiedź!");
+                return;
+            }
+
+            const newCard = {
+                q: qVal,
+                a: aVal,
+                topic: activeTopic,
+                category: activeCat,
+                interval: 0,
+                ef: 2.5,
+                nextReview: getTodayStr()
+            };
+
+            dbSrsRef.push(newCard).then(() => {
+                inputQ.value = '';
+                inputA.value = '';
+                alert("Fiszka została dodana do tematu: " + activeTopic);
+                loadDueCard();
+            }).catch(err => {
+                alert("Błąd zapisu Firebase: " + err.message);
+            });
+        };
+    }
 }
 
 // --- CALENDAR INTEGRATION (TIME-GRID + LIST) ---
@@ -1026,11 +1098,10 @@ function showKnowledgeModal(meta) {
     
     title.textContent = meta.categoryTitle;
     title.style.color = meta.baseColor;
-    
-    // Przekazanie aktywnej kategorii do systemu SRS (Modul Fiszki)
+    // Przekazanie aktywnego tematu i kategorii do systemu SRS (Modul Fiszki)
+    window.ACTIVE_SRS_TOPIC = meta.categoryTitle;
     window.ACTIVE_SRS_CATEGORY = meta.parentTopic;
     if(window.refreshSRS) window.refreshSRS();
-    
     const treeArr = window.KnowledgeTree ? window.KnowledgeTree[meta.categoryTitle] : null;
     let currentTopicStr = "Oczekuje na wgranie etapów...";
     let totalNodes = 0;

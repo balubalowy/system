@@ -5,9 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>B-Core</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css?v=17.9">
-    <script src="js/local_data.js?v=17.9"></script>
-    
+    <link rel="stylesheet" href="css/styles.css?v=18.4">
+    <script src="js/local_data.js?v=18.3"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -66,24 +69,33 @@
 
             <div class="modal-body" id="modal-body-content" style="font-size:0.9rem; line-height:1.6; color:var(--text-secondary); margin-bottom: 24px;">
                 <!-- Treść generowana z JS -->
-            </div>
-
-            <div class="srs-panel" id="srs-panel">
+            </div>            <div class="srs-panel" id="srs-panel" style="margin-bottom: 24px;">
                 <div class="widget-header" style="margin-bottom: 16px;">
                     <i data-lucide="brain-circuit" style="color: var(--accent-primary);"></i>
                     <h3 style="font-size:0.9rem; color:var(--text-primary); font-weight: 600;">Moduł Powtórek</h3>
                 </div>
                 
-                <p class="srs-question" id="srs-q">Wczytywanie fiszek...</p>
+                <p class="srs-question" id="srs-q" style="font-size: 1rem; line-height: 1.5; color: var(--text-primary); margin-bottom: 16px; min-height: 40px; padding: 12px; background: rgba(0,0,0,0.15); border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">Wczytywanie fiszek...</p>
                 <button class="btn btn-primary start-btn" id="srs-reveal" style="display:none; width:100%; margin-bottom:16px;">Odsłoń odpowiedź</button>
-                <div class="srs-actions" id="srs-actions" style="display:none;">
-                    <button class="btn btn-danger" id="srs-bad">Zapomniałem</button>
-                    <button class="btn btn-secondary" id="srs-mid" style="color: var(--accent-warning); border-color: var(--border-subtle);">Słabo</button>
-                    <button class="btn btn-secondary" id="srs-good" style="color: var(--accent-success); border-color: var(--border-subtle);">Doskonale</button>
+                <div class="srs-actions" id="srs-actions" style="display:none; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px;">
+                    <button class="btn btn-danger" id="srs-bad" style="padding: 10px;">Zapomniałem</button>
+                    <button class="btn btn-secondary" id="srs-mid" style="color: var(--accent-warning); border-color: var(--border-subtle); padding: 10px;">Słabo</button>
+                    <button class="btn btn-secondary" id="srs-good" style="color: var(--accent-success); border-color: var(--border-subtle); padding: 10px;">Doskonale</button>
                 </div>
-                <div class="srs-status" id="srs-status">W gotowości</div>
-            </div>
+                <div class="srs-status" id="srs-status" style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 20px;">W gotowości</div>
 
+                <!-- NOWY FORMULARZ DODAWANIA WŁASNEJ FISZKI -->
+                <div style="border-top:1px solid var(--border-subtle); padding-top:16px; margin-top:16px;">
+                    <h4 style="font-size:0.8rem; color:var(--text-primary); margin-bottom:12px; font-weight:600; display:flex; align-items:center; gap:6px;">
+                        <i data-lucide="plus-circle" style="width:14px; height:14px; color:var(--accent-primary);"></i> Dodaj własną fiszkę do tego tematu:
+                    </h4>
+                    <div style="display:flex; flex-direction:column; gap:8px;">
+                        <input type="text" id="new-srs-q" placeholder="Pytanie (np. Jaki jest wzór na $E=mc^2$ ?)" style="width:100%; background:var(--bg-secondary); border:1px solid var(--border-subtle); color:var(--text-primary); padding:8px 12px; font-size:0.85rem; border-radius:var(--radius-sm); outline:none;">
+                        <input type="text" id="new-srs-a" placeholder="Odpowiedź (np. definicja, wzór lub link do zdjęcia)" style="width:100%; background:var(--bg-secondary); border:1px solid var(--border-subtle); color:var(--text-primary); padding:8px 12px; font-size:0.85rem; border-radius:var(--radius-sm); outline:none;">
+                        <button class="btn btn-secondary" id="btn-add-custom-srs" style="font-size:0.8rem; padding:8px 12px; display:flex; align-items:center; justify-content:center; gap:6px; background:var(--bg-tertiary); border:1px solid var(--border-subtle); cursor:pointer;"><i data-lucide="check"></i> Zapisz fiszkę w chmurze</button>
+                    </div>
+                </div>
+            </div>
             <button class="btn btn-ghost" style="width:100%; margin-top: 8px;" onclick="document.getElementById('knowledge-modal').style.display='none'">Zamknij panel</button>
         </div>
     </div>
@@ -345,7 +357,7 @@
 
     <script src="js/knowledge_tree.js?v=17.6"></script>
     <script src="js/data.js?v=17.2"></script>
-    <script src="js/app.js?v=18.3"></script>
+    <script src="js/app.js?v=18.4"></script>
     <script>
         lucide.createIcons();
 
