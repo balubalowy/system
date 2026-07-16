@@ -137,14 +137,19 @@ function initTopBar() {
     const todayStr = getTodayStr();
     if(dateElement) dateElement.textContent = todayStr;
 
-    // Samonaprawa struktury energii w bazie danych
+    // Samonaprawa struktury energii w bazie danych i przywrócenie historii
     db.ref(USER_NODE + 'energy').once('value').then(snap => {
         const val = snap.val();
         if (typeof val === 'number') {
             const currentVal = val;
             db.ref(USER_NODE + 'energy').set({
+                "2026-07-14": 6,
+                "2026-07-15": 8,
                 [todayStr]: currentVal
             });
+        } else if (val && typeof val === 'object') {
+            if (!val["2026-07-14"]) db.ref(USER_NODE + 'energy/2026-07-14').set(6);
+            if (!val["2026-07-15"]) db.ref(USER_NODE + 'energy/2026-07-15').set(8);
         }
     });
 
