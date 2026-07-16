@@ -321,8 +321,18 @@
             </section>
 
             <section class="panel-section">
-                <div class="section-header">
+                <div class="section-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:var(--space-2);">
                     <h2>Analityka i Postęp</h2>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <label for="chart-sort" style="font-size:0.8rem; color:var(--text-secondary);">Sortowanie:</label>
+                        <select id="chart-sort" style="background:var(--bg-tertiary); border:1px solid var(--border-subtle); color:var(--text-primary); padding:4px 8px; border-radius:var(--radius-sm); font-size:0.8rem; outline:none; cursor:pointer; font-family:var(--font-sans);">
+                            <option value="section">Wg sekcji (grupy)</option>
+                            <option value="desc">Od największych do najmniejszych</option>
+                            <option value="asc">Od najmniejszych do największych</option>
+                            <option value="alpha">Alfabetycznie</option>
+                            <option value="priority">Priorytetami (własne)</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="charts-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:var(--space-4);">
                     <div class="card" style="min-height: 450px; position: relative; width: 100%;"><canvas id="skillsBarChart"></canvas></div>
@@ -335,7 +345,7 @@
 
     <script src="js/knowledge_tree.js?v=17.6"></script>
     <script src="js/data.js?v=17.2"></script>
-    <script src="js/app.js?v=17.9"></script>
+    <script src="js/app.js?v=18.3"></script>
     <script>
         lucide.createIcons();
 
