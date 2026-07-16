@@ -7,9 +7,12 @@ $onedrivePath = "C:\Users\baluk\OneDrive - Uniwersytet Ekonomiczny we Wrocławiu
 
 Write-Host "Rozpoczynam zwiad plikowy Local Agent Bridge..." -ForegroundColor Cyan
 
-$photosPath = 'C:\Users\baluk\OneDrive - Uniwersytet Ekonomiczny we Wrocławiu\hanuenane cz. 3\[-] FOTOGRAFIE'
-$excelPath = 'C:\Users\baluk\OneDrive - Uniwersytet Ekonomiczny we Wrocławiu\hanuenane cz. 3\[-] MODEL EXCEL'
-$stormsPath = 'C:\Users\baluk\OneDrive - Uniwersytet Ekonomiczny we Wrocławiu\hanuenane cz. 3\[-] APLIKACJE PYTHON'
+$basePathPattern = "C:\Users\baluk\OneDrive*Ekonomiczny*\hanuenane cz. 3"
+$basePath = (Resolve-Path $basePathPattern).Path
+
+$photosPath = Join-Path $basePath "[-] FOTOGRAFIE"
+$excelPath = Join-Path $basePath "[-] MODEL EXCEL"
+$stormsPath = Join-Path $basePath "[-] APLIKACJE PYTHON"
 
 $photosCount = 0
 $excelCount = 0
