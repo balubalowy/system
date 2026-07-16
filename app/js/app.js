@@ -112,6 +112,14 @@ function initApp() {
         if(miniSync) {
             miniSync.textContent = (window.localAgentStats.lastSync || '') + ` [Z: ${window.localAgentStats.photos} M:${window.localAgentStats.excels}]`;
         }
+        
+        const sp = document.getElementById('stat-photos');
+        const se = document.getElementById('stat-excels');
+        const ss = document.getElementById('stat-storms');
+        
+        if(sp) sp.textContent = window.localAgentStats.photos || 0;
+        if(se) se.textContent = window.localAgentStats.excels || 0;
+        if(ss) ss.textContent = window.localAgentStats.storms || 0;
     }
 }
 
@@ -1147,14 +1155,20 @@ function initInteractiveTasks() {
             }
 
             let html = `
-            <div style="display:flex; flex-direction:column; gap:8px;">
-                <div style="font-size:0.9rem; font-weight:500; color:var(--text-primary); line-height:1.4;">${topTask}</div>
-                <div style="display:flex; gap:6px;">
-                    <button class="btn btn-ghost" onclick="actionTask('${b.key}', 'reject')" style="padding: 4px 8px; font-size:0.75rem; color:var(--accent-warning); border:1px solid rgba(255,159,10,0.2);" title="Odrzuć na spód wrzutni"><i data-lucide="x" style="width:12px; margin-right:4px;"></i> Cofnij</button>
-                    <button class="btn btn-ghost" onclick="actionTask('${b.key}', 'complete')" style="padding: 4px 8px; font-size:0.75rem; color:var(--accent-success); border:1px solid rgba(43,191,113,0.3);"><i data-lucide="check" style="width:12px; margin-right:4px;"></i> Ukończ</button>
+            <div style="display:flex; flex-direction:column; height: 100%;">
+                
+                <!-- Główne Zadanie (Realizacja) -->
+                <div style="background: rgba(0,0,0,0.2); padding: 12px; border-radius: var(--radius-md); border-left: 2px solid ${b.btnColor}; margin-bottom: auto;">
+                    <div style="font-size:0.95rem; font-weight:500; color:var(--text-primary); line-height:1.4; margin-bottom: 12px;">${topTask}</div>
+                    <div style="display:flex; gap:6px;">
+                        <button class="btn btn-ghost" onclick="actionTask('${b.key}', 'reject')" style="flex:1; padding: 6px; font-size:0.8rem; color:var(--accent-warning); border:1px solid rgba(255,159,10,0.2);" title="Odrzuć na spód wrzutni"><i data-lucide="x" style="width:14px; margin-right:4px;"></i> Cofnij</button>
+                        <button class="btn btn-secondary" onclick="actionTask('${b.key}', 'complete')" style="flex:1; padding: 6px; font-size:0.8rem; color:var(--accent-success); border:1px solid rgba(43,191,113,0.3);"><i data-lucide="check" style="width:14px; margin-right:4px;"></i> Ukończ</button>
+                    </div>
                 </div>
+
+                <!-- Propozycje z Wrzutni -->
+                ${queueHtml}
             </div>
-            ${queueHtml}
             `;
             el.innerHTML = html;
         });
