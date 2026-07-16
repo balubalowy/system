@@ -101,7 +101,6 @@ function initApp() {
     initDayTimeTrack();
     initSidebarToggle();
     initIdeasEngine();
-    initHarvesting();
     initInteractiveTasks();
     
     setTimeout(() => { initCharts(); }, 500);
@@ -244,40 +243,6 @@ function initIdeasEngine() {
     });
 }
 
-function initHarvesting() {
-    db.ref(USER_NODE + 'inbox').once('value').then(snap => {
-        const data = snap.val() || {};
-        const maps = { priority: {id: 'suggested-priority', block: 'block-1'}, admin: {id: 'suggested-admin', block: 'block-2'} };
-        for (let key in maps) {
-            if (data[key]) {
-                const lines = data[key].split('\\n').map(l => l.trim()).filter(l => l.length > 0);
-                if (lines.length > 0) {
-                    const container = document.getElementById(maps[key].id);
-                    container.innerHTML = `<span style="color:var(--text-secondary); font-size:0.8rem; font-weight:600; display:block; margin-bottom:6px;">[Zrzutnia Zadań]</span><div style="display:flex; flex-wrap:wrap; gap:6px;"></div>`;
-                    const flexWrap = container.querySelector('div');
-                    
-                    lines.slice(0, 5).forEach(line => {
-                        const a = document.createElement('a');
-                        a.href = "#";
-                        a.innerHTML = `${line.substring(0, 50)}${line.length > 50 ? '...' : ''} <i data-lucide="arrow-up-right" style="width:14px; height:14px; vertical-align:middle;"></i>`;
-                        a.style.cssText = "color:var(--accent-info); text-decoration:none; display:inline-block; padding: 4px 8px; font-size:0.8rem; background: rgba(0, 190, 255, 0.05); border: 1px solid rgba(0, 190, 255, 0.2); border-radius:4px; transition:all 0.2s;";
-                        a.onclick = function(e) {
-                            e.preventDefault();
-                            document.querySelector(`#${maps[key].block} h3`).innerText = line;
-                            a.innerHTML = '<i data-lucide="check"></i> Gotowe';
-                            a.style.color = 'var(--accent-success)';
-                            a.style.pointerEvents = 'none';
-                            if(window.lucide) window.lucide.createIcons();
-                            setTimeout(() => { a.style.display = 'none'; }, 1500);
-                        };
-                        flexWrap.appendChild(a);
-                    });
-                    if(window.lucide) window.lucide.createIcons();
-                }
-            }
-        }
-    });
-}
 
 // --- CHECKLISTS (SYNCED) ---
 function initChecklists() {
