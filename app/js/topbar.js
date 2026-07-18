@@ -92,6 +92,27 @@ function initZeroEnergy() {
     });
 }
 
+function initSyncStatus() {
+    const cloudStatus = document.getElementById('cloud-status');
+    const miniSync = document.getElementById('mini-sync-status');
+    if(!cloudStatus || !miniSync) return;
+
+    if(!db || !USER_NODE) {
+        miniSync.textContent = 'Offline';
+        return;
+    }
+
+    // Pokaż "Synced" od razu - połączenie z Firebase istnieje
+    cloudStatus.style.display = 'inline';
+
+    // Słuchaj ostatniej zmiany w całym węźle użytkownika
+    db.ref(USER_NODE).limitToLast(1).on('value', () => {
+        const now = new Date();
+        const stamp = now.toISOString().split('T')[0] + '  ' + now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+        miniSync.textContent = stamp;
+    });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const currentTheme = localStorage.getItem('theme') || 'dark';
     document.documentElement.setAttribute('data-theme', currentTheme);
@@ -102,6 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initEnergySync();
     initThemeToggle();
     initZeroEnergy();
+    initSyncStatus();
     
     if(window.lucide) window.lucide.createIcons();
 });

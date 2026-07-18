@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="pl" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Baza Wydatków - B-Core</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css?v=20.1">
+    <style>
+        .expense-grid {
+            display: grid;
+            grid-template-columns: 340px 1fr;
+            gap: var(--space-4);
+            height: calc(100vh - 160px);
+        }
+        .expense-sidebar {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: var(--space-3);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .expense-main {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: var(--space-4);
+            overflow-y: auto;
+        }
+        .expense-cat-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 10px 14px;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.15s;
+            text-align: left;
+        }
+        .expense-cat-btn:hover { background: rgba(255,255,255,0.03); border-color: var(--border-subtle); }
+        .expense-cat-btn.active { background: rgba(255,255,255,0.05); border-color: var(--accent-primary); color: var(--text-primary); }
+
+        .expense-add-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            padding: 12px;
+            background: rgba(0,0,0,0.2);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-subtle);
+            flex-wrap: wrap;
+        }
+        .expense-add-row input, .expense-add-row select {
+            flex: 1;
+            min-width: 100px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            padding: 8px 10px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .expense-add-row input:focus, .expense-add-row select:focus {
+            border-color: var(--accent-primary);
+        }
+        .expense-add-row input[type="number"] { max-width: 120px; }
+        .expense-add-row input[type="date"] { max-width: 160px; }
+        .expense-add-row button {
+            padding: 8px 16px;
+            background: var(--accent-primary);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            white-space: nowrap;
+        }
+        .expense-add-row button:hover { opacity: 0.85; }
+
+        .expense-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .expense-table th {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border-subtle);
+            text-align: left;
+        }
+        .expense-table td {
+            padding: 10px 12px;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+        .expense-table tr:hover td {
+            background: rgba(255,255,255,0.02);
+        }
+        .expense-delete-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            opacity: 0.4;
+            transition: all 0.2s;
+            padding: 4px;
+        }
+        .expense-delete-btn:hover { opacity: 1; color: var(--accent-warning); }
+
+        .expense-summary-bar {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .expense-summary-card {
+            background: rgba(0,0,0,0.25);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 120px;
+        }
+        .expense-summary-card .label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+        }
+        .expense-summary-card .value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            font-family: var(--font-mono);
+        }
+
+        @media (max-width: 768px) {
+            .expense-grid { grid-template-columns: 1fr; height: auto; }
+            .expense-sidebar { max-height: 200px; }
+        }
+    </style>
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="js/firebase_init.js"></script>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-505S145DR8"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-505S145DR8');
+    </script>
+</head>
+<body class="no-sidebar">
+    <header class="topbar">
+        <div class="logo">
+            <i data-lucide="command" class="symbol"></i>
+            <h1>B <span>-Core</span></h1>
+            <div style="display:flex; flex-direction:column; margin-left: 12px; gap: 2px;">
+                <span id="btn-force-srs-sync" style="font-size:10px; color:var(--text-secondary); cursor:pointer; padding:2px 4px; border-radius:4px; line-height: 1;" title="Synchronizuj ręcznie"><i data-lucide="refresh-cw" style="width:10px; height:10px; vertical-align:middle; margin-right:4px;"></i><span id="cloud-status" style="color:var(--accent-success);">Synced</span></span>
+                <span id="mini-sync-status" style="font-size: 8px; color:var(--text-secondary); padding-left:4px; font-family:var(--font-mono);">Oczekiwanie...</span>
+            </div>
+            <button class="btn btn-ghost" id="theme-toggle-btn" style="margin-left: 10px; padding:4px 8px;" title="Przełącz Motyw"><i data-lucide="sun-moon"></i></button>
+            <button class="btn btn-ghost" id="btn-zero-energy" style="margin-left: 6px; padding:4px 8px;" title="Włącz tryb Low Energy (Tryb Baterii)"><i data-lucide="battery-low"></i></button>
+        </div>
+        
+        <div style="flex-grow:1; max-width:400px; margin:0 20px;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom: 6px;">
+                <label style="width:50px; color:var(--text-secondary); font-size:0.85rem; font-weight:500;">Energia</label>
+                <div class="energy-track" id="energy-track" title="Kliknij, by ustawić energię">
+                    <div class="energy-fill" id="energy-fill" style="width: 50%;"></div>
+                </div>
+                <span class="energy-val" id="energy-val-display" style="width:40px; font-family:var(--font-mono); font-weight:500; font-size:0.85rem;">5/10</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+                <label style="width:50px; color:var(--accent-info); font-size:0.85rem; font-weight:500;">Dzień</label>
+                <div class="energy-track" style="background:rgba(255,255,255,0.05); pointer-events:none;">
+                    <div class="energy-fill" id="time-fill" style="width: 0%; background:var(--accent-info); transition: width 1s linear;"></div>
+                </div>
+                <span id="time-val-display" style="width:40px; font-family:var(--font-mono); font-weight:500; font-size:0.85rem; color:#fff;">--:--</span>
+            </div>
+        </div>
+
+        <div class="top-stats">
+            <a href="index.html" class="btn btn-ghost" title="Powrót do Pulpitu"><i data-lucide="layout-dashboard"></i> Pulpit</a>
+            <a href="inbox.html" class="btn btn-ghost" title="Skok do Zrzutni Zadań"><i data-lucide="inbox"></i> Zrzutnia</a>
+            <a href="knowledge.html" class="btn btn-ghost" title="Baza Wiedzy"><i data-lucide="network"></i> Wiedza</a>
+            <a href="expenses.html" class="btn btn-ghost" title="Baza Wydatków"><i data-lucide="wallet"></i> Wydatki</a>
+        </div>
+    </header>
+
+    <main class="main-content no-sidebar-main">
+        <section class="content-area">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: var(--space-4);">
+                <div>
+                    <h2 style="font-size: 1.5rem; display:flex; align-items:center; gap:12px; font-weight:600;"><i data-lucide="wallet" style="color:#FF9F0A; width:24px; height:24px;"></i> Baza Wydatków</h2>
+                    <span class="date-subtitle" style="font-family: var(--font-sans); color: var(--text-secondary); margin-bottom: 0;">Planuj przyszłe wydatki i śledź budżet.</span>
+                </div>
+            </div>
+
+            <div class="expense-grid">
+                <div class="expense-sidebar" id="exp-sidebar"></div>
+                <div class="expense-main" id="exp-main">
+                    <p style="color:var(--text-secondary); text-align:center; padding-top: 40px;">Wybierz kategorię z lewego panelu.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if(window.lucide) window.lucide.createIcons();
+
+            const CATEGORIES = [
+                { name: "Mieszkanie", icon: "home", color: "#0A84FF" },
+                { name: "Jedzenie", icon: "utensils", color: "#2BBF71" },
+                { name: "Transport", icon: "car", color: "#5E5CE6" },
+                { name: "Subskrypcje", icon: "credit-card", color: "#FF375F" },
+                { name: "Elektronika", icon: "monitor-smartphone", color: "#FF9F0A" },
+                { name: "Ubrania", icon: "shirt", color: "#64D2FF" },
+                { name: "Zdrowie", icon: "heart-pulse", color: "#FF453A" },
+                { name: "Rozrywka", icon: "gamepad-2", color: "#BF5AF2" },
+                { name: "Edukacja", icon: "graduation-cap", color: "#30D158" },
+                { name: "Inne", icon: "more-horizontal", color: "#8B949E" }
+            ];
+
+            let allExpenses = {};
+            let activeCategory = null;
+
+            // Pobierz dane z Firebase
+            db.ref(USER_NODE + 'expenses').on('value', snap => {
+                allExpenses = snap.val() || {};
+                renderSidebar();
+                if(activeCategory) {
+                    renderMainArea(activeCategory);
+                }
+            });
+
+            function renderSidebar() {
+                const sidebar = document.getElementById('exp-sidebar');
+                sidebar.innerHTML = '';
+
+                CATEGORIES.forEach((cat, idx) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'expense-cat-btn' + (activeCategory === cat.name ? ' active' : '');
+                    
+                    // Zlicz ilość wydatków i sumę
+                    const catExpenses = allExpenses[cat.name] ? Object.values(allExpenses[cat.name]) : [];
+                    const totalAmount = catExpenses.reduce((sum, e) => sum + (parseFloat(e.amount) || 0), 0);
+                    const count = catExpenses.length;
+
+                    btn.innerHTML = `
+                        <span style="display:flex; align-items:center; gap:10px;">
+                            <i data-lucide="${cat.icon}" style="width:16px; height:16px; color:${cat.color};"></i>
+                            <span>${cat.name}</span>
+                            ${count > 0 ? `<span style="font-size:0.7rem; font-family:var(--font-mono); color:var(--text-secondary);">(${count})</span>` : ''}
+                        </span>
+                        ${totalAmount > 0 ? `<span style="font-family:var(--font-mono); font-size:0.8rem; color:${cat.color}; font-weight:600;">${totalAmount.toFixed(0)} zł</span>` : ''}
+                    `;
+
+                    btn.onclick = () => {
+                        activeCategory = cat.name;
+                        document.querySelectorAll('.expense-cat-btn').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        renderMainArea(cat.name);
+                    };
+                    sidebar.appendChild(btn);
+                });
+
+                if(window.lucide) window.lucide.createIcons();
+            }
+
+            function renderMainArea(categoryName) {
+                const main = document.getElementById('exp-main');
+                const catMeta = CATEGORIES.find(c => c.name === categoryName);
+                const color = catMeta ? catMeta.color : '#8B949E';
+                const catExpenses = allExpenses[categoryName] ? Object.entries(allExpenses[categoryName]) : [];
+                
+                // Sortuj po dacie malejąco
+                catExpenses.sort((a, b) => (b[1].date || '').localeCompare(a[1].date || ''));
+
+                const totalAmount = catExpenses.reduce((sum, [, e]) => sum + (parseFloat(e.amount) || 0), 0);
+                const avgAmount = catExpenses.length > 0 ? totalAmount / catExpenses.length : 0;
+
+                let html = `
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-subtle);">
+                        <h2 style="font-size: 1.3rem; color: var(--text-primary); font-weight: 600; display:flex; align-items:center; gap: 10px;">
+                            <div style="width: 10px; height: 22px; background-color: ${color}; border-radius: 3px;"></div>
+                            ${categoryName}
+                        </h2>
+                    </div>
+
+                    <div class="expense-summary-bar">
+                        <div class="expense-summary-card">
+                            <span class="label">Łącznie</span>
+                            <span class="value" style="color:${color};">${totalAmount.toFixed(2)} zł</span>
+                        </div>
+                        <div class="expense-summary-card">
+                            <span class="label">Pozycji</span>
+                            <span class="value" style="color:var(--text-primary);">${catExpenses.length}</span>
+                        </div>
+                        <div class="expense-summary-card">
+                            <span class="label">Średnio</span>
+                            <span class="value" style="color:var(--text-secondary);">${avgAmount.toFixed(2)} zł</span>
+                        </div>
+                    </div>
+
+                    <div class="expense-add-row">
+                        <input type="text" id="exp-name" placeholder="Nazwa wydatku..." style="flex:2;">
+                        <input type="number" id="exp-amount" placeholder="Kwota (zł)" step="0.01" min="0">
+                        <input type="date" id="exp-date" value="${new Date().toISOString().split('T')[0]}">
+                        <input type="text" id="exp-note" placeholder="Notatka (opcjonalnie)..." style="flex:2;">
+                        <button onclick="window.addExpense('${categoryName}')"><i data-lucide="plus" style="width:14px; height:14px; vertical-align:middle; margin-right:4px;"></i> Dodaj</button>
+                    </div>
+                `;
+
+                if(catExpenses.length === 0) {
+                    html += `<p style="color:var(--text-secondary); text-align:center; padding: 30px 0;">Brak zapisanych wydatków w tej kategorii. Dodaj pierwszy powyżej.</p>`;
+                } else {
+                    html += `
+                        <table class="expense-table">
+                            <thead>
+                                <tr>
+                                    <th style="width:30px;">#</th>
+                                    <th>Nazwa</th>
+                                    <th style="width:120px;">Kwota</th>
+                                    <th style="width:120px;">Data</th>
+                                    <th>Notatka</th>
+                                    <th style="width:40px;"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    `;
+
+                    catExpenses.forEach(([key, exp], idx) => {
+                        html += `
+                            <tr>
+                                <td style="color:var(--text-secondary); font-family:var(--font-mono); font-size:0.8rem;">${idx + 1}</td>
+                                <td style="font-weight:500;">${exp.name || '—'}</td>
+                                <td style="font-family:var(--font-mono); font-weight:600; color:${color};">${parseFloat(exp.amount || 0).toFixed(2)} zł</td>
+                                <td style="font-family:var(--font-mono); font-size:0.85rem; color:var(--text-secondary);">${exp.date || '—'}</td>
+                                <td style="font-size:0.85rem; color:var(--text-secondary);">${exp.note || '—'}</td>
+                                <td>
+                                    <button class="expense-delete-btn" onclick="window.deleteExpense('${categoryName}', '${key}')" title="Usuń wydatek">
+                                        <i data-lucide="trash-2" style="width:14px; height:14px;"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+
+                    html += `</tbody></table>`;
+                }
+
+                main.innerHTML = html;
+                if(window.lucide) window.lucide.createIcons();
+            }
+
+            window.addExpense = function(category) {
+                const name = document.getElementById('exp-name').value.trim();
+                const amount = document.getElementById('exp-amount').value;
+                const date = document.getElementById('exp-date').value;
+                const note = document.getElementById('exp-note').value.trim();
+
+                if(!name || !amount) {
+                    document.getElementById('exp-name').style.borderColor = !name ? 'var(--accent-warning)' : '';
+                    document.getElementById('exp-amount').style.borderColor = !amount ? 'var(--accent-warning)' : '';
+                    return;
+                }
+
+                const newRef = db.ref(USER_NODE + 'expenses/' + category).push();
+                newRef.set({
+                    name: name,
+                    amount: parseFloat(amount),
+                    date: date || new Date().toISOString().split('T')[0],
+                    note: note || '',
+                    createdAt: Date.now()
+                });
+            };
+
+            window.deleteExpense = function(category, key) {
+                db.ref(USER_NODE + 'expenses/' + category + '/' + key).remove();
+            };
+        });
+    </script>
+    <script src="js/topbar.js?v=20.1"></script>
+</body>
+</html>
