@@ -614,13 +614,18 @@
                                 Zrealizowane
                             </label>
 
-                            <select id="txn-recurring" style="max-width:120px;">
+                            <select id="txn-recurring" style="max-width:120px;" onchange="const el = document.getElementById('recurring-opts'); if(el) el.style.display = this.value ? 'flex' : 'none';">
                                 <option value="">Jednorazowy</option>
                                 <option value="weekly">Co tydzień</option>
                                 <option value="monthly">Co miesiąc</option>
                                 <option value="quarterly">Co kwartał</option>
                                 <option value="yearly">Co rok</option>
                             </select>
+                            <div id="recurring-opts" style="display:none; gap:6px; align-items:center;">
+                                <input type="number" id="txn-recur-count" placeholder="Rat" style="max-width:70px;" min="1" title="Zakończ po X wpłatach">
+                                <span style="color:var(--text-secondary); font-size:0.75rem;">lub do</span>
+                                <input type="date" id="txn-recur-end" style="max-width:120px;" title="Zakończ po tej dacie">
+                            </div>
                             <input type="text" id="txn-note" placeholder="Notatka..." style="flex:1.5;">
                             <button id="btn-add-txn" onclick="window.addTransaction('${dbNode}', '${catName}')"><i data-lucide="plus" style="width:14px; height:14px; vertical-align:middle; margin-right:4px;"></i> Dodaj</button>
                         </div>
@@ -648,6 +653,11 @@
                         items.forEach(([key, txn]) => {
                             const isRealized = txn.realized !== false;
                             const recurLabel = txn.recurring ? RECURRING_LABELS[txn.recurring] || txn.recurring : '';
+                            let recurDetails = recurLabel;
+                            if (recurLabel) {
+                                if (txn.recurCount) recurDetails += ` (x${txn.recurCount})`;
+                                else if (txn.recurEnd) recurDetails += ` (do ${txn.recurEnd})`;
+                            }
                             const rowClass = isRealized ? '' : 'row-planned';
                             
                             html += `
@@ -660,7 +670,7 @@
                                             ${isRealized ? '<i data-lucide="check" style="width:10px; height:10px; vertical-align:middle;"></i> Zrealizowane' : '<i data-lucide="clock" style="width:10px; height:10px; vertical-align:middle;"></i> Planowane'}
                                         </span>
                                     </td>
-                                    <td>${recurLabel ? `<span style="font-size:0.7rem; padding:2px 8px; border-radius:10px; background:rgba(255,255,255,0.05); color:var(--text-secondary); font-weight:500; white-space:nowrap;"><i data-lucide="repeat" style="width:10px; height:10px; vertical-align:middle;"></i> ${recurLabel}</span>` : '<span style="font-size:0.75rem; color:var(--text-secondary); opacity:0.5;">—</span>'}</td>
+                                    <td>${recurDetails ? `<span style="font-size:0.7rem; padding:2px 8px; border-radius:10px; background:rgba(255,255,255,0.05); color:var(--text-secondary); font-weight:500; white-space:nowrap;" title="Cykliczność"><i data-lucide="repeat" style="width:10px; height:10px; vertical-align:middle;"></i> ${recurDetails}</span>` : '<span style="font-size:0.75rem; color:var(--text-secondary); opacity:0.5;">—</span>'}</td>
                                     <td style="font-size:0.85rem; color:var(--text-secondary);">${txn.note || '—'}</td>
                                     <td style="display:flex; gap: 4px;">
                                         <button class="expense-delete-btn" onclick="window.editItem('${dbNode}', '${catName}', '${key}')" title="Edytuj pozycję">
@@ -703,6 +713,14 @@
                 document.getElementById('txn-date').value = txn.date || '';
                 document.getElementById('txn-realized').checked = txn.realized !== false;
                 document.getElementById('txn-recurring').value = txn.recurring || '';
+                
+                const opts = document.getElementById('recurring-opts');
+                if(opts) {
+                    opts.style.display = txn.recurring ? 'flex' : 'none';
+                    if(document.getElementById('txn-recur-count')) document.getElementById('txn-recur-count').value = txn.recurCount || '';
+                    if(document.getElementById('txn-recur-end')) document.getElementById('txn-recur-end').value = txn.recurEnd || '';
+                }
+
                 document.getElementById('txn-note').value = txn.note || '';
                 
                 const btn = document.getElementById('btn-add-txn');
@@ -722,6 +740,8 @@
                 const date = document.getElementById('txn-date').value;
                 const realized = document.getElementById('txn-realized').checked;
                 const recurring = document.getElementById('txn-recurring').value;
+                const recurCount = document.getElementById('txn-recur-count') ? document.getElementById('txn-recur-count').value : '';
+                const recurEnd = document.getElementById('txn-recur-end') ? document.getElementById('txn-recur-end').value : '';
                 const note = document.getElementById('txn-note').value.trim();
 
                 if(!name || !amount) {
@@ -738,7 +758,11 @@
                     note: note || '',
                     createdAt: Date.now()
                 };
-                if(recurring) data.recurring = recurring;
+                if(recurring) {
+                    data.recurring = recurring;
+                    if(recurCount) data.recurCount = parseInt(recurCount);
+                    if(recurEnd) data.recurEnd = recurEnd;
+                }
 
                 if(window.editState) {
                     delete data.createdAt; // Nie nadpisujemy daty utworzenia
@@ -758,6 +782,9 @@
                 document.getElementById('txn-amount').value = '';
                 document.getElementById('txn-note').value = '';
                 document.getElementById('txn-recurring').value = '';
+                if(document.getElementById('recurring-opts')) document.getElementById('recurring-opts').style.display = 'none';
+                if(document.getElementById('txn-recur-count')) document.getElementById('txn-recur-count').value = '';
+                if(document.getElementById('txn-recur-end')) document.getElementById('txn-recur-end').value = '';
             };
 
             window.addInvestment = function(category) {
