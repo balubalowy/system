@@ -248,36 +248,94 @@
                 { name: "Inne", icon: "more-horizontal", color: "#8B949E" }
             ];
 
-            let allExpenses = {};
-            let activeCategory = null;
+            const RECURRING_LABELS = {
+                '': 'Jednorazowy',
+                'monthly': 'Co miesiąc',
+                'weekly': 'Co tydzień',
+                'yearly': 'Co rok',
+                'quarterly': 'Co kwartał'
+            };
 
-            // Pobierz dane z Firebase
+            let allExpenses = {};
+            let activeCategory = null; // null = podsumowanie
+
             db.ref(USER_NODE + 'expenses').on('value', snap => {
                 allExpenses = snap.val() || {};
                 renderSidebar();
-                if(activeCategory) {
+                if(activeCategory === null) {
+                    renderSummary();
+                } else {
                     renderMainArea(activeCategory);
                 }
             });
+
+            function getAllExpensesFlat() {
+                let all = [];
+                CATEGORIES.forEach(cat => {
+                    const items = allExpenses[cat.name] ? Object.entries(allExpenses[cat.name]) : [];
+                    items.forEach(([key, exp]) => {
+                        all.push({ ...exp, key, category: cat.name, color: cat.color, icon: cat.icon });
+                    });
+                });
+                return all;
+            }
+
+            function getMonthlyRecurringTotal() {
+                let total = 0;
+                const all = getAllExpensesFlat();
+                all.forEach(e => {
+                    if(e.recurring === 'monthly') total += (parseFloat(e.amount) || 0);
+                    else if(e.recurring === 'weekly') total += (parseFloat(e.amount) || 0) * 4.33;
+                    else if(e.recurring === 'yearly') total += (parseFloat(e.amount) || 0) / 12;
+                    else if(e.recurring === 'quarterly') total += (parseFloat(e.amount) || 0) / 3;
+                });
+                return total;
+            }
 
             function renderSidebar() {
                 const sidebar = document.getElementById('exp-sidebar');
                 sidebar.innerHTML = '';
 
-                CATEGORIES.forEach((cat, idx) => {
+                // Przycisk Podsumowanie
+                const sumBtn = document.createElement('button');
+                sumBtn.className = 'expense-cat-btn' + (activeCategory === null ? ' active' : '');
+                const grandTotal = getAllExpensesFlat().reduce((s, e) => s + (parseFloat(e.amount) || 0), 0);
+                const recurringMonthly = getMonthlyRecurringTotal();
+                sumBtn.innerHTML = `
+                    <span style="display:flex; align-items:center; gap:10px;">
+                        <i data-lucide="bar-chart-3" style="width:16px; height:16px; color:#FF9F0A;"></i>
+                        <span style="font-weight:600;">Podsumowanie</span>
+                    </span>
+                    <span style="font-family:var(--font-mono); font-size:0.8rem; color:#FF9F0A; font-weight:600;">${grandTotal.toFixed(0)} zł</span>
+                `;
+                sumBtn.onclick = () => {
+                    activeCategory = null;
+                    document.querySelectorAll('.expense-cat-btn').forEach(b => b.classList.remove('active'));
+                    sumBtn.classList.add('active');
+                    renderSummary();
+                };
+                sidebar.appendChild(sumBtn);
+
+                // Separator
+                const sep = document.createElement('div');
+                sep.style.cssText = 'height:1px; background:var(--border-subtle); margin:4px 0;';
+                sidebar.appendChild(sep);
+
+                CATEGORIES.forEach(cat => {
                     const btn = document.createElement('button');
                     btn.className = 'expense-cat-btn' + (activeCategory === cat.name ? ' active' : '');
                     
-                    // Zlicz ilość wydatków i sumę
                     const catExpenses = allExpenses[cat.name] ? Object.values(allExpenses[cat.name]) : [];
                     const totalAmount = catExpenses.reduce((sum, e) => sum + (parseFloat(e.amount) || 0), 0);
                     const count = catExpenses.length;
+                    const hasRecurring = catExpenses.some(e => e.recurring);
 
                     btn.innerHTML = `
                         <span style="display:flex; align-items:center; gap:10px;">
                             <i data-lucide="${cat.icon}" style="width:16px; height:16px; color:${cat.color};"></i>
                             <span>${cat.name}</span>
                             ${count > 0 ? `<span style="font-size:0.7rem; font-family:var(--font-mono); color:var(--text-secondary);">(${count})</span>` : ''}
+                            ${hasRecurring ? `<i data-lucide="repeat" style="width:10px; height:10px; color:var(--accent-info); opacity:0.6;"></i>` : ''}
                         </span>
                         ${totalAmount > 0 ? `<span style="font-family:var(--font-mono); font-size:0.8rem; color:${cat.color}; font-weight:600;">${totalAmount.toFixed(0)} zł</span>` : ''}
                     `;
@@ -294,17 +352,111 @@
                 if(window.lucide) window.lucide.createIcons();
             }
 
+            function renderSummary() {
+                const main = document.getElementById('exp-main');
+                const all = getAllExpensesFlat();
+                const grandTotal = all.reduce((s, e) => s + (parseFloat(e.amount) || 0), 0);
+                const recurringMonthly = getMonthlyRecurringTotal();
+                const recurringYearly = recurringMonthly * 12;
+                const oneTimeTotal = all.filter(e => !e.recurring).reduce((s, e) => s + (parseFloat(e.amount) || 0), 0);
+                const recurringItems = all.filter(e => e.recurring);
+
+                let html = `
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-subtle);">
+                        <h2 style="font-size: 1.3rem; color: var(--text-primary); font-weight: 600; display:flex; align-items:center; gap: 10px;">
+                            <div style="width: 10px; height: 22px; background: linear-gradient(180deg, #FF9F0A, #FF375F); border-radius: 3px;"></div>
+                            Podsumowanie Wszystkich Wydatków
+                        </h2>
+                    </div>
+
+                    <div class="expense-summary-bar">
+                        <div class="expense-summary-card">
+                            <span class="label">Suma globalna</span>
+                            <span class="value" style="color:#FF9F0A;">${grandTotal.toFixed(2)} zł</span>
+                        </div>
+                        <div class="expense-summary-card">
+                            <span class="label">Wszystkich pozycji</span>
+                            <span class="value" style="color:var(--text-primary);">${all.length}</span>
+                        </div>
+                        <div class="expense-summary-card">
+                            <span class="label">Jednorazowe</span>
+                            <span class="value" style="color:var(--text-secondary);">${oneTimeTotal.toFixed(2)} zł</span>
+                        </div>
+                        <div class="expense-summary-card" style="border-color: var(--accent-info);">
+                            <span class="label"><i data-lucide="repeat" style="width:10px; height:10px; vertical-align:middle; margin-right:4px;"></i>Stałe / miesiąc</span>
+                            <span class="value" style="color:var(--accent-info);">${recurringMonthly.toFixed(2)} zł</span>
+                        </div>
+                        <div class="expense-summary-card" style="border-color: var(--accent-info);">
+                            <span class="label"><i data-lucide="repeat" style="width:10px; height:10px; vertical-align:middle; margin-right:4px;"></i>Stałe / rok</span>
+                            <span class="value" style="color:var(--accent-info);">${recurringYearly.toFixed(2)} zł</span>
+                        </div>
+                    </div>
+
+                    <h3 style="font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin: 24px 0 12px;">Rozkład wydatków wg kategorii</h3>
+                    <div style="display:flex; flex-direction:column; gap:6px; margin-bottom: 28px;">
+                `;
+
+                CATEGORIES.forEach(cat => {
+                    const catItems = allExpenses[cat.name] ? Object.values(allExpenses[cat.name]) : [];
+                    const catTotal = catItems.reduce((s, e) => s + (parseFloat(e.amount) || 0), 0);
+                    const pct = grandTotal > 0 ? (catTotal / grandTotal) * 100 : 0;
+                    if(catTotal === 0) return;
+
+                    html += `
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <span style="width:120px; font-size:0.85rem; color:var(--text-secondary); display:flex; align-items:center; gap:6px;">
+                                <i data-lucide="${cat.icon}" style="width:14px; height:14px; color:${cat.color};"></i> ${cat.name}
+                            </span>
+                            <div style="flex-grow:1; height:18px; background:rgba(255,255,255,0.04); border-radius:4px; overflow:hidden; position:relative;">
+                                <div style="width:${pct}%; height:100%; background:${cat.color}; border-radius:4px; transition:width 0.4s;"></div>
+                            </div>
+                            <span style="width:100px; text-align:right; font-family:var(--font-mono); font-size:0.85rem; font-weight:600; color:${cat.color};">${catTotal.toFixed(0)} zł</span>
+                            <span style="width:50px; text-align:right; font-family:var(--font-mono); font-size:0.75rem; color:var(--text-secondary);">${pct.toFixed(0)}%</span>
+                        </div>
+                    `;
+                });
+
+                html += `</div>`;
+
+                // Sekcja wydatków cyklicznych
+                if(recurringItems.length > 0) {
+                    html += `
+                        <h3 style="font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent-info); margin: 8px 0 12px; display:flex; align-items:center; gap:6px;">
+                            <i data-lucide="repeat" style="width:14px; height:14px;"></i> Wydatki cykliczne (${recurringItems.length})
+                        </h3>
+                        <table class="expense-table">
+                            <thead><tr>
+                                <th>Nazwa</th><th>Kategoria</th><th>Kwota</th><th>Cykl</th>
+                            </tr></thead><tbody>
+                    `;
+                    recurringItems.forEach(e => {
+                        html += `
+                            <tr>
+                                <td style="font-weight:500;">${e.name}</td>
+                                <td style="font-size:0.85rem; color:var(--text-secondary);"><i data-lucide="${e.icon}" style="width:12px; height:12px; color:${e.color}; vertical-align:middle; margin-right:4px;"></i>${e.category}</td>
+                                <td style="font-family:var(--font-mono); font-weight:600; color:${e.color};">${parseFloat(e.amount).toFixed(2)} zł</td>
+                                <td><span style="font-size:0.75rem; padding:2px 8px; border-radius:10px; background:rgba(100,210,255,0.1); color:var(--accent-info); font-weight:500;">${RECURRING_LABELS[e.recurring] || e.recurring}</span></td>
+                            </tr>
+                        `;
+                    });
+                    html += `</tbody></table>`;
+                }
+
+                main.innerHTML = html;
+                if(window.lucide) window.lucide.createIcons();
+            }
+
             function renderMainArea(categoryName) {
                 const main = document.getElementById('exp-main');
                 const catMeta = CATEGORIES.find(c => c.name === categoryName);
                 const color = catMeta ? catMeta.color : '#8B949E';
                 const catExpenses = allExpenses[categoryName] ? Object.entries(allExpenses[categoryName]) : [];
                 
-                // Sortuj po dacie malejąco
                 catExpenses.sort((a, b) => (b[1].date || '').localeCompare(a[1].date || ''));
 
                 const totalAmount = catExpenses.reduce((sum, [, e]) => sum + (parseFloat(e.amount) || 0), 0);
                 const avgAmount = catExpenses.length > 0 ? totalAmount / catExpenses.length : 0;
+                const recurringCount = catExpenses.filter(([,e]) => e.recurring).length;
 
                 let html = `
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-subtle);">
@@ -327,13 +479,25 @@
                             <span class="label">Średnio</span>
                             <span class="value" style="color:var(--text-secondary);">${avgAmount.toFixed(2)} zł</span>
                         </div>
+                        ${recurringCount > 0 ? `
+                        <div class="expense-summary-card" style="border-color:var(--accent-info);">
+                            <span class="label"><i data-lucide="repeat" style="width:10px; height:10px; vertical-align:middle; margin-right:4px;"></i>Cyklicznych</span>
+                            <span class="value" style="color:var(--accent-info);">${recurringCount}</span>
+                        </div>` : ''}
                     </div>
 
                     <div class="expense-add-row">
                         <input type="text" id="exp-name" placeholder="Nazwa wydatku..." style="flex:2;">
                         <input type="number" id="exp-amount" placeholder="Kwota (zł)" step="0.01" min="0">
                         <input type="date" id="exp-date" value="${new Date().toISOString().split('T')[0]}">
-                        <input type="text" id="exp-note" placeholder="Notatka (opcjonalnie)..." style="flex:2;">
+                        <select id="exp-recurring" style="max-width:140px;">
+                            <option value="">Jednorazowy</option>
+                            <option value="weekly">Co tydzień</option>
+                            <option value="monthly">Co miesiąc</option>
+                            <option value="quarterly">Co kwartał</option>
+                            <option value="yearly">Co rok</option>
+                        </select>
+                        <input type="text" id="exp-note" placeholder="Notatka..." style="flex:1.5;">
                         <button onclick="window.addExpense('${categoryName}')"><i data-lucide="plus" style="width:14px; height:14px; vertical-align:middle; margin-right:4px;"></i> Dodaj</button>
                     </div>
                 `;
@@ -348,7 +512,8 @@
                                     <th style="width:30px;">#</th>
                                     <th>Nazwa</th>
                                     <th style="width:120px;">Kwota</th>
-                                    <th style="width:120px;">Data</th>
+                                    <th style="width:110px;">Data</th>
+                                    <th style="width:100px;">Cykl</th>
                                     <th>Notatka</th>
                                     <th style="width:40px;"></th>
                                 </tr>
@@ -357,12 +522,14 @@
                     `;
 
                     catExpenses.forEach(([key, exp], idx) => {
+                        const recurLabel = exp.recurring ? RECURRING_LABELS[exp.recurring] || exp.recurring : '';
                         html += `
                             <tr>
                                 <td style="color:var(--text-secondary); font-family:var(--font-mono); font-size:0.8rem;">${idx + 1}</td>
                                 <td style="font-weight:500;">${exp.name || '—'}</td>
                                 <td style="font-family:var(--font-mono); font-weight:600; color:${color};">${parseFloat(exp.amount || 0).toFixed(2)} zł</td>
                                 <td style="font-family:var(--font-mono); font-size:0.85rem; color:var(--text-secondary);">${exp.date || '—'}</td>
+                                <td>${recurLabel ? `<span style="font-size:0.7rem; padding:2px 8px; border-radius:10px; background:rgba(100,210,255,0.1); color:var(--accent-info); font-weight:500; white-space:nowrap;">${recurLabel}</span>` : '<span style="font-size:0.75rem; color:var(--text-secondary);">—</span>'}</td>
                                 <td style="font-size:0.85rem; color:var(--text-secondary);">${exp.note || '—'}</td>
                                 <td>
                                     <button class="expense-delete-btn" onclick="window.deleteExpense('${categoryName}', '${key}')" title="Usuń wydatek">
@@ -384,6 +551,7 @@
                 const name = document.getElementById('exp-name').value.trim();
                 const amount = document.getElementById('exp-amount').value;
                 const date = document.getElementById('exp-date').value;
+                const recurring = document.getElementById('exp-recurring').value;
                 const note = document.getElementById('exp-note').value.trim();
 
                 if(!name || !amount) {
@@ -392,19 +560,24 @@
                     return;
                 }
 
-                const newRef = db.ref(USER_NODE + 'expenses/' + category).push();
-                newRef.set({
+                const data = {
                     name: name,
                     amount: parseFloat(amount),
                     date: date || new Date().toISOString().split('T')[0],
                     note: note || '',
                     createdAt: Date.now()
-                });
+                };
+                if(recurring) data.recurring = recurring;
+
+                db.ref(USER_NODE + 'expenses/' + category).push().set(data);
             };
 
             window.deleteExpense = function(category, key) {
                 db.ref(USER_NODE + 'expenses/' + category + '/' + key).remove();
             };
+
+            // Domyślnie pokaż podsumowanie
+            renderSummary();
         });
     </script>
     <script src="js/topbar.js?v=20.1"></script>
