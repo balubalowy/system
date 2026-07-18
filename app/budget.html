@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="pl" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budżet i Inwestycje - B-Core</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css?v=20.3">
+    <style>
+        .expense-grid {
+            display: grid;
+            grid-template-columns: 340px 1fr;
+            gap: var(--space-4);
+            height: calc(100vh - 160px);
+        }
+        .expense-sidebar {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: var(--space-3);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .expense-main {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: var(--space-4);
+            overflow-y: auto;
+        }
+        .expense-cat-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 8px 12px;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.15s;
+            text-align: left;
+        }
+        .expense-cat-btn:hover { background: rgba(255,255,255,0.03); border-color: var(--border-subtle); }
+        .expense-cat-btn.active { background: rgba(255,255,255,0.05); border-color: var(--accent-primary); color: var(--text-primary); }
+
+        .sidebar-section-title {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            margin: 12px 4px 4px;
+        }
+
+        .expense-add-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            padding: 12px;
+            background: rgba(0,0,0,0.2);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-subtle);
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .expense-add-row input, .expense-add-row select {
+            flex: 1;
+            min-width: 100px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            padding: 8px 10px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .expense-add-row input:focus, .expense-add-row select:focus {
+            border-color: var(--accent-primary);
+        }
+        .expense-add-row input[type="number"] { max-width: 120px; }
+        .expense-add-row input[type="date"] { max-width: 140px; }
+        .expense-add-row button {
+            padding: 8px 16px;
+            background: var(--accent-primary);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            white-space: nowrap;
+        }
+        .expense-add-row button:hover { opacity: 0.85; }
+
+        .expense-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .expense-table th {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--border-subtle);
+            text-align: left;
+        }
+        .expense-table td {
+            padding: 8px 10px;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            vertical-align: middle;
+        }
+        .expense-table tr:hover td {
+            background: rgba(255,255,255,0.02);
+        }
+        .expense-delete-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            opacity: 0.4;
+            transition: all 0.2s;
+            padding: 4px;
+        }
+        .expense-delete-btn:hover { opacity: 1; color: var(--accent-warning); }
+
+        .expense-summary-bar {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .expense-summary-card {
+            background: rgba(0,0,0,0.25);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 120px;
+        }
+        .expense-summary-card .label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+        }
+        .expense-summary-card .value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            font-family: var(--font-mono);
+        }
+
+        .status-badge {
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            user-select: none;
+            transition: opacity 0.2s;
+        }
+        .status-badge:hover { opacity: 0.8; }
+        .status-realized { background: rgba(43, 191, 113, 0.15); color: #2BBF71; border: 1px solid rgba(43, 191, 113, 0.3); }
+        .status-planned { background: rgba(255, 159, 10, 0.15); color: #FF9F0A; border: 1px solid rgba(255, 159, 10, 0.3); }
+        .status-badge.disabled { cursor: default; }
+        .status-badge.disabled:hover { opacity: 1; }
+
+        .row-planned { opacity: 0.65; }
+
+        .toggle-switch {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        .toggle-switch input { display: none; }
+        .toggle-slider {
+            width: 32px;
+            height: 18px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            position: relative;
+            transition: background 0.2s;
+        }
+        .toggle-slider::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 14px;
+            height: 14px;
+            background: #fff;
+            border-radius: 50%;
+            transition: left 0.2s;
+        }
+        .toggle-switch input:checked + .toggle-slider { background: #2BBF71; }
+        .toggle-switch input:checked + .toggle-slider::after { left: 16px; }
+
+        @media (max-width: 768px) {
+            .expense-grid { grid-template-columns: 1fr; height: auto; }
+            .expense-sidebar { max-height: 200px; }
+        }
+    </style>
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="js/firebase_init.js"></script>
+</head>
+<body class="no-sidebar">
+    <header class="topbar">
+        <div class="logo">
+            <i data-lucide="command" class="symbol"></i>
+            <h1>B <span>-Core</span></h1>
+            <div style="display:flex; flex-direction:column; margin-left: 12px; gap: 2px;">
+                <span id="btn-force-srs-sync" style="font-size:10px; color:var(--text-secondary); cursor:pointer; padding:2px 4px; border-radius:4px; line-height: 1;" title="Synchronizuj ręcznie"><i data-lucide="refresh-cw" style="width:10px; height:10px; vertical-align:middle; margin-right:4px;"></i><span id="cloud-status" style="color:var(--accent-success);">Synced</span></span>
+                <span id="mini-sync-status" style="font-size: 8px; color:var(--text-secondary); padding-left:4px; font-family:var(--font-mono);">Oczekiwanie...</span>
+            </div>
+            <button class="btn btn-ghost" id="theme-toggle-btn" style="margin-left: 10px; padding:4px 8px;" title="Przełącz Motyw"><i data-lucide="sun-moon"></i></button>
+            <button class="btn btn-ghost" id="btn-zero-energy" style="margin-left: 6px; padding:4px 8px;" title="Włącz tryb Low Energy (Tryb Baterii)"><i data-lucide="battery-low"></i></button>
+        </div>
+        
+        <div style="flex-grow:1; max-width:400px; margin:0 20px;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom: 6px;">
+                <label style="width:50px; color:var(--text-secondary); font-size:0.85rem; font-weight:500;">Energia</label>
+                <div class="energy-track" id="energy-track" title="Kliknij, by ustawić energię">
+                    <div class="energy-fill" id="energy-fill" style="width: 50%;"></div>
+                </div>
+                <span class="energy-val" id="energy-val-display" style="width:40px; font-family:var(--font-mono); font-weight:500; font-size:0.85rem;">5/10</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+                <label style="width:50px; color:var(--accent-info); font-size:0.85rem; font-weight:500;">Dzień</label>
+                <div class="energy-track" style="background:rgba(255,255,255,0.05); pointer-events:none;">
+                    <div class="energy-fill" id="time-fill" style="width: 0%; background:var(--accent-info); transition: width 1s linear;"></div>
+                </div>
+                <span id="time-val-display" style="width:40px; font-family:var(--font-mono); font-weight:500; font-size:0.85rem; color:#fff;">--:--</span>
+            </div>
+        </div>
+
+        <div class="top-stats">
+            <a href="index.html" class="btn btn-ghost" title="Powrót do Pulpitu"><i data-lucide="layout-dashboard"></i> Pulpit</a>
+            <a href="inbox.html" class="btn btn-ghost" title="Skok do Zrzutni Zadań"><i data-lucide="inbox"></i> Zrzutnia</a>
+            <a href="knowledge.html" class="btn btn-ghost" title="Baza Wiedzy"><i data-lucide="network"></i> Wiedza</a>
+            <a href="budget.html" class="btn btn-ghost" title="Budżet i Inwestycje"><i data-lucide="landmark"></i> Budżet</a>
+        </div>
+    </header>
+
+    <main class="main-content no-sidebar-main">
+        <section class="content-area">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: var(--space-4);">
+                <div>
+                    <h2 style="font-size: 1.5rem; display:flex; align-items:center; gap:12px; font-weight:600;"><i data-lucide="landmark" style="color:#FF9F0A; width:24px; height:24px;"></i> Budżet i Inwestycje</h2>
+                    <span class="date-subtitle" style="font-family: var(--font-sans); color: var(--text-secondary); margin-bottom: 0;">Zarządzaj przepływami finansowymi, kontroluj wydatki i monitoruj inwestycje.</span>
+                </div>
+            </div>
+
+            <div class="expense-grid">
+                <div class="expense-sidebar" id="exp-sidebar"></div>
+                <div class="expense-main" id="exp-main">
+                    <p style="color:var(--text-secondary); text-align:center; padding-top: 40px;">Wybierz kategorię z lewego panelu.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if(window.lucide) window.lucide.createIcons();
+
+            const EXPENSE_CATS = [
+                { name: "Mieszkanie", icon: "home", color: "#0A84FF" },
+                { name: "Jedzenie", icon: "utensils", color: "#2BBF71" },
+                { name: "Transport", icon: "car", color: "#5E5CE6" },
+                { name: "Subskrypcje", icon: "credit-card", color: "#FF375F" },
+                { name: "Elektronika", icon: "monitor-smartphone", color: "#FF9F0A" },
+                { name: "Ubrania", icon: "shirt", color: "#64D2FF" },
+                { name: "Zdrowie", icon: "heart-pulse", color: "#FF453A" },
+                { name: "Rozrywka", icon: "gamepad-2", color: "#BF5AF2" },
+                { name: "Edukacja", icon: "graduation-cap", color: "#30D158" },
+                { name: "Inne", icon: "more-horizontal", color: "#8B949E" }
+            ];
+
+            const INCOME_CATS = [
+                { name: "Wynagrodzenie", icon: "briefcase", color: "#30D158" },
+                { name: "Premie", icon: "gift", color: "#0A84FF" },
+                { name: "Odsetki", icon: "trending-up", color: "#BF5AF2" },
+                { name: "Inne Wpływy", icon: "plus-circle", color: "#2BBF71" }
+            ];
+
+            const INV_CATS = [
+                { name: "Konta Oszczędnościowe", icon: "piggy-bank", color: "#0A84FF" },
+                { name: "Obligacje Skarbowe", icon: "landmark", color: "#FF9F0A" },
+                { name: "Giełda i ETF", icon: "line-chart", color: "#BF5AF2" },
+                { name: "Kryptowaluty", icon: "bitcoin", color: "#FF375F" }
+            ];
+
+            const RECURRING_LABELS = {
+                '': 'Jednorazowy',
+                'monthly': 'Co miesiąc',
+                'weekly': 'Co tydzień',
+                'yearly': 'Co rok',
+                'quarterly': 'Co kwartał'
+            };
+
+            let allExpenses = {};
+            let allIncomes = {};
+            let allInvestments = {};
+            let activeCategory = null; // object: {type: 'summary'|'expense'|'income'|'investment', name: string}
+
+            // Inicjalizacja kategorii
+            activeCategory = { type: 'summary', name: 'Podsumowanie' };
+
+            // Pobieranie z bazy (3 węzły)
+            let loaded = 0;
+            const checkRender = () => {
+                if(loaded >= 3) {
+                    renderSidebar();
+                    renderMainArea();
+                }
+            };
+
+            db.ref(USER_NODE + 'expenses').on('value', snap => { allExpenses = snap.val() || {}; loaded++; checkRender(); });
+            db.ref(USER_NODE + 'incomes').on('value', snap => { allIncomes = snap.val() || {}; loaded++; checkRender(); });
+            db.ref(USER_NODE + 'investments').on('value', snap => { allInvestments = snap.val() || {}; loaded++; checkRender(); });
+
+            function getFlatData(sourceObj, categoryDefs, type) {
+                let all = [];
+                categoryDefs.forEach(cat => {
+                    const items = sourceObj[cat.name] ? Object.entries(sourceObj[cat.name]) : [];
+                    items.forEach(([key, item]) => {
+                        all.push({ ...item, key, category: cat.name, color: cat.color, icon: cat.icon, type: type });
+                    });
+                });
+                return all;
+            }
+
+            function renderSidebar() {
+                const sidebar = document.getElementById('exp-sidebar');
+                sidebar.innerHTML = '';
+
+                // Podsumowanie
+                const sumBtn = document.createElement('button');
+                sumBtn.className = 'expense-cat-btn' + (activeCategory.type === 'summary' ? ' active' : '');
+                
+                const expFlat = getFlatData(allExpenses, EXPENSE_CATS, 'expense');
+                const incFlat = getFlatData(allIncomes, INCOME_CATS, 'income');
+                const invFlat = getFlatData(allInvestments, INV_CATS, 'investment');
+
+                const totalExp = expFlat.filter(e => e.realized !== false).reduce((s, e) => s + (parseFloat(e.amount) || 0), 0);
+                const totalInc = incFlat.filter(e => e.realized !== false).reduce((s, e) => s + (parseFloat(e.amount) || 0), 0);
+                const balance = totalInc - totalExp;
+
+                sumBtn.innerHTML = `
+                    <span style="display:flex; align-items:center; gap:10px;">
+                        <i data-lucide="bar-chart-3" style="width:16px; height:16px; color:#FF9F0A;"></i>
+                        <span style="font-weight:600;">Podsumowanie</span>
+                    </span>
+                    <span style="font-family:var(--font-mono); font-size:0.8rem; color:${balance >= 0 ? '#30D158' : '#FF375F'}; font-weight:600;">${balance > 0 ? '+' : ''}${balance.toFixed(0)} zł</span>
+                `;
+                sumBtn.onclick = () => {
+                    activeCategory = { type: 'summary', name: 'Podsumowanie' };
+                    renderSidebar();
+                    renderMainArea();
+                };
+                sidebar.appendChild(sumBtn);
+
+                // Helper do sekcji
+                const createSection = (title, dataObj, catDefs, type) => {
+                    const titleEl = document.createElement('div');
+                    titleEl.className = 'sidebar-section-title';
+                    titleEl.innerText = title;
+                    sidebar.appendChild(titleEl);
+
+                    catDefs.forEach(cat => {
+                        const btn = document.createElement('button');
+                        const isActive = activeCategory.type === type && activeCategory.name === cat.name;
+                        btn.className = 'expense-cat-btn' + (isActive ? ' active' : '');
+                        
+                        const items = dataObj[cat.name] ? Object.values(dataObj[cat.name]) : [];
+                        // Inwestycje - sumujemy balance, pozostale amount
+                        const isInv = type === 'investment';
+                        const total = items.reduce((sum, e) => sum + (parseFloat(isInv ? e.balance : e.amount) || 0), 0);
+                        const count = items.length;
+
+                        btn.innerHTML = `
+                            <span style="display:flex; align-items:center; gap:10px;">
+                                <i data-lucide="${cat.icon}" style="width:16px; height:16px; color:${cat.color};"></i>
+                                <span>${cat.name}</span>
+                                ${count > 0 && !isInv ? `<span style="font-size:0.7rem; font-family:var(--font-mono); color:var(--text-secondary);">(${count})</span>` : ''}
+                            </span>
+                            ${total > 0 ? `<span style="font-family:var(--font-mono); font-size:0.8rem; color:${cat.color}; font-weight:600;">${total.toFixed(0)} zł</span>` : ''}
+                        `;
+                        btn.onclick = () => {
+                            activeCategory = { type: type, name: cat.name };
+                            renderSidebar();
+                            renderMainArea();
+                        };
+                        sidebar.appendChild(btn);
+                    });
+                };
+
+                createSection('Przychody', allIncomes, INCOME_CATS, 'income');
+                createSection('Wydatki', allExpenses, EXPENSE_CATS, 'expense');
+                createSection('Portfel Inwestycyjny', allInvestments, INV_CATS, 'investment');
+
+                if(window.lucide) window.lucide.createIcons();
+            }
+
+            function renderSummary() {
+                const main = document.getElementById('exp-main');
+                const expFlat = getFlatData(allExpenses, EXPENSE_CATS, 'expense');
+                const incFlat = getFlatData(allIncomes, INCOME_CATS, 'income');
+                const invFlat = getFlatData(allInvestments, INV_CATS, 'investment');
+
+                const expReal = expFlat.filter(e => e.realized !== false).reduce((s, e) => s + (parseFloat(e.amount) || 0), 0);
+                const expPlan = expFlat.filter(e => e.realized === false).reduce((s, e) => s + (parseFloat(e.amount) || 0), 0);
+                
+                const incReal = incFlat.filter(e => e.realized !== false).reduce((s, e) => s + (parseFloat(e.amount) || 0), 0);
+                const incPlan = incFlat.filter(e => e.realized === false).reduce((s, e) => s + (parseFloat(e.amount) || 0), 0);
+
+                const netReal = incReal - expReal;
+                const totalAssets = invFlat.reduce((s, e) => s + (parseFloat(e.balance) || 0), 0);
+
+                let html = `
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-subtle);">
+                        <h2 style="font-size: 1.3rem; color: var(--text-primary); font-weight: 600; display:flex; align-items:center; gap: 10px;">
+                            <div style="width: 10px; height: 22px; background: linear-gradient(180deg, #FF9F0A, #FF375F); border-radius: 3px;"></div>
+                            Podsumowanie Finansowe
+                        </h2>
+                    </div>
+
+                    <div class="expense-summary-bar">
+                        <div class="expense-summary-card">
+                            <span class="label">Bilans Zrealizowany</span>
+                            <span class="value" style="color:${netReal >= 0 ? '#30D158' : '#FF375F'};">${netReal > 0 ? '+' : ''}${netReal.toFixed(2)} zł</span>
+                        </div>
+                        <div class="expense-summary-card">
+                            <span class="label">Przychody (Zrealizowane)</span>
+                            <span class="value" style="color:#30D158;">${incReal.toFixed(2)} zł</span>
+                        </div>
+                        <div class="expense-summary-card">
+                            <span class="label">Wydatki (Zrealizowane)</span>
+                            <span class="value" style="color:#FF375F;">${expReal.toFixed(2)} zł</span>
+                        </div>
+                        <div class="expense-summary-card" style="border-color: #BF5AF2;">
+                            <span class="label">Aktywa Inwestycyjne</span>
+                            <span class="value" style="color:#BF5AF2;">${totalAssets.toFixed(2)} zł</span>
+                        </div>
+                    </div>
+
+                    <h3 style="font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin: 24px 0 12px;">Planowane Operacje</h3>
+                    <div style="display:flex; gap: 30px;">
+                        <div style="flex:1; background:rgba(0,0,0,0.15); padding:16px; border-radius:8px; border:1px solid rgba(255,159,10,0.2);">
+                            <span style="font-size:0.8rem; color:var(--text-secondary); text-transform:uppercase; font-weight:600;">Oczekujące Wydatki</span>
+                            <div style="font-size:1.5rem; font-family:var(--font-mono); color:#FF9F0A; font-weight:700; margin-top:4px;">${expPlan.toFixed(2)} zł</div>
+                            <div style="font-size:0.8rem; color:var(--text-secondary); margin-top:4px;">Zmniejszą Twój bilans do <strong style="color:${(netReal - expPlan) >= 0 ? '#30D158' : '#FF375F'};">${(netReal - expPlan).toFixed(2)} zł</strong></div>
+                        </div>
+                        <div style="flex:1; background:rgba(0,0,0,0.15); padding:16px; border-radius:8px; border:1px solid rgba(48,209,88,0.2);">
+                            <span style="font-size:0.8rem; color:var(--text-secondary); text-transform:uppercase; font-weight:600;">Oczekujące Wpływy</span>
+                            <div style="font-size:1.5rem; font-family:var(--font-mono); color:#30D158; font-weight:700; margin-top:4px;">${incPlan.toFixed(2)} zł</div>
+                            <div style="font-size:0.8rem; color:var(--text-secondary); margin-top:4px;">Zwiększą Twój bilans do <strong style="color:${(netReal + incPlan) >= 0 ? '#30D158' : '#FF375F'};">${(netReal + incPlan).toFixed(2)} zł</strong></div>
+                        </div>
+                    </div>
+                `;
+
+                main.innerHTML = html;
+                if(window.lucide) window.lucide.createIcons();
+            }
+
+            function renderMainArea() {
+                if(activeCategory.type === 'summary') {
+                    return renderSummary();
+                }
+
+                const main = document.getElementById('exp-main');
+                const catName = activeCategory.name;
+                const type = activeCategory.type;
+
+                let catDefs, dbNode;
+                if(type === 'expense') { catDefs = EXPENSE_CATS; dbNode = 'expenses'; }
+                else if(type === 'income') { catDefs = INCOME_CATS; dbNode = 'incomes'; }
+                else if(type === 'investment') { catDefs = INV_CATS; dbNode = 'investments'; }
+
+                const catMeta = catDefs.find(c => c.name === catName);
+                const color = catMeta ? catMeta.color : '#8B949E';
+                
+                const sourceData = type === 'expense' ? allExpenses : (type === 'income' ? allIncomes : allInvestments);
+                const items = sourceData[catName] ? Object.entries(sourceData[catName]) : [];
+                
+                if(type === 'investment') {
+                    // Inwestycje - portfel
+                    const totalBalance = items.reduce((s, [, e]) => s + (parseFloat(e.balance) || 0), 0);
+
+                    let html = `
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-subtle);">
+                            <h2 style="font-size: 1.3rem; color: var(--text-primary); font-weight: 600; display:flex; align-items:center; gap: 10px;">
+                                <div style="width: 10px; height: 22px; background-color: ${color}; border-radius: 3px;"></div>
+                                ${catName} (Inwestycje)
+                            </h2>
+                        </div>
+
+                        <div class="expense-summary-bar">
+                            <div class="expense-summary-card">
+                                <span class="label">Suma Aktywów</span>
+                                <span class="value" style="color:${color};">${totalBalance.toFixed(2)} zł</span>
+                            </div>
+                            <div class="expense-summary-card">
+                                <span class="label">Aktywne pozycje</span>
+                                <span class="value" style="color:var(--text-primary);">${items.length}</span>
+                            </div>
+                        </div>
+
+                        <div class="expense-add-row">
+                            <input type="text" id="inv-name" placeholder="Nazwa aktywa (np. Obligacje EDO)..." style="flex:2;">
+                            <input type="number" id="inv-balance" placeholder="Aktualne saldo (zł)" step="0.01" min="0">
+                            <button onclick="window.addInvestment('${catName}')"><i data-lucide="plus" style="width:14px; height:14px; vertical-align:middle; margin-right:4px;"></i> Dodaj Aktywo</button>
+                        </div>
+                    `;
+
+                    if(items.length === 0) {
+                        html += `<p style="color:var(--text-secondary); text-align:center; padding: 30px 0;">Brak aktywów w tej kategorii.</p>`;
+                    } else {
+                        html += `
+                            <table class="expense-table">
+                                <thead>
+                                    <tr>
+                                        <th>Nazwa Aktywa</th>
+                                        <th style="width:150px;">Ostatnia aktualizacja</th>
+                                        <th style="width:200px;">Aktualne Saldo</th>
+                                        <th style="width:40px;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                        `;
+                        items.sort((a,b) => b[1].updatedAt - a[1].updatedAt).forEach(([key, inv]) => {
+                            const dateStr = new Date(inv.updatedAt || Date.now()).toISOString().split('T')[0];
+                            html += `
+                                <tr>
+                                    <td style="font-weight:500;">${inv.name}</td>
+                                    <td style="font-family:var(--font-mono); font-size:0.8rem; color:var(--text-secondary);">${dateStr}</td>
+                                    <td style="display:flex; gap:8px; align-items:center;">
+                                        <input type="number" id="update-bal-${key}" value="${inv.balance}" style="width:100px; background:rgba(0,0,0,0.2); border:1px solid var(--border-subtle); border-radius:4px; padding:4px 8px; color:var(--text-primary); font-family:var(--font-mono); font-weight:600; color:${color};">
+                                        <button onclick="window.updateInvestment('${catName}', '${key}')" style="background:none; border:none; color:var(--text-secondary); cursor:pointer;" title="Zapisz nowe saldo"><i data-lucide="save" style="width:16px; height:16px;"></i></button>
+                                    </td>
+                                    <td>
+                                        <button class="expense-delete-btn" onclick="window.deleteItem('${dbNode}', '${catName}', '${key}')" title="Usuń aktywo">
+                                            <i data-lucide="trash-2" style="width:14px; height:14px;"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            `;
+                        });
+                        html += `</tbody></table>`;
+                    }
+                    main.innerHTML = html;
+                } else {
+                    // Przychody / Wydatki
+                    items.sort((a, b) => (b[1].date || '').localeCompare(a[1].date || ''));
+
+                    const realTotal = items.filter(e => e[1].realized !== false).reduce((s, e) => s + (parseFloat(e[1].amount) || 0), 0);
+                    const planTotal = items.filter(e => e[1].realized === false).reduce((s, e) => s + (parseFloat(e[1].amount) || 0), 0);
+
+                    let html = `
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-subtle);">
+                            <h2 style="font-size: 1.3rem; color: var(--text-primary); font-weight: 600; display:flex; align-items:center; gap: 10px;">
+                                <div style="width: 10px; height: 22px; background-color: ${color}; border-radius: 3px;"></div>
+                                ${catName} <span style="font-size:0.8rem; color:var(--text-secondary); font-weight:400;">(${type === 'expense' ? 'Wydatki' : 'Przychody'})</span>
+                            </h2>
+                        </div>
+
+                        <div class="expense-summary-bar">
+                            <div class="expense-summary-card">
+                                <span class="label">Suma Zrealizowana</span>
+                                <span class="value" style="color:${color};">${realTotal.toFixed(2)} zł</span>
+                            </div>
+                            <div class="expense-summary-card">
+                                <span class="label">Suma Planowana</span>
+                                <span class="value" style="color:#FF9F0A;">${planTotal.toFixed(2)} zł</span>
+                            </div>
+                            <div class="expense-summary-card">
+                                <span class="label">Pozycji</span>
+                                <span class="value" style="color:var(--text-primary);">${items.length}</span>
+                            </div>
+                        </div>
+
+                        <div class="expense-add-row">
+                            <input type="text" id="txn-name" placeholder="Nazwa..." style="flex:2;">
+                            <input type="number" id="txn-amount" placeholder="Kwota (zł)" step="0.01" min="0">
+                            <input type="date" id="txn-date" value="${new Date().toISOString().split('T')[0]}">
+                            
+                            <label class="toggle-switch" title="Zrealizowane czy Planowane?">
+                                <input type="checkbox" id="txn-realized" checked>
+                                <div class="toggle-slider"></div>
+                                Zrealizowane
+                            </label>
+
+                            <select id="txn-recurring" style="max-width:120px;">
+                                <option value="">Jednorazowy</option>
+                                <option value="weekly">Co tydzień</option>
+                                <option value="monthly">Co miesiąc</option>
+                                <option value="quarterly">Co kwartał</option>
+                                <option value="yearly">Co rok</option>
+                            </select>
+                            <input type="text" id="txn-note" placeholder="Notatka..." style="flex:1.5;">
+                            <button onclick="window.addTransaction('${dbNode}', '${catName}')"><i data-lucide="plus" style="width:14px; height:14px; vertical-align:middle; margin-right:4px;"></i> Dodaj</button>
+                        </div>
+                    `;
+
+                    if(items.length === 0) {
+                        html += `<p style="color:var(--text-secondary); text-align:center; padding: 30px 0;">Brak zapisanych pozycji w tej kategorii.</p>`;
+                    } else {
+                        html += `
+                            <table class="expense-table">
+                                <thead>
+                                    <tr>
+                                        <th>Nazwa</th>
+                                        <th style="width:110px;">Kwota</th>
+                                        <th style="width:100px;">Data</th>
+                                        <th style="width:110px;">Status</th>
+                                        <th style="width:90px;">Cykl</th>
+                                        <th>Notatka</th>
+                                        <th style="width:40px;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                        `;
+
+                        items.forEach(([key, txn]) => {
+                            const isRealized = txn.realized !== false;
+                            const recurLabel = txn.recurring ? RECURRING_LABELS[txn.recurring] || txn.recurring : '';
+                            const rowClass = isRealized ? '' : 'row-planned';
+                            
+                            html += `
+                                <tr class="${rowClass}">
+                                    <td style="font-weight:500;">${txn.name || '—'}</td>
+                                    <td style="font-family:var(--font-mono); font-weight:600; color:${color};">${parseFloat(txn.amount || 0).toFixed(2)} zł</td>
+                                    <td style="font-family:var(--font-mono); font-size:0.85rem; color:var(--text-secondary);">${txn.date || '—'}</td>
+                                    <td>
+                                        <span class="status-badge ${isRealized ? 'status-realized' : 'status-planned'}" onclick="window.toggleStatus('${dbNode}', '${catName}', '${key}', ${isRealized})">
+                                            ${isRealized ? '<i data-lucide="check" style="width:10px; height:10px; vertical-align:middle;"></i> Zrealizowane' : '<i data-lucide="clock" style="width:10px; height:10px; vertical-align:middle;"></i> Planowane'}
+                                        </span>
+                                    </td>
+                                    <td>${recurLabel ? `<span style="font-size:0.7rem; padding:2px 8px; border-radius:10px; background:rgba(255,255,255,0.05); color:var(--text-secondary); font-weight:500; white-space:nowrap;"><i data-lucide="repeat" style="width:10px; height:10px; vertical-align:middle;"></i> ${recurLabel}</span>` : '<span style="font-size:0.75rem; color:var(--text-secondary); opacity:0.5;">—</span>'}</td>
+                                    <td style="font-size:0.85rem; color:var(--text-secondary);">${txn.note || '—'}</td>
+                                    <td>
+                                        <button class="expense-delete-btn" onclick="window.deleteItem('${dbNode}', '${catName}', '${key}')" title="Usuń pozycję">
+                                            <i data-lucide="trash-2" style="width:14px; height:14px;"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            `;
+                        });
+                        html += `</tbody></table>`;
+                    }
+                    main.innerHTML = html;
+                }
+                if(window.lucide) window.lucide.createIcons();
+            }
+
+            window.addTransaction = function(dbNode, category) {
+                const name = document.getElementById('txn-name').value.trim();
+                const amount = document.getElementById('txn-amount').value;
+                const date = document.getElementById('txn-date').value;
+                const realized = document.getElementById('txn-realized').checked;
+                const recurring = document.getElementById('txn-recurring').value;
+                const note = document.getElementById('txn-note').value.trim();
+
+                if(!name || !amount) {
+                    document.getElementById('txn-name').style.borderColor = !name ? 'var(--accent-warning)' : '';
+                    document.getElementById('txn-amount').style.borderColor = !amount ? 'var(--accent-warning)' : '';
+                    return;
+                }
+
+                const data = {
+                    name: name,
+                    amount: parseFloat(amount),
+                    date: date || new Date().toISOString().split('T')[0],
+                    realized: realized,
+                    note: note || '',
+                    createdAt: Date.now()
+                };
+                if(recurring) data.recurring = recurring;
+
+                db.ref(USER_NODE + dbNode + '/' + category).push().set(data);
+            };
+
+            window.addInvestment = function(category) {
+                const name = document.getElementById('inv-name').value.trim();
+                const balance = document.getElementById('inv-balance').value;
+
+                if(!name || !balance) {
+                    document.getElementById('inv-name').style.borderColor = !name ? 'var(--accent-warning)' : '';
+                    document.getElementById('inv-balance').style.borderColor = !balance ? 'var(--accent-warning)' : '';
+                    return;
+                }
+
+                const data = {
+                    name: name,
+                    balance: parseFloat(balance),
+                    updatedAt: Date.now()
+                };
+                db.ref(USER_NODE + 'investments/' + category).push().set(data);
+            };
+
+            window.updateInvestment = function(category, key) {
+                const val = document.getElementById('update-bal-' + key).value;
+                if(!val) return;
+                db.ref(USER_NODE + 'investments/' + category + '/' + key).update({
+                    balance: parseFloat(val),
+                    updatedAt: Date.now()
+                });
+            };
+
+            window.toggleStatus = function(dbNode, category, key, currentRealized) {
+                db.ref(USER_NODE + dbNode + '/' + category + '/' + key).update({
+                    realized: !currentRealized
+                });
+            };
+
+            window.deleteItem = function(dbNode, category, key) {
+                db.ref(USER_NODE + dbNode + '/' + category + '/' + key).remove();
+            };
+        });
+    </script>
+    <script src="js/topbar.js?v=20.3"></script>
+</body>
+</html>
