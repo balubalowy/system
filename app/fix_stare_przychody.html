@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pl" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <title>Rozbijanie Starych Przychodów</title>
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="js/firebase_init.js"></script>
+</head>
+<body style="background: #111; color: #eee; font-family: sans-serif; padding: 40px;">
+    <h2>Korekta Wykresu: Stare Przychody</h2>
+    <p>Skrypt znajdzie gigantyczny wpływ "Stare przychody" (44335.27 zł) i fizycznie rozbije go na 33 mniejsze transakcje (od października 2023 do czerwca 2026), każda po około 1343.49 zł. Każda część będzie oznaczona jako zrealizowana, dzięki czemu Twój wykres zyska łagodny, rzeczywisty wzrost zamiast jednego zaburzającego skoku w 2022 roku.</p>
+    <button id="btn-fix" style="padding: 10px 20px; font-size: 16px; cursor: pointer; background: #0A84FF; color: white; border: none; border-radius: 5px;">Rozbij na 33 miesiące</button>
+    <div id="log" style="margin-top: 20px; font-family: monospace; line-height: 1.5;"></div>
+
+    <script>
+        document.getElementById('btn-fix').addEventListener('click', async () => {
+            const btn = document.getElementById('btn-fix');
+            const log = document.getElementById('log');
+            btn.disabled = true;
+            btn.innerText = 'Przetwarzanie...';
+
+            log.innerHTML += 'Pobieram dane o przychodach...<br>';
+            const snap = await db.ref(USER_NODE + 'incomes').once('value');
+            const data = snap.val();
+            
+            if(!data) {
+                log.innerHTML += 'Brak przychodów w bazie.<br>';
+                return;
+            }
+
+            let foundKey = null;
+            let foundCat = null;
+            let foundTxn = null;
+
+            for(let cat of Object.keys(data)) {
+                for(let key of Object.keys(data[cat])) {
+                    const txn = data[cat][key];
+                    if(txn && txn.name && txn.name.includes('Stare przychody') && txn.amount > 40000) {
+                        foundKey = key;
+                        foundCat = cat;
+                        foundTxn = txn;
+                        break;
+                    }
+                }
+                if(foundKey) break;
+            }
+
+            if(!foundKey) {
+                log.innerHTML += '❌ Nie znaleziono transakcji "Stare przychody" o wartości ~44k zł.<br>';
+                return;
+            }
+
+            log.innerHTML += `Znaleziono: "${foundTxn.name}" (${foundTxn.amount} zł) w kategorii "${foundCat}".<br>`;
+            
+            // 33 months math
+            const totalAmount = parseFloat(foundTxn.amount);
+            const monthsCount = 33;
+            const perMonth = Math.floor((totalAmount / monthsCount) * 100) / 100; // 1343.49
+            const remainder = totalAmount - (perMonth * (monthsCount - 1)); // for the last month to make it exact
+
+            log.innerHTML += `Usuwam oryginalny wpis...<br>`;
+            await db.ref(USER_NODE + 'incomes/' + foundCat + '/' + foundKey).remove();
+
+            log.innerHTML += `Generuję 33 nowe wpisy...<br>`;
+            
+            let currentYear = 2023;
+            let currentMonth = 10;
+            
+            for(let i = 0; i < monthsCount; i++) {
+                const isLast = (i === monthsCount - 1);
+                const amount = isLast ? remainder : perMonth;
+                
+                const monthStr = currentMonth < 10 ? '0' + currentMonth : currentMonth;
+                const dateStr = `${currentYear}-${monthStr}-01`;
+                
+                const newData = {
+                    name: `Stare przychody (${i+1}/${monthsCount})`,
+                    amount: amount,
+                    date: dateStr,
+                    realized: true,
+                    note: 'Automatycznie rozbite w celu korekty wykresu',
+                    createdAt: Date.now() + i
+                };
+
+                await db.ref(USER_NODE + 'incomes/' + foundCat).push().set(newData);
+                
+                // increment month
+                currentMonth++;
+                if(currentMonth > 12) {
+                    currentMonth = 1;
+                    currentYear++;
+                }
+            }
+
+            log.innerHTML += `✅ Sukces! Stare przychody zostały rozłożone na równe raty od 2023-10 do 2026-06.<br>`;
+            log.innerHTML += `Możesz teraz zamknąć tę kartę i odświeżyć <a href="budget.html" style="color:#0A84FF;">Podsumowanie Budżetu</a>.`;
+        });
+    </script>
+</body>
+</html>
