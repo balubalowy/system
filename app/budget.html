@@ -676,6 +676,17 @@
                 if(window.lucide) window.lucide.createIcons();
             }
 
+            // Automatyczne odznaczanie "Zrealizowane" dla dat w przyszłości
+            document.addEventListener('change', (e) => {
+                if (e.target.id === 'txn-date') {
+                    const today = new Date().toISOString().split('T')[0];
+                    const realizedCheckbox = document.getElementById('txn-realized');
+                    if (realizedCheckbox) {
+                        realizedCheckbox.checked = e.target.value <= today;
+                    }
+                }
+            });
+
             window.addTransaction = function(dbNode, category) {
                 const name = document.getElementById('txn-name').value.trim();
                 const amount = document.getElementById('txn-amount').value;
