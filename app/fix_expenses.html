@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pl" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <title>Naprawa Przypisania Przychody/Wydatki</title>
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="js/firebase_init.js"></script>
+</head>
+<body style="background: #111; color: #eee; font-family: sans-serif; padding: 40px;">
+    <h2>Czyszczenie Wydatków z Przypadkowych Wpływów</h2>
+    <p>Skrypt usunie z sekcji "Wydatki" te pozycje, które w rzeczywistości były wpływami (np. "korki", "vinted", "zwrot", "od taty", "wygrana"). Ponieważ zostały one już wcześniej skopiowane do zakładki "Przychody", ten skrypt po prostu pozbędzie się duplikatów w wydatkach.</p>
+    <button id="btn-fix" style="padding: 10px 20px; font-size: 16px; cursor: pointer; background: #FF453A; color: white; border: none; border-radius: 5px;">Usuń błędne wydatki</button>
+    <div id="log" style="margin-top: 20px; font-family: monospace;"></div>
+
+    <script>
+        const KEYWORDS = ['kelner', 'dodatek', 'napiwek', 'stypendium', 'od tat', 'od mam', 'od bab', 'od rodzin', 'od chrzest', 'korki', 'wygrana', 'zwrot', 'z oszczędno', 'z oszczedno', 'prezencik', 'vinted', 'sprzedaż', 'nagroda'];
+
+        document.getElementById('btn-fix').addEventListener('click', async () => {
+            const btn = document.getElementById('btn-fix');
+            const log = document.getElementById('log');
+            btn.disabled = true;
+            btn.innerText = 'Czyszczenie...';
+
+            let removedCount = 0;
+            const snap = await db.ref(USER_NODE + 'expenses').once('value');
+            const data = snap.val();
+            if(!data) {
+                log.innerHTML = 'Brak wydatków.';
+                return;
+            }
+
+            for(let cat of Object.keys(data)) {
+                for(let key of Object.keys(data[cat])) {
+                    const txn = data[cat][key];
+                    if(!txn || !txn.name) continue;
+                    
+                    const nameLower = txn.name.toLowerCase();
+                    const isIncome = KEYWORDS.some(kw => nameLower.includes(kw));
+
+                    if(isIncome) {
+                        console.log("Usuwam z wydatków:", txn.name, txn.amount);
+                        await db.ref(USER_NODE + 'expenses/' + cat + '/' + key).remove();
+                        removedCount++;
+                    }
+                }
+            }
+
+            log.innerHTML = '✅ Sukces! Usunięto ' + removedCount + ' błędnych "wydatków" z bazy.<br>Możesz teraz bezpiecznie wrócić do <a href="budget.html" style="color:#0A84FF;">Podsumowania Budżetu</a>.';
+        });
+    </script>
+</body>
+</html>
