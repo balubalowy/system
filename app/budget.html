@@ -543,29 +543,63 @@
                 const monthlyData = {};
                 const allItems = [...expFlat, ...incFlat];
                 
+                let minMonth = "9999-99";
+                let maxMonth = "0000-00";
+
                 allItems.forEach(item => {
                     if(!item.date) return;
                     const monthKey = item.date.substring(0, 7);
+                    if (monthKey < minMonth) minMonth = monthKey;
+                    if (monthKey > maxMonth) maxMonth = monthKey;
+
                     if (!monthlyData[monthKey]) {
-                        monthlyData[monthKey] = { exp: 0, inc: 0 };
+                        monthlyData[monthKey] = { expReal: 0, expPlan: 0, incReal: 0, incPlan: 0 };
                     }
                     const amt = parseFloat(item.amount) || 0;
-                    if (item.type === 'expense') monthlyData[monthKey].exp += amt;
-                    if (item.type === 'income') monthlyData[monthKey].inc += amt;
+                    const isReal = item.realized !== false;
+                    
+                    if (item.type === 'expense') {
+                        if (isReal) monthlyData[monthKey].expReal += amt;
+                        else monthlyData[monthKey].expPlan += amt;
+                    }
+                    if (item.type === 'income') {
+                        if (isReal) monthlyData[monthKey].incReal += amt;
+                        else monthlyData[monthKey].incPlan += amt;
+                    }
                 });
 
-                const labels = Object.keys(monthlyData).sort();
-                const incData = [];
-                const expData = [];
+                // Generate continuous labels
+                const labels = [];
+                if (minMonth !== "9999-99" && maxMonth !== "0000-00") {
+                    let currentD = new Date(minMonth + "-01");
+                    const endD = new Date(maxMonth + "-01");
+                    while (currentD <= endD) {
+                        const m = currentD.toISOString().substring(0, 7);
+                        labels.push(m);
+                        if (!monthlyData[m]) monthlyData[m] = { expReal: 0, expPlan: 0, incReal: 0, incPlan: 0 };
+                        currentD.setMonth(currentD.getMonth() + 1);
+                    }
+                }
+
+                const incRealData = [];
+                const incPlanData = [];
+                const expRealData = [];
+                const expPlanData = [];
                 const balanceData = [];
                 let runningBalance = 0;
 
                 labels.forEach(m => {
-                    const i = monthlyData[m].inc;
-                    const e = monthlyData[m].exp;
-                    incData.push(i);
-                    expData.push(e);
-                    runningBalance += (i - e);
+                    const ir = monthlyData[m].incReal;
+                    const ip = monthlyData[m].incPlan;
+                    const er = monthlyData[m].expReal;
+                    const ep = monthlyData[m].expPlan;
+                    
+                    incRealData.push(ir);
+                    incPlanData.push(ip);
+                    expRealData.push(er);
+                    expPlanData.push(ep);
+                    
+                    runningBalance += ((ir + ip) - (er + ep));
                     balanceData.push(runningBalance);
                 });
 
@@ -593,20 +627,44 @@
                             },
                             {
                                 type: 'bar',
-                                label: 'Przychody',
-                                data: incData,
+                                label: 'Zrealizowane Przychody',
+                                data: incRealData,
                                 backgroundColor: '#30D158',
+                                stack: 'StackInc',
                                 borderRadius: 4,
-                                barPercentage: 0.5,
                                 yAxisID: 'y1'
                             },
                             {
                                 type: 'bar',
-                                label: 'Wydatki',
-                                data: expData,
-                                backgroundColor: '#FF375F',
+                                label: 'Planowane Przychody',
+                                data: incPlanData,
+                                backgroundColor: 'rgba(48, 209, 88, 0.3)',
+                                borderColor: '#30D158',
+                                borderWidth: { top: 1, right: 1, bottom: 0, left: 1 },
+                                borderDash: [2, 2],
+                                stack: 'StackInc',
                                 borderRadius: 4,
-                                barPercentage: 0.5,
+                                yAxisID: 'y1'
+                            },
+                            {
+                                type: 'bar',
+                                label: 'Zrealizowane Wydatki',
+                                data: expRealData,
+                                backgroundColor: '#FF375F',
+                                stack: 'StackExp',
+                                borderRadius: 4,
+                                yAxisID: 'y1'
+                            },
+                            {
+                                type: 'bar',
+                                label: 'Planowane Wydatki',
+                                data: expPlanData,
+                                backgroundColor: 'rgba(255, 55, 95, 0.3)',
+                                borderColor: '#FF375F',
+                                borderWidth: { top: 1, right: 1, bottom: 0, left: 1 },
+                                borderDash: [2, 2],
+                                stack: 'StackExp',
+                                borderRadius: 4,
                                 yAxisID: 'y1'
                             }
                         ]
@@ -620,7 +678,6 @@
                         },
                         scales: {
                             x: {
-                                stacked: false,
                                 grid: { color: 'rgba(255,255,255,0.05)' },
                                 ticks: { color: '#8B949E', font: { family: 'JetBrains Mono', size: 10 } }
                             },
