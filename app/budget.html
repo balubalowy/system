@@ -225,6 +225,8 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="js/firebase_init.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="no-sidebar">
     <header class="topbar">
@@ -426,11 +428,56 @@
                 if(window.lucide) window.lucide.createIcons();
             }
 
+            function expandOccurrences(items) {
+                const expanded = [];
+                items.forEach(item => {
+                    let currentDt = new Date(item.date || new Date());
+                    
+                    // Always add the first occurrence.
+                    expanded.push({ ...item, date: currentDt.toISOString().split('T')[0] });
+                    
+                    if (!item.recurring) return;
+                    
+                    let count = 1;
+                    const maxCount = item.recurCount ? parseInt(item.recurCount) : null;
+                    const endDtStr = item.recurEnd ? item.recurEnd : null;
+                    const endDt = endDtStr ? new Date(endDtStr) : null;
+                    
+                    // Fallback to exactly 12 occurrences for infinite loops
+                    const fallbackCount = 12;
+
+                    while (true) {
+                        if (maxCount && count >= maxCount) break;
+                        if (!maxCount && !endDt && count >= fallbackCount) break;
+                        
+                        if (item.recurring === 'weekly') currentDt.setDate(currentDt.getDate() + 7);
+                        else if (item.recurring === 'monthly') currentDt.setMonth(currentDt.getMonth() + 1);
+                        else if (item.recurring === 'quarterly') currentDt.setMonth(currentDt.getMonth() + 3);
+                        else if (item.recurring === 'yearly') currentDt.setFullYear(currentDt.getFullYear() + 1);
+                        
+                        if (endDt && currentDt > endDt) break;
+                        
+                        expanded.push({ 
+                            ...item, 
+                            date: currentDt.toISOString().split('T')[0],
+                            realized: false // Future generated occurrences are always planned
+                        });
+                        count++;
+                    }
+                });
+                return expanded;
+            }
+
+            let summaryChart = null;
+
             function renderSummary() {
                 const main = document.getElementById('exp-main');
-                const expFlat = getFlatData(allExpenses, EXPENSE_CATS, 'expense');
-                const incFlat = getFlatData(allIncomes, INCOME_CATS, 'income');
+                const expFlatRaw = getFlatData(allExpenses, EXPENSE_CATS, 'expense');
+                const incFlatRaw = getFlatData(allIncomes, INCOME_CATS, 'income');
                 const invFlat = getFlatData(allInvestments, INV_CATS, 'investment');
+
+                const expFlat = expandOccurrences(expFlatRaw);
+                const incFlat = expandOccurrences(incFlatRaw);
 
                 const expReal = expFlat.filter(e => e.realized !== false).reduce((s, e) => s + (parseFloat(e.amount) || 0), 0);
                 const expPlan = expFlat.filter(e => e.realized === false).reduce((s, e) => s + (parseFloat(e.amount) || 0), 0);
@@ -469,7 +516,7 @@
                     </div>
 
                     <h3 style="font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin: 24px 0 12px;">Planowane Operacje</h3>
-                    <div style="display:flex; gap: 30px;">
+                    <div style="display:flex; gap: 30px; margin-bottom: 30px;">
                         <div style="flex:1; background:rgba(0,0,0,0.15); padding:16px; border-radius:8px; border:1px solid rgba(255,159,10,0.2);">
                             <span style="font-size:0.8rem; color:var(--text-secondary); text-transform:uppercase; font-weight:600;">Oczekujące Wydatki</span>
                             <div style="font-size:1.5rem; font-family:var(--font-mono); color:#FF9F0A; font-weight:700; margin-top:4px;">${expPlan.toFixed(2)} zł</div>
@@ -481,10 +528,124 @@
                             <div style="font-size:0.8rem; color:var(--text-secondary); margin-top:4px;">Zwiększą Twój bilans do <strong style="color:${(netReal + incPlan) >= 0 ? '#30D158' : '#FF375F'};">${(netReal + incPlan).toFixed(2)} zł</strong></div>
                         </div>
                     </div>
+                    
+                    <h3 style="font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin: 24px 0 12px;">Analiza Przepływów</h3>
+                    <div style="background: rgba(0,0,0,0.2); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 16px;">
+                        <div style="position: relative; height:300px; width:100%;">
+                            <canvas id="budgetChart"></canvas>
+                        </div>
+                    </div>
                 `;
 
                 main.innerHTML = html;
                 if(window.lucide) window.lucide.createIcons();
+
+                const monthlyData = {};
+                const allItems = [...expFlat, ...incFlat];
+                
+                allItems.forEach(item => {
+                    if(!item.date) return;
+                    const monthKey = item.date.substring(0, 7);
+                    if (!monthlyData[monthKey]) {
+                        monthlyData[monthKey] = { exp: 0, inc: 0 };
+                    }
+                    const amt = parseFloat(item.amount) || 0;
+                    if (item.type === 'expense') monthlyData[monthKey].exp += amt;
+                    if (item.type === 'income') monthlyData[monthKey].inc += amt;
+                });
+
+                const labels = Object.keys(monthlyData).sort();
+                const incData = [];
+                const expData = [];
+                const balanceData = [];
+                let runningBalance = 0;
+
+                labels.forEach(m => {
+                    const i = monthlyData[m].inc;
+                    const e = monthlyData[m].exp;
+                    incData.push(i);
+                    expData.push(e);
+                    runningBalance += (i - e);
+                    balanceData.push(runningBalance);
+                });
+
+                if(summaryChart) {
+                    summaryChart.destroy();
+                }
+
+                const ctx = document.getElementById('budgetChart').getContext('2d');
+                summaryChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                type: 'line',
+                                label: 'Skumulowany Bilans (zł)',
+                                data: balanceData,
+                                borderColor: '#0A84FF',
+                                backgroundColor: 'rgba(10, 132, 255, 0.1)',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.3,
+                                pointRadius: 2,
+                                yAxisID: 'y'
+                            },
+                            {
+                                type: 'bar',
+                                label: 'Przychody',
+                                data: incData,
+                                backgroundColor: '#30D158',
+                                borderRadius: 4,
+                                barPercentage: 0.5,
+                                yAxisID: 'y1'
+                            },
+                            {
+                                type: 'bar',
+                                label: 'Wydatki',
+                                data: expData,
+                                backgroundColor: '#FF375F',
+                                borderRadius: 4,
+                                barPercentage: 0.5,
+                                yAxisID: 'y1'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: {
+                            mode: 'index',
+                            intersect: false,
+                        },
+                        scales: {
+                            x: {
+                                stacked: false,
+                                grid: { color: 'rgba(255,255,255,0.05)' },
+                                ticks: { color: '#8B949E', font: { family: 'JetBrains Mono', size: 10 } }
+                            },
+                            y: {
+                                type: 'linear',
+                                display: true,
+                                position: 'left',
+                                grid: { color: 'rgba(255,255,255,0.05)' },
+                                ticks: { color: '#0A84FF', font: { family: 'JetBrains Mono', size: 10 } }
+                            },
+                            y1: {
+                                type: 'linear',
+                                display: true,
+                                position: 'right',
+                                grid: { drawOnChartArea: false },
+                                ticks: { color: '#8B949E', font: { family: 'JetBrains Mono', size: 10 } }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                labels: { color: '#8B949E', font: { family: 'Inter', size: 11 } }
+                            }
+                        }
+                    }
+                });
             }
 
             function renderMainArea() {
