@@ -174,6 +174,7 @@
             cursor: pointer;
             user-select: none;
             transition: opacity 0.2s;
+            white-space: nowrap;
         }
         .status-badge:hover { opacity: 0.8; }
         .status-realized { background: rgba(43, 191, 113, 0.15); color: #2BBF71; border: 1px solid rgba(43, 191, 113, 0.3); }
@@ -621,7 +622,7 @@
                                 <option value="yearly">Co rok</option>
                             </select>
                             <input type="text" id="txn-note" placeholder="Notatka..." style="flex:1.5;">
-                            <button onclick="window.addTransaction('${dbNode}', '${catName}')"><i data-lucide="plus" style="width:14px; height:14px; vertical-align:middle; margin-right:4px;"></i> Dodaj</button>
+                            <button id="btn-add-txn" onclick="window.addTransaction('${dbNode}', '${catName}')"><i data-lucide="plus" style="width:14px; height:14px; vertical-align:middle; margin-right:4px;"></i> Dodaj</button>
                         </div>
                     `;
 
@@ -661,7 +662,10 @@
                                     </td>
                                     <td>${recurLabel ? `<span style="font-size:0.7rem; padding:2px 8px; border-radius:10px; background:rgba(255,255,255,0.05); color:var(--text-secondary); font-weight:500; white-space:nowrap;"><i data-lucide="repeat" style="width:10px; height:10px; vertical-align:middle;"></i> ${recurLabel}</span>` : '<span style="font-size:0.75rem; color:var(--text-secondary); opacity:0.5;">—</span>'}</td>
                                     <td style="font-size:0.85rem; color:var(--text-secondary);">${txn.note || '—'}</td>
-                                    <td>
+                                    <td style="display:flex; gap: 4px;">
+                                        <button class="expense-delete-btn" onclick="window.editItem('${dbNode}', '${catName}', '${key}')" title="Edytuj pozycję">
+                                            <i data-lucide="edit-3" style="width:14px; height:14px;"></i>
+                                        </button>
                                         <button class="expense-delete-btn" onclick="window.deleteItem('${dbNode}', '${catName}', '${key}')" title="Usuń pozycję">
                                             <i data-lucide="trash-2" style="width:14px; height:14px;"></i>
                                         </button>
@@ -687,6 +691,31 @@
                 }
             });
 
+            window.editState = null;
+
+            window.editItem = function(dbNode, category, key) {
+                const sourceData = dbNode === 'expenses' ? allExpenses : allIncomes;
+                if(!sourceData[category] || !sourceData[category][key]) return;
+                const txn = sourceData[category][key];
+                
+                document.getElementById('txn-name').value = txn.name || '';
+                document.getElementById('txn-amount').value = txn.amount || '';
+                document.getElementById('txn-date').value = txn.date || '';
+                document.getElementById('txn-realized').checked = txn.realized !== false;
+                document.getElementById('txn-recurring').value = txn.recurring || '';
+                document.getElementById('txn-note').value = txn.note || '';
+                
+                const btn = document.getElementById('btn-add-txn');
+                if(btn) {
+                    btn.innerHTML = '<i data-lucide="save" style="width:14px; height:14px; vertical-align:middle; margin-right:4px;"></i> Zapisz';
+                    btn.style.background = '#0A84FF';
+                }
+                
+                window.editState = { dbNode, category, key };
+                window.scrollTo({top: 0, behavior: 'smooth'});
+                if(window.lucide) window.lucide.createIcons();
+            };
+
             window.addTransaction = function(dbNode, category) {
                 const name = document.getElementById('txn-name').value.trim();
                 const amount = document.getElementById('txn-amount').value;
@@ -711,7 +740,24 @@
                 };
                 if(recurring) data.recurring = recurring;
 
-                db.ref(USER_NODE + dbNode + '/' + category).push().set(data);
+                if(window.editState) {
+                    delete data.createdAt; // Nie nadpisujemy daty utworzenia
+                    db.ref(USER_NODE + window.editState.dbNode + '/' + window.editState.category + '/' + window.editState.key).update(data);
+                    window.editState = null;
+                    const btn = document.getElementById('btn-add-txn');
+                    if(btn) {
+                        btn.innerHTML = '<i data-lucide="plus" style="width:14px; height:14px; vertical-align:middle; margin-right:4px;"></i> Dodaj';
+                        btn.style.background = 'var(--accent-primary)';
+                    }
+                } else {
+                    db.ref(USER_NODE + dbNode + '/' + category).push().set(data);
+                }
+                
+                // wyczysc pola
+                document.getElementById('txn-name').value = '';
+                document.getElementById('txn-amount').value = '';
+                document.getElementById('txn-note').value = '';
+                document.getElementById('txn-recurring').value = '';
             };
 
             window.addInvestment = function(category) {
