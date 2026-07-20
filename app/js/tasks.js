@@ -47,7 +47,7 @@ export function initInteractiveTasks() {
                 }
 
                 if (lines.length > 0) {
-                    html += `<div style="margin-top: ${activeTask !== '' ? 'auto' : '0'}; padding-top: 8px; border-top: ${activeTask !== '' ? '1px dashed var(--border-subtle)' : 'none'};">`;
+                    html += `<div style="margin-top: ${activeTasks.length > 0 ? 'auto' : '0'}; padding-top: 8px; border-top: ${activeTasks.length > 0 ? '1px dashed var(--border-subtle)' : 'none'};">`;
                     html += `<div style="margin-bottom: 8px; font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase;">Zrzutnia Zadań:</div>`;
                     html += `<div style="display:flex; flex-direction:column; gap:4px;">`;
                     lines.forEach(line => {
