@@ -17,12 +17,20 @@ export function initCalendar() {
     
     const calPanelToday = document.getElementById('sidebar-timeline');
     const proxyUrlV2 = "https://script.google.com/macros/s/AKfycbx5x6wNjwrWdAysQoroCW-OhsvDWgUU8Z17MPEWfoeeb9iXLyeKZoAQ666-gpq838NmPA/exec";
+    
+    let gasSecret = localStorage.getItem('gas_secret');
+    if(!gasSecret) {
+        gasSecret = prompt("Zabezpieczenie prywatności:\nPodaj tajne hasło do API Kalendarza (zostanie zapisane w pamięci przeglądarki):");
+        if(gasSecret) localStorage.setItem('gas_secret', gasSecret);
+    }
+    
+    const fetchUrl = gasSecret ? `${proxyUrlV2}?secret=${encodeURIComponent(gasSecret)}` : proxyUrlV2;
 
     if(calPanelToday) {
         calPanelToday.innerHTML = "<div style='padding:10px; font-size:0.85rem; color:var(--text-secondary);'>Wczytywanie Hubu Czasu...</div>";
     }
     
-    fetch(proxyUrlV2)
+    fetch(fetchUrl)
       .then(res => res.json())
       .then(data => {
           calendarEventsRaw = (data.events || []).map(e => {
