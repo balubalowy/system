@@ -15,14 +15,7 @@ const CATEGORY_COLORS = {
 // db oraz USER_NODE są tam zdefiniowane i ładowane globalnie.
 
 document.addEventListener('DOMContentLoaded', () => {
-    const isAuth = localStorage.getItem('ag_auth');
-    if(!isAuth) {
-        document.getElementById('pin-overlay').style.display = 'flex';
-        document.getElementById('pin-submit-btn').addEventListener('click', checkPin);
-    } else {
-        document.getElementById('pin-overlay').style.display = 'none';
-        initApp();
-    }
+    initApp();
 });
 
 // Nasłuchiwanie klawisza Escape w systemie
@@ -41,20 +34,6 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-function checkPin() {
-    const p = document.getElementById('pin-input').value;
-    db.ref(USER_NODE + 'auth/pin').once('value').then(snap => {
-        const validPin = snap.val() || '1234'; // Domyślny 1234 jeśli brak w DB
-        if(p === validPin) {
-            localStorage.setItem('ag_auth', '1');
-            document.getElementById('pin-overlay').style.display = 'none';
-            initApp();
-            initReadingList();
-        } else {
-            document.getElementById('pin-error').style.display = 'block';
-        }
-    });
-}
 
 function initApp() {
     window.KnowledgeTree = {};
