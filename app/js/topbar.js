@@ -106,11 +106,20 @@ function initSyncStatus() {
     // Pokaż "Synced" od razu - połączenie z Firebase istnieje
     cloudStatus.style.display = 'inline';
 
-    // Słuchaj ostatniej zmiany w całym węźle użytkownika
-    db.ref(USER_NODE).limitToLast(1).on('value', () => {
-        const now = new Date();
-        const stamp = now.toISOString().split('T')[0] + '  ' + now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
-        miniSync.textContent = stamp;
+    // Słuchaj stanu połączenia z chmurą
+    db.ref('.info/connected').on('value', snap => {
+        if (snap.val() === true) {
+            const now = new Date();
+            const stamp = now.toISOString().split('T')[0] + '  ' + now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+            miniSync.textContent = stamp;
+            miniSync.style.color = "var(--text-secondary)";
+            cloudStatus.textContent = "Synced";
+            cloudStatus.style.color = "var(--accent-success)";
+        } else {
+            miniSync.textContent = 'Brak połączenia';
+            cloudStatus.textContent = "Offline";
+            cloudStatus.style.color = "var(--accent-danger)";
+        }
     });
 }
 

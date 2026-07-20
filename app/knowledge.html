@@ -103,6 +103,7 @@
             if(window.lucide) window.lucide.createIcons();
 
             let localProgress = {};
+            let globalTree = {};
             db.ref(USER_NODE + 'knowledge_tree').on('value', snapTree => {
                 globalTree = snapTree.val() || {};
                 
