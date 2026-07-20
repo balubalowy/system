@@ -281,6 +281,20 @@
                     <p style="color:var(--text-secondary); text-align:center; padding-top: 40px;">Wybierz kategorię z lewego panelu.</p>
                 </div>
             </div>
+
+            <!-- SKRZYNKA MARZEŃ W BUDŻECIE -->
+            <div style="margin-top: 40px; border-top: 1px solid var(--border-subtle); padding-top: 30px;">
+                <h2 style="font-size: 1.2rem; display:flex; align-items:center; gap:8px; color: #FF375F; margin-bottom: 16px;"><i data-lucide="gift"></i> Skrzynka Marzeń (Wydatki na Kiedyś)</h2>
+                <div style="max-width: 600px;">
+                    <div style="display:flex; gap:8px; margin-bottom:12px;">
+                        <input type="text" id="wishlist-input" placeholder="Co chcesz kupić na kiedyś?" style="flex:1; background:rgba(0,0,0,0.2); border:1px solid var(--border-subtle); color:var(--text-primary); padding:10px; font-family:var(--font-sans); font-size:0.85rem; border-radius: var(--radius-sm); outline:none;">
+                        <input type="number" id="wishlist-price" placeholder="PLN" style="width:80px; background:rgba(0,0,0,0.2); border:1px solid var(--border-subtle); color:var(--text-primary); padding:10px; font-family:var(--font-sans); font-size:0.85rem; border-radius: var(--radius-sm); outline:none;">
+                    </div>
+                    <button class="btn btn-secondary" id="btn-save-wishlist" style="width:100%; color:var(--text-secondary); justify-content:center; margin-bottom:16px;"><i data-lucide="plus"></i> Dodaj marzenie</button>
+                    <div id="wishlist-list" style="display:flex; flex-direction:column; gap:8px;"></div>
+                </div>
+            </div>
+
         </section>
     </main>
 
@@ -288,7 +302,11 @@
     <script type="module">
         import { db, USER_NODE } from './js/firebase.js';
         import { escapeHTML } from './js/utils.js';
+        import { initWishlistEngine } from './js/ui.js';
+        
         document.addEventListener('DOMContentLoaded', () => {
+            if(window.lucide) window.lucide.createIcons();
+            initWishlistEngine();
             if(window.lucide) window.lucide.createIcons();
 
             const EXPENSE_CATS = [

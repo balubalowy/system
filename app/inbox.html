@@ -131,7 +131,18 @@
                 <div class="inbox-section" style="border-top: 4px solid var(--accent-warning);">
                     <h2 style="font-size: 1.1rem; display:flex; align-items:center; gap:8px; color: var(--accent-warning);"><i data-lucide="lightbulb"></i> Zrzutnia Pomysłów</h2>
                     <textarea id="ai-dump" rows="3" placeholder="Szybki pomysł na projekt, skrypt, funkcję... Wrzucasz, zapominasz, do zrobienia." style="width:100%; background:rgba(0,0,0,0.2); border:1px solid var(--border-subtle); color:var(--text-primary); padding:10px; font-family:var(--font-sans); font-size:0.85rem; border-radius: var(--radius-sm); resize:vertical; margin-top:12px; margin-bottom:12px; outline:none;"></textarea>
-                    <button class="btn btn-secondary" id="btn-save-idea" style="width:100%; color:var(--text-secondary); justify-content:center;"><i data-lucide="download-cloud"></i> Wrzuć do Bazy</button>
+                    <button class="btn btn-secondary" id="btn-save-idea" style="width:100%; color:var(--text-secondary); justify-content:center; margin-bottom:12px;"><i data-lucide="download-cloud"></i> Wrzuć do Bazy</button>
+                    <div id="ideas-list" style="display:flex; flex-direction:column; gap:8px; border-top:1px dashed var(--border-subtle); padding-top:12px;"></div>
+                </div>
+                
+                <div class="inbox-section" style="border-top: 4px solid #FF375F;">
+                    <h2 style="font-size: 1.1rem; display:flex; align-items:center; gap:8px; color: #FF375F;"><i data-lucide="gift"></i> Skrzynka Marzeń (Wydatki)</h2>
+                    <div style="display:flex; gap:8px; margin-top:12px; margin-bottom:12px;">
+                        <input type="text" id="wishlist-input" placeholder="Co chcesz kupić na kiedyś?" style="flex:1; background:rgba(0,0,0,0.2); border:1px solid var(--border-subtle); color:var(--text-primary); padding:10px; font-family:var(--font-sans); font-size:0.85rem; border-radius: var(--radius-sm); outline:none;">
+                        <input type="number" id="wishlist-price" placeholder="PLN" style="width:80px; background:rgba(0,0,0,0.2); border:1px solid var(--border-subtle); color:var(--text-primary); padding:10px; font-family:var(--font-sans); font-size:0.85rem; border-radius: var(--radius-sm); outline:none;">
+                    </div>
+                    <button class="btn btn-secondary" id="btn-save-wishlist" style="width:100%; color:var(--text-secondary); justify-content:center; margin-bottom:12px;"><i data-lucide="plus"></i> Dodaj marzenie</button>
+                    <div id="wishlist-list" style="display:flex; flex-direction:column; gap:8px; border-top:1px dashed var(--border-subtle); padding-top:12px;"></div>
                 </div>
             </div>
 
@@ -148,7 +159,7 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script type="module">
         import { db, USER_NODE } from './js/firebase.js';
-        import { initIdeasEngine } from './js/ui.js';
+        import { initIdeasEngine, initWishlistEngine } from './js/ui.js';
         import { escapeHTML } from './js/utils.js';
         
         document.addEventListener('DOMContentLoaded', () => {
@@ -169,6 +180,7 @@
             let timeout = null;
 
             initIdeasEngine();
+            initWishlistEngine();
 
             // Ładowanie
             db.ref(USER_NODE + 'inbox').once('value').then(snap => {
