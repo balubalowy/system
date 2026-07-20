@@ -231,7 +231,7 @@ function renderTodayList(events, container) {
             heightPercent = 100 - topPercent;
         }
 
-        let html = `<div style="position: absolute; top: ${topPercent}%; left: 35px; right: 2px; height: ${heightPercent}%; background: ${ev.colorHex}; border-radius: 4px; padding: 2px 4px; font-size: 0.65rem; overflow: hidden; color: #fff; opacity: 0.85; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1); border-left: 2px solid rgba(255,255,255,0.4); z-index: 10;">
+        let html = `<div class="cal-timeline-event" style="top: ${topPercent}%; height: ${heightPercent}%; background: ${ev.colorHex};">
             <div style="font-weight: bold; line-height: 1.1;">${ev.timeStr}</div>
             <div style="line-height: 1.1; margin-top:2px; white-space: normal;">${ev.title}</div>
         </div>`;
