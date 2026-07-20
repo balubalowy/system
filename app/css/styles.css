@@ -36,8 +36,6 @@
   --elevation-1: 0 1px 3px rgba(0,0,0,0.2);
   --elevation-2: 0 4px 12px rgba(0,0,0,0.4);
 
-  --elevation-2: 0 4px 12px rgba(0,0,0,0.4);
-
   --transition: all 0.2s ease-out;
 }
 
@@ -90,7 +88,7 @@ body.sidebar-collapsed {
 .top-stats { display: flex; gap: var(--space-3); }
 
 /* PROGRESS BAR (Energia) */
-.energy-track { flex-grow:1; height: 8px !important; background: var(--border-strong); border-radius: 4px; position: relative; overflow: hidden; cursor:pointer;}
+body .energy-track { flex-grow:1; height: 8px; background: var(--border-strong); border-radius: 4px; position: relative; overflow: hidden; cursor:pointer;}
 .energy-fill { height: 100%; background: var(--accent-primary); border-radius: 4px; width: 50%; transition: width 0.3s ease; }
 .energy-val { font-family: var(--font-mono); font-weight: 500; color: var(--text-primary); font-size: 0.85rem;}
 
@@ -163,7 +161,7 @@ body.sidebar-collapsed {
     white-space: nowrap;
 }
 .sidebar.collapsed .sidebar-header { justify-content: center; margin-bottom: 24px;}
-.sidebar.collapsed .segmented-control { display: none !important; }
+body .sidebar.collapsed .segmented-control { display: none; }
 .sidebar.collapsed .checklist-item i, .sidebar.collapsed .sidebar-section i { margin: 0 auto; display:block; }
 .main-content {
     flex-grow: 1;
@@ -245,24 +243,24 @@ body.sidebar-collapsed {
     border-color: #888;
 }
 /* All sidebar icons: uniform muted gray */
-.sidebar .btn-ghost i,
-.sidebar .naked-section i,
-.sidebar .stat-text ~ i {
-    color: #666 !important;
+body .sidebar .btn-ghost i,
+body .sidebar .naked-section i,
+body .sidebar .stat-text ~ i {
+    color: #666;
 }
-.sidebar .btn-ghost {
-    color: var(--text-secondary) !important;
+body .sidebar .btn-ghost {
+    color: var(--text-secondary);
     font-size: 0.82rem;
 }
-.sidebar .btn-ghost:hover {
-    color: var(--text-primary) !important;
+body .sidebar .btn-ghost:hover {
+    color: var(--text-primary);
 }
-.sidebar .btn-ghost:hover i {
-    color: var(--text-primary) !important;
+body .sidebar .btn-ghost:hover i {
+    color: var(--text-primary);
 }
 /* Sidebar section icon uniformity */
-.sidebar section i[data-lucide] {
-    color: #666 !important;
+body .sidebar section i[data-lucide] {
+    color: #666;
 }
 
 /* BLOCKS (Layout Hierarchiczny) */
@@ -421,12 +419,12 @@ body.sidebar-collapsed {
     text-align: center;
 }
 
-.knowledge-item.interactive:hover {
-    background: rgba(255,255,255,0.06) !important;
+body .knowledge-item.interactive:hover {
+    background: rgba(255,255,255,0.06);
     transform: translateX(4px);
 }
-[data-theme="light"] .knowledge-item.interactive:hover {
-    background: rgba(0,0,0,0.05) !important;
+[data-theme="light"] body .knowledge-item.interactive:hover {
+    background: rgba(0,0,0,0.05);
 }
 
 @media (max-width: 1024px) {

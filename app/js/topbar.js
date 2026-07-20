@@ -1,8 +1,8 @@
 // topbar.js - Obsługa dynamicznego paska górnego na podstronach (inbox, knowledge)
 import { db, USER_NODE } from './firebase.js';
 function getTodayStr() {
-    const tzoffset = (new Date()).getTimezoneOffset() * 60000;
-    return (new Date(Date.now() - tzoffset)).toISOString().split('T')[0];
+    const d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
 }
 
 function updateTimeProgress() {
