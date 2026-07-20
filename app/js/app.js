@@ -8,27 +8,7 @@ const CATEGORY_COLORS = {
     "Specjalistyczne & Rozwój": "#F85149" 
 };
 
-// --- BAZA "SYSTEMU ŻYCIA" (GIGANTYCZNY DECK) ---
-const HUGE_DECK = {
-    "s1": { q: "P-value", a: "Prawdopodobieństwo uzyskania statystyki testowej równej lub bardziej ekstremalnej niż obserwowana, przy założeniu, że H0 jest prawdziwa.", interval:0, ef:2.5, topic: "Statystyka matematyczna", category: "Matematyka & Statystyka" },
-    "s2": { q: "Wariancja a Odch. Std.", a: "Wariancja to średnia kwadratów odchyleń od średniej. Odch. Std. to jej pierwiastek (wraca do pierwotnej jednostki).", interval:0, ef:2.5, topic: "Statystyka opisowa", category: "Matematyka & Statystyka" },
-    "s3": { q: "Rozkład Normalny (3 sigmy)", a: "68% obs. w 1 odch. std., 95% w 2, a 99.7% w 3.", interval:0, ef:2.5, topic: "Statystyka opisowa", category: "Matematyka & Statystyka" },
-    "s4": { q: "Błąd I i II rodzaju", a: "I: Odrzucenie prawdziwej H0 (alfa). II: Przyjęcie fałszywej H0 (beta).", interval:0, ef:2.5, topic: "Statystyka matematyczna", category: "Matematyka & Statystyka" },
-    "p1": { q: "Pandas: Usunięcie braków", a: "df.dropna()", interval:0, ef:2.5, topic: "Python (Pandas/Numpy)", category: "Technologie & Analityka" },
-    "p2": { q: "Pandas: Grupowanie (Miasto i średnia Cen)", a: "df.groupby('Miasto')['Ceny'].mean()", interval:0, ef:2.5, topic: "Python (Pandas/Numpy)", category: "Technologie & Analityka" },
-    "p3": { q: "Pandas: Odczyt CSV i Excel", a: "pd.read_csv('plik.csv'), pd.read_excel('plik.xlsx')", interval:0, ef:2.5, topic: "Python (Pandas/Numpy)", category: "Technologie & Analityka" },
-    "p4": { q: "Numpy: Tablica zer (2 wiersze, 3 kol)", a: "np.zeros((2, 3))", interval:0, ef:2.5, topic: "Python (Pandas/Numpy)", category: "Technologie & Analityka" },
-    "e1": { q: "VLOOKUP a XLOOKUP", a: "XLOOKUP szuka w obie strony (lewo/prawo), nie wymaga liczenia numeru kolumny, radzi sobie z wstawianiem nowych wierszy.", interval:0, ef:2.5, topic: "Excel Zaawansowany", category: "Technologie & Analityka" },
-    "e2": { q: "Funkcja SUMIFS", a: "Sumuje wartości tylko gdy spełnione jest wiele kryteriów (np. suma dla Region=Wawa ORAZ Rok=2026).", interval:0, ef:2.5, topic: "Excel Zaawansowany", category: "Technologie & Analityka" },
-    "e3": { q: "Skrót: Twarde blokowanie komórki ($)", a: "Klawisz F4. Pozwala na zablokowanie rzędu/kolumny przy przeciąganiu wzoru.", interval:0, ef:2.5, topic: "Excel Zaawansowany", category: "Technologie & Analityka" },
-    "f1": { q: "EBITDA", a: "Zysk operacyjny przed odsetkami, podatkami i amortyzacją. Proxy cash-flow na działalności operacyjnej firmy.", interval:0, ef:2.5, topic: "Ekonomia", category: "Ekonomia & Finanse" },
-    "f2": { q: "Wycena modelem DCF", a: "Suma przyszłych, przewidywanych przepływów pieniężnych (FCF) zdyskontowanych na dzisiaj przy użyciu WACC.", interval:0, ef:2.5, topic: "Wycena spółek (Corporate Finance)", category: "Ekonomia & Finanse" },
-    "f3": { q: "Risk-Free Rate (Stopa wolna od ryzyka)", a: "Rentowność superbezpiecznych aktywów (głównie 10-letnie obligacje skarbowe USA/Państwa), podstawa do obliczania WACC.", interval:0, ef:2.5, topic: "Rynki finansowe", category: "Ekonomia & Finanse" },
-    "f4": { q: "CAPM (Capital Asset Pricing Model)", a: "Wzór na koszt kapitału własnego: R_f + Beta * (R_m - R_f). Gdzie R_m to rynkowa stopa zwrotu.", interval:0, ef:2.5, topic: "Wycena spółek (Corporate Finance)", category: "Ekonomia & Finanse" },
-    "l1": { q: "Zasada 5 minut dla ADHD", a: "Bariera rozpoczęcia pracy to iluzja dopaminowa. Zobowiąż się tylko na 5 minut bez oceny. Ciało migdałowate w mózgu puści strach.", interval:0, ef:2.5, topic: "Kognitywistyka / ADHD", category: "Specjalistyczne & Rozwój" },
-    "l2": { q: "Dopamina poranna", a: "Żadnych ekranów (social media/newsy) przed pierwszą głęboką pracą. Scrollowanie ustawia tani Baseline dopaminy na cały dzień, niszcząc zapał do trudnych akcji.", interval:0, ef:2.5, topic: "Kognitywistyka / ADHD", category: "Specjalistyczne & Rozwój" },
-    "l3": { q: "Prawo Parkinsona", a: "Praca rozszerza się tak, aby wypełnić czas dostępny na jej ukończenie. Skracaj deadliny celowo.", interval:0, ef:2.5, topic: "Zarządzanie czasem", category: "Specjalistyczne & Rozwój" }
-};
+// HUGE_DECK usunięty - dane fiszek znajdują się wyłącznie w bazie Firebase.
 
 // --- FIREBASE INIT ---
 // Konfiguracja przeniesiona do firebase_init.js by zasilać inne podstrony (np. knowledge.html, inbox.html)
@@ -77,6 +57,11 @@ function checkPin() {
 }
 
 function initApp() {
+    window.KnowledgeTree = {};
+    db.ref(USER_NODE + 'knowledge_tree').on('value', snap => {
+        window.KnowledgeTree = snap.val() || {};
+    });
+
     // Theme Switcher
     const currentTheme = localStorage.getItem('theme') || 'dark';
     document.documentElement.setAttribute('data-theme', currentTheme);
@@ -477,23 +462,29 @@ function initSRS() {
     
     const dbSrsRef = db.ref(USER_NODE + 'srs_deck');
     
-    const syncHugeDeck = () => {
-        qDisplay.textContent = "Synchronizacja Life System Deck...";
-        const todayStr = getTodayStr();
-        let compiledDeck = {};
-        for(let k in HUGE_DECK) {
-            compiledDeck[k] = { ...HUGE_DECK[k], nextReview: todayStr };
+    const cloudStatus = document.getElementById('cloud-status');
+    const syncBtn = document.getElementById('btn-force-srs-sync');
+    if (syncBtn) {
+        syncBtn.style.cursor = 'default';
+        syncBtn.title = "Status połączenia z chmurą";
+    }
+    
+    db.ref('.info/connected').on('value', snap => {
+        if (snap.val() === true) {
+            if (cloudStatus) {
+                cloudStatus.textContent = "Synced";
+                cloudStatus.style.color = "var(--accent-success)";
+            }
+        } else {
+            if (cloudStatus) {
+                cloudStatus.textContent = "Offline";
+                cloudStatus.style.color = "var(--accent-warning)";
+            }
         }
-        dbSrsRef.set(compiledDeck).then(() => {
-            alert("Baza Życia została zsynchronizowana z Firebase! Powodzenia w potężnej nauce.");
-            loadDueCard();
-        });
-    };
-
-    document.getElementById('btn-force-srs-sync').addEventListener('click', syncHugeDeck);
+    });
 
     dbSrsRef.once('value').then(snap => {
-        if(!snap.exists()) { syncHugeDeck(); } else { loadDueCard(); }
+        loadDueCard();
     });
 
     let currentCardKey = null;

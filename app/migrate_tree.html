@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pl" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <title>Migrate Knowledge Tree to Firebase</title>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="js/firebase_init.js"></script>
+    <!-- Ładujemy stary plik z drzewem wiedzy -->
+    <script src="js/knowledge_tree.js"></script>
+</head>
+<body style="background: #111; color: #eee; font-family: sans-serif; padding: 40px;">
+    <h2>Migracja Drzewa Wiedzy</h2>
+    <p>Ten skrypt pobierze window.KnowledgeTree z pliku JS i wrzuci go do węzła "knowledge_tree" w Firebase.</p>
+    <button id="btn-run" style="padding: 10px 20px; font-size: 16px; cursor: pointer; background: #0A84FF; color: white; border: none; border-radius: 5px;">Rozpocznij migrację</button>
+    <div id="log" style="margin-top: 20px; font-family: monospace; line-height: 1.5;"></div>
+
+    <script>
+        document.getElementById('btn-run').addEventListener('click', async () => {
+            const btn = document.getElementById('btn-run');
+            const log = document.getElementById('log');
+            btn.disabled = true;
+            btn.innerText = 'Wysyłanie do bazy...';
+
+            if (!window.KnowledgeTree) {
+                log.innerHTML += '<span style="color:red">BŁĄD: Nie znaleziono window.KnowledgeTree! Sprawdź czy plik JS się załadował.</span><br>';
+                return;
+            }
+
+            try {
+                // Konwersja starej tablicy (gdzie indeks = pozycja) na obiekt ułatwiający edycję
+                // Ale nie, Firebase zapisze to jako tablicę/obiekt automatycznie.
+                
+                log.innerHTML += 'Kopiowanie danych do chmury...<br>';
+                
+                await db.ref(USER_NODE + 'knowledge_tree').set(window.KnowledgeTree);
+                
+                log.innerHTML += '✅ <b>Sukces!</b> Drzewo pomyślnie zmigrowane do Firebase.<br>';
+                log.innerHTML += 'Możesz teraz przejść do knowledge.html (po odświeżeniu i wdrożeniu zmian z brancha).';
+            } catch(e) {
+                log.innerHTML += '<span style="color:red">Błąd podczas wysyłania: ' + e.message + '</span><br>';
+            }
+        });
+    </script>
+</body>
+</html>

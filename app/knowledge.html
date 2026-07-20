@@ -86,8 +86,7 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="js/firebase_init.js"></script>
     <script src="js/data.js"></script>
-    <script src="js/knowledge_tree.js"></script>
-    <script src="js/knowledge_tree_2.js"></script>
+    <script src="js/local_data.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const currentTheme = localStorage.getItem('theme') || 'dark';
@@ -104,32 +103,33 @@
             if(window.lucide) window.lucide.createIcons();
 
             let localProgress = {};
-            let globalTree = {};
-            
-            db.ref(USER_NODE + 'knowledge').once('value').then(snap => {
-                localProgress = snap.val() || {};
+            db.ref(USER_NODE + 'knowledge_tree').on('value', snapTree => {
+                globalTree = snapTree.val() || {};
                 
-                // Migracja starej liniowej bazy na nową nieliniową
-                Object.keys(localProgress).forEach(category => {
-                    const progress = localProgress[category];
-                    const treeArr = window.KnowledgeTree ? window.KnowledgeTree[category] : null;
-                    if(progress && treeArr && progress.level > 0 && (!progress.completed || Object.keys(progress.completed).length === 0)) {
-                        const total = treeArr.length;
-                        const maxIdx = Math.floor((progress.level / 100) * total) - 1;
-                        progress.completed = {};
-                        for(let i = 0; i <= maxIdx; i++) {
-                            progress.completed[i] = true;
+                db.ref(USER_NODE + 'knowledge').once('value').then(snap => {
+                    localProgress = snap.val() || {};
+                    
+                    // Migracja starej liniowej bazy na nową nieliniową
+                    Object.keys(localProgress).forEach(category => {
+                        const progress = localProgress[category];
+                        const treeArr = globalTree[category] ? globalTree[category] : null;
+                        if(progress && treeArr && progress.level > 0 && (!progress.completed || Object.keys(progress.completed).length === 0)) {
+                            const total = treeArr.length;
+                            const maxIdx = Math.floor((progress.level / 100) * total) - 1;
+                            progress.completed = {};
+                            for(let i = 0; i <= maxIdx; i++) {
+                                progress.completed[i] = true;
+                            }
                         }
-                    }
+                    });
+                    
+                    renderSidebar();
+                }).catch(e => {
+                    renderSidebar();
                 });
-                
-                renderSidebar();
-            }).catch(e => {
-                renderSidebar();
             });
 
             function getTopicDetails(category, title, item) {
-                // Jeśli item jest obiektem i ma predefiniowane wyzwania (tak jak Excel)
                 if (typeof item === 'object') {
                     return {
                         yt: item.yt || null,
@@ -139,7 +139,6 @@
                     };
                 }
                 
-                // W przeciwnym razie generujemy logiczny opis i 3 podtematy do opanowania:
                 const description = `Wprowadzenie i ustrukturyzowana wiedza do zagadnienia **${title}** w ramach ścieżki **${category}**. Temat ten obejmuje kluczowe zagadnienia teoretyczne oraz zastosowania w analizach i projektach.`;
                 
                 let subtopics = [
@@ -178,7 +177,6 @@
                 };
             }
 
-            // Category color map
             function getCatColor(cat) {
                 let t = cat.toLowerCase();
                 if(t.includes('matematyk') || t.includes('statystyk') || t.includes('algebra') || t.includes('excel') || t.includes('power')) return '#2BBF71';
@@ -193,7 +191,6 @@
 
             function renderSidebar() {
                 const sidebar = document.getElementById('k-sidebar');
-                globalTree = window.KnowledgeTree || {};
                 let keys = Object.keys(globalTree);
                 
                 if(keys.length === 0) {
@@ -231,6 +228,20 @@
                         btn.click();
                     }
                 });
+                
+                // Przycisk dodawania nowej kategorii lub węzła
+                let addBtnDiv = document.createElement('div');
+                addBtnDiv.style.padding = '12px';
+                addBtnDiv.style.marginTop = '20px';
+                addBtnDiv.style.borderTop = '1px dashed var(--border-subtle)';
+                addBtnDiv.innerHTML = `<button id="btn-add-node" class="btn btn-primary" style="width:100%; justify-content:center;"><i data-lucide="plus"></i> Rozbuduj Drzewo Wiedzy</button>`;
+                sidebar.appendChild(addBtnDiv);
+
+                if(window.lucide) window.lucide.createIcons();
+                
+                setTimeout(() => {
+                    document.getElementById('btn-add-node').addEventListener('click', openAddNodeModal);
+                }, 100);
             }
 
             function renderMainArea(category, color, currentLevel) {
@@ -352,14 +363,12 @@
                     let color = getCatColor(category);
                     renderMainArea(category, color, newLevel);
                     
-                    // Update sidebar button
                     const sidebar = document.getElementById('k-sidebar');
                     const btns = sidebar.querySelectorAll('.category-btn');
                     btns.forEach(btn => {
                         if(btn.innerHTML.includes(category)) {
                             const levelSpan = btn.querySelector('span > span');
                             if(levelSpan) levelSpan.innerText = `(${newLevel}%)`;
-                            // Update circle size
                             const circle = btn.querySelector('div');
                             if(circle) {
                                 const newSize = 6 + (newLevel / 100) * 12;
@@ -374,6 +383,82 @@
                     document.getElementById('k-main').style.opacity = '1';
                 });
             };
+            
+            // --- UI Dodawania Węzłów do Drzewa ---
+            function openAddNodeModal() {
+                let m = document.getElementById('add-node-modal');
+                if(!m) {
+                    m = document.createElement('div');
+                    m.id = 'add-node-modal';
+                    m.className = 'modal-overlay';
+                    m.style.display = 'flex';
+                    m.style.zIndex = '3000';
+                    m.innerHTML = `
+                        <div class="modal-content" style="max-width: 500px;">
+                            <div class="modal-header">
+                                <h2>Rozbuduj Drzewo Wiedzy</h2>
+                                <button class="btn btn-ghost" onclick="document.getElementById('add-node-modal').style.display='none'"><i data-lucide="x"></i></button>
+                            </div>
+                            <div class="modal-body" style="display:flex; flex-direction:column; gap:12px;">
+                                <label style="font-size:0.8rem; color:var(--text-secondary);">Wybierz kategorię lub wpisz nową:</label>
+                                <input type="text" id="an-category" list="an-categories" class="inbox-task-input" placeholder="Np. Excel, Python, Finanse...">
+                                <datalist id="an-categories"></datalist>
+                                
+                                <label style="font-size:0.8rem; color:var(--text-secondary); margin-top:8px;">Tytuł nowego tematu / lekcji:</label>
+                                <input type="text" id="an-title" class="inbox-task-input" placeholder="Tytuł zagadnienia">
+                                
+                                <label style="font-size:0.8rem; color:var(--text-secondary); margin-top:8px;">Link YouTube (opcjonalnie, format /embed/):</label>
+                                <input type="text" id="an-yt" class="inbox-task-input" placeholder="https://www.youtube.com/embed/XXXXX">
+                                
+                                <label style="font-size:0.8rem; color:var(--text-secondary); margin-top:8px;">Wyzwanie praktyczne (opcjonalnie):</label>
+                                <textarea id="an-challenge" class="inbox-task-input" rows="3" placeholder="Zadanie do wykonania po lekcji..."></textarea>
+                                
+                                <button id="an-save-btn" class="btn btn-primary" style="margin-top: 16px; justify-content:center;"><i data-lucide="save"></i> Zapisz do bazy</button>
+                            </div>
+                        </div>
+                    `;
+                    document.body.appendChild(m);
+                    if(window.lucide) window.lucide.createIcons();
+                }
+                
+                const dl = document.getElementById('an-categories');
+                dl.innerHTML = '';
+                Object.keys(globalTree).forEach(k => {
+                    const opt = document.createElement('option');
+                    opt.value = k;
+                    dl.appendChild(opt);
+                });
+                
+                document.getElementById('an-category').value = '';
+                document.getElementById('an-title').value = '';
+                document.getElementById('an-yt').value = '';
+                document.getElementById('an-challenge').value = '';
+                
+                m.style.display = 'flex';
+                
+                document.getElementById('an-save-btn').onclick = () => {
+                    const cat = document.getElementById('an-category').value.trim();
+                    const tit = document.getElementById('an-title').value.trim();
+                    const yt = document.getElementById('an-yt').value.trim();
+                    const chall = document.getElementById('an-challenge').value.trim();
+                    
+                    if(!cat || !tit) return alert("Kategoria i tytuł są wymagane!");
+                    
+                    let nodeData = tit;
+                    if(yt || chall) {
+                        nodeData = { title: tit };
+                        if(yt) nodeData.yt = yt;
+                        if(chall) nodeData.challenge = chall;
+                    }
+                    
+                    let targetArr = globalTree[cat] ? [...globalTree[cat]] : [];
+                    targetArr.push(nodeData);
+                    
+                    db.ref(USER_NODE + 'knowledge_tree/' + cat).set(targetArr).then(() => {
+                        m.style.display = 'none';
+                    });
+                };
+            }
         });
     </script>
     <script src="js/topbar.js?v=20.1"></script>
