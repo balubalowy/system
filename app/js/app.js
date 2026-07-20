@@ -1305,3 +1305,15 @@ window.actionTask = function(key, action, encodedTask) {
         });
     }
 };
+
+window.quickAddTask = function(key) {
+    const task = prompt("Wpisz nowe zadanie do: " + key.toUpperCase());
+    if(task && task.trim() !== "") {
+        db.ref(USER_NODE + 'inbox/' + key).once('value').then(s => {
+            let text = s.val() || "";
+            let lines = text.split('\n').filter(l => l.trim() !== "");
+            lines.push("- " + task.trim());
+            db.ref(USER_NODE + 'inbox/' + key).set(lines.join('\n'));
+        });
+    }
+};

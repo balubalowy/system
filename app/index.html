@@ -257,22 +257,34 @@
 
                 <div class="blocks-layout" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--space-4);">
                     <div class="card block-card priority" style="border-top: 3px solid var(--accent-primary);">
-                        <div class="card-header"><h3 style="font-size: 1.1rem; color: var(--text-primary); display:flex; align-items:center; gap:6px;"><i data-lucide="brain" style="color:var(--accent-primary);"></i> Kognitywny</h3></div>
+                        <div class="card-header" style="justify-content:space-between;">
+                            <h3 style="font-size: 1.1rem; color: var(--text-primary); display:flex; align-items:center; gap:6px;"><i data-lucide="brain" style="color:var(--accent-primary);"></i> Kognitywny</h3>
+                            <button onclick="quickAddTask('priority')" style="background:none; border:none; cursor:pointer; color:var(--text-secondary);" title="Szybkie dodanie"><i data-lucide="plus" style="width:16px;"></i></button>
+                        </div>
                         <div id="suggested-priority" style="flex-grow:1; display:flex; flex-direction:column;">Pobieranie z bazy...</div>
                     </div>
 
                     <div class="card block-card admin" style="border-top: 3px solid var(--text-secondary);">
-                        <div class="card-header"><h3 style="font-size: 1.1rem; color: var(--text-primary); display:flex; align-items:center; gap:6px;"><i data-lucide="briefcase"></i> Administracja</h3></div>
+                        <div class="card-header" style="justify-content:space-between;">
+                            <h3 style="font-size: 1.1rem; color: var(--text-primary); display:flex; align-items:center; gap:6px;"><i data-lucide="briefcase"></i> Administracja</h3>
+                            <button onclick="quickAddTask('admin')" style="background:none; border:none; cursor:pointer; color:var(--text-secondary);" title="Szybkie dodanie"><i data-lucide="plus" style="width:16px;"></i></button>
+                        </div>
                         <div id="suggested-admin" style="flex-grow:1; display:flex; flex-direction:column;">Pobieranie z bazy...</div>
                     </div>
                     
                     <div class="card block-card light" style="border-top: 3px solid var(--accent-info);">
-                        <div class="card-header"><h3 style="font-size: 1.1rem; color: var(--text-primary); display:flex; align-items:center; gap:6px;"><i data-lucide="coffee" style="color:var(--accent-info);"></i> Zadanie Lekkie</h3></div>
+                        <div class="card-header" style="justify-content:space-between;">
+                            <h3 style="font-size: 1.1rem; color: var(--text-primary); display:flex; align-items:center; gap:6px;"><i data-lucide="coffee" style="color:var(--accent-info);"></i> Zadanie Lekkie</h3>
+                            <button onclick="quickAddTask('light')" style="background:none; border:none; cursor:pointer; color:var(--text-secondary);" title="Szybkie dodanie"><i data-lucide="plus" style="width:16px;"></i></button>
+                        </div>
                         <div id="suggested-light" style="flex-grow:1; display:flex; flex-direction:column;">Pobieranie z bazy...</div>
                     </div>
                     
                     <div class="card block-card sensory" style="border-top: 3px solid var(--accent-success);">
-                        <div class="card-header"><h3 style="font-size: 1.1rem; color: var(--text-primary); display:flex; align-items:center; gap:6px;"><i data-lucide="ear" style="color:var(--accent-success);"></i> Odłączenie</h3></div>
+                        <div class="card-header" style="justify-content:space-between;">
+                            <h3 style="font-size: 1.1rem; color: var(--text-primary); display:flex; align-items:center; gap:6px;"><i data-lucide="ear" style="color:var(--accent-success);"></i> Odłączenie</h3>
+                            <button onclick="quickAddTask('sensory')" style="background:none; border:none; cursor:pointer; color:var(--text-secondary);" title="Szybkie dodanie"><i data-lucide="plus" style="width:16px;"></i></button>
+                        </div>
                         <div id="suggested-sensory" style="flex-grow:1; display:flex; flex-direction:column;">Pobieranie z bazy...</div>
                     </div>
                 </div>
