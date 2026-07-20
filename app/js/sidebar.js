@@ -98,11 +98,10 @@ window.renderSidebar = function renderSidebar() {
         
         <!-- Warstwa przyciemniająca na telefonach -->
         <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
-    \`;
+    `;
 
-    const container = document.querySelector('.container');
-    if (container) {
-        container.insertAdjacentHTML('afterbegin', sidebarHTML);
+    if (document.body) {
+        document.body.insertAdjacentHTML('afterbegin', sidebarHTML);
     }
     
     if (window.lucide) {
