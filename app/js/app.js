@@ -1292,7 +1292,7 @@ function initInteractiveTasks() {
                     html += `<div style="display:flex; flex-direction:column; gap:4px;">`;
                     lines.forEach(line => {
                         let cleanLine = line.startsWith('-') ? line.substring(1).trim() : line;
-                        html += `<a href="#" onclick="actionTask('${b.key}', 'activate', '${encodeURIComponent(line)}')" style="color:var(--text-secondary); text-decoration:none; padding:6px; background:rgba(255,255,255,0.02); border:1px solid var(--border-subtle); border-radius:4px; font-size:0.85rem; display:block; transition:all 0.2s; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="Wrzut do góry!">- ${cleanLine} <i data-lucide="arrow-up-right" style="width:14px; float:right; opacity:0.5;"></i></a>`;
+                        html += `<a href="#" onclick="actionTask('${b.key}', 'activate', '${encodeURIComponent(line)}')" style="color:var(--text-secondary); text-decoration:none; padding:6px; background:rgba(255,255,255,0.02); border:1px solid var(--border-subtle); border-radius:4px; font-size:0.85rem; display:flex; align-items:flex-start; justify-content:space-between; gap:8px; transition:all 0.2s;" title="Wrzut do góry!"><span style="line-height:1.4;">- ${cleanLine}</span> <i data-lucide="arrow-up-right" style="width:14px; height:14px; flex-shrink:0; opacity:0.5; margin-top:2px;"></i></a>`;
                     });
                     html += `</div></div>`;
                 }
