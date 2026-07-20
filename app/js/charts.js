@@ -1,6 +1,6 @@
 // js/charts.js
 import { db, USER_NODE } from './firebase.js';
-import { showKnowledgeModal } from './ui.js';
+import { showKnowledgeModal } from './knowledge-modal.js';
 
 const CATEGORY_COLORS = {
     "Matematyka & Statystyka": "#2F81F7", 
