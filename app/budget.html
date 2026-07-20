@@ -302,11 +302,18 @@
     <script type="module">
         import { db, USER_NODE } from './js/firebase.js';
         import { escapeHTML } from './js/utils.js';
-        import { initWishlistEngine } from './js/ui.js';
+        import { initWishlistEngine, initTopBar, initDayTimeTrack, initSidebarToggle, initChecklists, initReadingList } from './js/ui.js';
+        import { initCalendar } from './js/calendar.js';
         
         document.addEventListener('DOMContentLoaded', () => {
             if(window.lucide) window.lucide.createIcons();
             initWishlistEngine();
+            initTopBar();
+            initDayTimeTrack();
+            initSidebarToggle();
+            initChecklists();
+            initReadingList();
+            initCalendar();
             if(window.lucide) window.lucide.createIcons();
 
             const EXPENSE_CATS = [

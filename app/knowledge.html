@@ -89,7 +89,10 @@
     <script src="js/local_data.js"></script>
     <script type="module">
         import { db, USER_NODE } from './js/firebase.js';
+        import { initTopBar, initDayTimeTrack, initSidebarToggle, initChecklists, initReadingList } from './js/ui.js';
+        import { initCalendar } from './js/calendar.js';
         import { escapeHTML } from './js/utils.js';
+
         document.addEventListener('DOMContentLoaded', () => {
             const currentTheme = localStorage.getItem('theme') || 'dark';
             document.documentElement.setAttribute('data-theme', currentTheme);
@@ -103,6 +106,13 @@
                 });
             }
             if(window.lucide) window.lucide.createIcons();
+
+            initTopBar();
+            initDayTimeTrack();
+            initSidebarToggle();
+            initChecklists();
+            initReadingList();
+            initCalendar();
 
             let localProgress = {};
             let globalTree = {};

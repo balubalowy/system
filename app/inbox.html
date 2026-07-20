@@ -159,7 +159,8 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script type="module">
         import { db, USER_NODE } from './js/firebase.js';
-        import { initIdeasEngine, initWishlistEngine } from './js/ui.js';
+        import { initIdeasEngine, initWishlistEngine, initTopBar, initDayTimeTrack, initSidebarToggle, initChecklists, initReadingList } from './js/ui.js';
+        import { initCalendar } from './js/calendar.js';
         import { escapeHTML } from './js/utils.js';
         
         document.addEventListener('DOMContentLoaded', () => {
@@ -175,6 +176,13 @@
                 });
             }
             if(window.lucide) window.lucide.createIcons();
+
+            initTopBar();
+            initDayTimeTrack();
+            initSidebarToggle();
+            initChecklists();
+            initReadingList();
+            initCalendar();
 
             const boxes = ['priority', 'admin', 'light', 'sensory'];
             let timeout = null;
