@@ -105,25 +105,25 @@
                 <div class="inbox-section" style="border-top: 4px solid var(--accent-primary);">
                     <h2 style="font-size: 1.1rem; display:flex; align-items:center; gap:8px;"><i data-lucide="brain"></i> Kognitywny (Priorytet)</h2>
                     <div id="list-priority" class="inbox-task-list"></div>
-                    <button class="btn btn-ghost add-task-btn" data-key="priority" style="margin-top: 8px; font-size: 0.8rem; width:100%; justify-content:center;"><i data-lucide="plus" style="width:14px;"></i> Dodaj zadanie</button>
+                    <button class="btn btn-ghost add-task-btn" onclick="window.addTask('priority')" style="margin-top: 8px; font-size: 0.8rem; width:100%; justify-content:center;"><i data-lucide="plus" style="width:14px;"></i> Dodaj zadanie</button>
                 </div>
                 
                 <div class="inbox-section" style="border-top: 4px solid var(--text-secondary);">
                     <h2 style="font-size: 1.1rem; display:flex; align-items:center; gap:8px;"><i data-lucide="briefcase"></i> Administracja</h2>
                     <div id="list-admin" class="inbox-task-list"></div>
-                    <button class="btn btn-ghost add-task-btn" data-key="admin" style="margin-top: 8px; font-size: 0.8rem; width:100%; justify-content:center;"><i data-lucide="plus" style="width:14px;"></i> Dodaj zadanie</button>
+                    <button class="btn btn-ghost add-task-btn" onclick="window.addTask('admin')" style="margin-top: 8px; font-size: 0.8rem; width:100%; justify-content:center;"><i data-lucide="plus" style="width:14px;"></i> Dodaj zadanie</button>
                 </div>
                 
                 <div class="inbox-section" style="border-top: 4px solid var(--accent-info);">
                     <h2 style="font-size: 1.1rem; display:flex; align-items:center; gap:8px;"><i data-lucide="coffee"></i> Zadania Lekkie</h2>
                     <div id="list-light" class="inbox-task-list"></div>
-                    <button class="btn btn-ghost add-task-btn" data-key="light" style="margin-top: 8px; font-size: 0.8rem; width:100%; justify-content:center;"><i data-lucide="plus" style="width:14px;"></i> Dodaj zadanie</button>
+                    <button class="btn btn-ghost add-task-btn" onclick="window.addTask('light')" style="margin-top: 8px; font-size: 0.8rem; width:100%; justify-content:center;"><i data-lucide="plus" style="width:14px;"></i> Dodaj zadanie</button>
                 </div>
                 
                 <div class="inbox-section" style="border-top: 4px solid var(--accent-success);">
                     <h2 style="font-size: 1.1rem; display:flex; align-items:center; gap:8px;"><i data-lucide="ear"></i> Sensoryczne (Odłączanie)</h2>
                     <div id="list-sensory" class="inbox-task-list"></div>
-                    <button class="btn btn-ghost add-task-btn" data-key="sensory" style="margin-top: 8px; font-size: 0.8rem; width:100%; justify-content:center;"><i data-lucide="plus" style="width:14px;"></i> Dodaj zadanie</button>
+                    <button class="btn btn-ghost add-task-btn" onclick="window.addTask('sensory')" style="margin-top: 8px; font-size: 0.8rem; width:100%; justify-content:center;"><i data-lucide="plus" style="width:14px;"></i> Dodaj zadanie</button>
                 </div>
             </div>
 
@@ -225,12 +225,9 @@
                 }, 800);
             }
             
-            document.querySelectorAll('.add-task-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const k = e.currentTarget.getAttribute('data-key');
-                    renderTaskRow(document.getElementById(`list-${k}`), k, "");
-                });
-            });
+            window.addTask = function(key) {
+                renderTaskRow(document.getElementById(`list-${key}`), key, "");
+            };
 
             // Archiwum
             db.ref(USER_NODE + 'inbox_completed').orderByChild('timestamp').on('value', snap => {
