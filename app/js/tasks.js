@@ -39,8 +39,8 @@ export function initInteractiveTasks() {
                         <div class="task-active-card" style="border-left: 2px solid ${b.btnColor};">
                             <div style="font-size:0.95rem; font-weight:500; color:var(--text-primary); line-height:1.4; margin-bottom: 12px;">${activeTask}</div>
                             <div style="display:flex; gap:6px;">
-                                <button class="btn btn-ghost" onclick="actionTask('${b.key}', 'reject', '${encodeURIComponent(activeTask)}')" style="flex:1; padding: 6px; font-size:0.8rem; color:var(--accent-warning); border:1px solid rgba(255,159,10,0.2);" title="Wyrzuć z powrotem do zrzutni"><i data-lucide="x" style="width:14px; margin-right:4px;"></i> Cofnij</button>
-                                <button class="btn btn-secondary" onclick="actionTask('${b.key}', 'complete', '${encodeURIComponent(activeTask)}')" style="flex:1; padding: 6px; font-size:0.8rem; color:var(--accent-success); border:1px solid rgba(43,191,113,0.3);"><i data-lucide="check" style="width:14px; margin-right:4px;"></i> Ukończ</button>
+                                <button class="btn btn-ghost task-action-btn" data-key="${b.key}" data-action="reject" data-task="${encodeURIComponent(activeTask)}" style="flex:1; padding: 6px; font-size:0.8rem; color:var(--accent-warning); border:1px solid rgba(255,159,10,0.2);" title="Wyrzuć z powrotem do zrzutni"><i data-lucide="x" style="width:14px; margin-right:4px;"></i> Cofnij</button>
+                                <button class="btn btn-secondary task-action-btn" data-key="${b.key}" data-action="complete" data-task="${encodeURIComponent(activeTask)}" style="flex:1; padding: 6px; font-size:0.8rem; color:var(--accent-success); border:1px solid rgba(43,191,113,0.3);"><i data-lucide="check" style="width:14px; margin-right:4px;"></i> Ukończ</button>
                             </div>
                         </div>`;
                     });
@@ -52,21 +52,31 @@ export function initInteractiveTasks() {
                     html += `<div style="display:flex; flex-direction:column; gap:4px;">`;
                     lines.forEach(line => {
                         let cleanLine = line.startsWith('-') ? line.substring(1).trim() : line;
-                        html += `<a href="#" onclick="actionTask('${b.key}', 'activate', '${encodeURIComponent(line)}')" class="task-list-link" title="Wrzut do góry!"><span style="line-height:1.4;">- ${cleanLine}</span> <i data-lucide="arrow-up-right" style="width:14px; height:14px; flex-shrink:0; opacity:0.5; margin-top:2px;"></i></a>`;
+                        html += `<a href="#" class="task-list-link task-action-btn" data-key="${b.key}" data-action="activate" data-task="${encodeURIComponent(line)}" title="Wrzut do góry!"><span style="line-height:1.4;">- ${cleanLine}</span> <i data-lucide="arrow-up-right" style="width:14px; height:14px; flex-shrink:0; opacity:0.5; margin-top:2px;"></i></a>`;
                     });
                     html += `</div></div>`;
                 }
 
                 html += `</div>`;
                 el.innerHTML = html;
+                
+                // Dopnij nasłuchiwacze (nowoczesne podejście)
+                el.querySelectorAll('.task-action-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const key = btn.getAttribute('data-key');
+                        const action = btn.getAttribute('data-action');
+                        const taskStr = decodeURIComponent(btn.getAttribute('data-task'));
+                        actionTask(key, action, taskStr);
+                    });
+                });
             });
             if(window.lucide) window.lucide.createIcons();
         });
     });
 }
 
-window.actionTask = function(key, action, encodedTask) {
-    let taskStr = decodeURIComponent(encodedTask);
+function actionTask(key, action, taskStr) {
     
     if(action === 'activate') {
         db.ref(USER_NODE + 'inbox_active/' + key).once('value').then(sa => {
