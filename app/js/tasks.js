@@ -23,24 +23,27 @@ export function initInteractiveTasks() {
                     lines = data[b.key].split('\n').map(l => l.trim()).filter(l => l.length > 0);
                 }
                 
-                let activeTask = activeData[b.key] || "";
+                let activeText = activeData[b.key] || "";
+                let activeTasks = activeText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
                 
-                if(activeTask === "" && lines.length === 0) {
+                if(activeTasks.length === 0 && lines.length === 0) {
                     el.innerHTML = '<span style="color:var(--text-secondary); opacity:0.5;">Sektor czysty. Brak zadań.</span>';
                     return;
                 }
 
                 let html = `<div style="display:flex; flex-direction:column; height: 100%;">`;
                 
-                if (activeTask !== "") {
-                    html += `
-                    <div style="background: rgba(0,0,0,0.2); padding: 12px; border-radius: var(--radius-md); border-left: 2px solid ${b.btnColor}; margin-bottom: 12px;">
-                        <div style="font-size:0.95rem; font-weight:500; color:var(--text-primary); line-height:1.4; margin-bottom: 12px;">${activeTask}</div>
-                        <div style="display:flex; gap:6px;">
-                            <button class="btn btn-ghost" onclick="actionTask('${b.key}', 'reject', '${encodeURIComponent(activeTask)}')" style="flex:1; padding: 6px; font-size:0.8rem; color:var(--accent-warning); border:1px solid rgba(255,159,10,0.2);" title="Wyrzuć z powrotem do zrzutni"><i data-lucide="x" style="width:14px; margin-right:4px;"></i> Cofnij</button>
-                            <button class="btn btn-secondary" onclick="actionTask('${b.key}', 'complete', '${encodeURIComponent(activeTask)}')" style="flex:1; padding: 6px; font-size:0.8rem; color:var(--accent-success); border:1px solid rgba(43,191,113,0.3);"><i data-lucide="check" style="width:14px; margin-right:4px;"></i> Ukończ</button>
-                        </div>
-                    </div>`;
+                if (activeTasks.length > 0) {
+                    activeTasks.forEach(activeTask => {
+                        html += `
+                        <div style="background: rgba(0,0,0,0.2); padding: 12px; border-radius: var(--radius-md); border-left: 2px solid ${b.btnColor}; margin-bottom: 12px;">
+                            <div style="font-size:0.95rem; font-weight:500; color:var(--text-primary); line-height:1.4; margin-bottom: 12px;">${activeTask}</div>
+                            <div style="display:flex; gap:6px;">
+                                <button class="btn btn-ghost" onclick="actionTask('${b.key}', 'reject', '${encodeURIComponent(activeTask)}')" style="flex:1; padding: 6px; font-size:0.8rem; color:var(--accent-warning); border:1px solid rgba(255,159,10,0.2);" title="Wyrzuć z powrotem do zrzutni"><i data-lucide="x" style="width:14px; margin-right:4px;"></i> Cofnij</button>
+                                <button class="btn btn-secondary" onclick="actionTask('${b.key}', 'complete', '${encodeURIComponent(activeTask)}')" style="flex:1; padding: 6px; font-size:0.8rem; color:var(--accent-success); border:1px solid rgba(43,191,113,0.3);"><i data-lucide="check" style="width:14px; margin-right:4px;"></i> Ukończ</button>
+                            </div>
+                        </div>`;
+                    });
                 }
 
                 if (lines.length > 0) {
@@ -66,29 +69,45 @@ window.actionTask = function(key, action, encodedTask) {
     let taskStr = decodeURIComponent(encodedTask);
     
     if(action === 'activate') {
-        db.ref(USER_NODE + 'inbox_active/' + key).set(taskStr).then(() => {
-            db.ref(USER_NODE + 'inbox/' + key).once('value').then(s => {
-                let text = s.val() || "";
-                let lines = text.split('\n').filter(l => l.trim() !== taskStr && l.trim() !== "");
-                db.ref(USER_NODE + 'inbox/' + key).set(lines.join('\n'));
+        db.ref(USER_NODE + 'inbox_active/' + key).once('value').then(sa => {
+            let activeText = sa.val() || "";
+            let activeLines = activeText.split('\n').filter(l => l.trim() !== "");
+            if (!activeLines.includes(taskStr)) {
+                activeLines.push(taskStr);
+            }
+            db.ref(USER_NODE + 'inbox_active/' + key).set(activeLines.join('\n')).then(() => {
+                db.ref(USER_NODE + 'inbox/' + key).once('value').then(s => {
+                    let text = s.val() || "";
+                    let lines = text.split('\n').filter(l => l.trim() !== taskStr && l.trim() !== "");
+                    db.ref(USER_NODE + 'inbox/' + key).set(lines.join('\n'));
+                });
             });
         });
     } else if (action === 'reject') {
-        db.ref(USER_NODE + 'inbox_active/' + key).set(null).then(() => {
-            db.ref(USER_NODE + 'inbox/' + key).once('value').then(s => {
-                let text = s.val() || "";
-                let lines = text.split('\n').filter(l => l.trim() !== "");
-                lines.push(taskStr);
-                db.ref(USER_NODE + 'inbox/' + key).set(lines.join('\n'));
+        db.ref(USER_NODE + 'inbox_active/' + key).once('value').then(sa => {
+            let activeText = sa.val() || "";
+            let activeLines = activeText.split('\n').filter(l => l.trim() !== taskStr && l.trim() !== "");
+            db.ref(USER_NODE + 'inbox_active/' + key).set(activeLines.join('\n')).then(() => {
+                db.ref(USER_NODE + 'inbox/' + key).once('value').then(s => {
+                    let text = s.val() || "";
+                    let lines = text.split('\n').filter(l => l.trim() !== "");
+                    lines.push(taskStr);
+                    db.ref(USER_NODE + 'inbox/' + key).set(lines.join('\n'));
+                });
             });
         });
     } else if (action === 'complete') {
-        db.ref(USER_NODE + 'inbox_active/' + key).set(null);
-        let cleanTask = taskStr.startsWith('-') ? taskStr.substring(1).trim() : taskStr;
-        db.ref(USER_NODE + 'inbox_completed').push({
-            task: cleanTask,
-            category: key,
-            timestamp: new Date().toISOString()
+        db.ref(USER_NODE + 'inbox_active/' + key).once('value').then(sa => {
+            let activeText = sa.val() || "";
+            let activeLines = activeText.split('\n').filter(l => l.trim() !== taskStr && l.trim() !== "");
+            db.ref(USER_NODE + 'inbox_active/' + key).set(activeLines.join('\n')).then(() => {
+                let cleanTask = taskStr.startsWith('-') ? taskStr.substring(1).trim() : taskStr;
+                db.ref(USER_NODE + 'inbox_completed').push({
+                    task: cleanTask,
+                    category: key,
+                    timestamp: new Date().toISOString()
+                });
+            });
         });
     }
 };
