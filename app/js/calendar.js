@@ -1,6 +1,6 @@
 // js/calendar.js
 import { db, USER_NODE } from './firebase.js';
-import { getTodayStr } from './utils.js';
+import { getTodayStr, escapeHTML } from './utils.js';
 
 const START_HOUR = 7;
 const END_HOUR = 22;
@@ -240,8 +240,8 @@ function renderTodayList(events, container) {
         }
 
         let html = `<div class="cal-timeline-event" style="top: ${topPercent}%; height: ${heightPercent}%; background: ${ev.colorHex};">
-            <div style="font-weight: bold; line-height: 1.1;">${ev.timeStr}</div>
-            <div style="line-height: 1.1; margin-top:2px; white-space: normal;">${ev.title}</div>
+            <div style="font-weight: bold; line-height: 1.1;">${escapeHTML(ev.timeStr)}</div>
+            <div style="line-height: 1.1; margin-top:2px; white-space: normal;">${escapeHTML(ev.title)}</div>
         </div>`;
         target.innerHTML += html;
     });
@@ -290,8 +290,8 @@ function renderWeekGrid(events) {
         if(topPercent >= 100 || topPercent + heightPercent <= 0) return;
 
         col.innerHTML += `<div class="cal-event" style="top: ${topPercent}%; height: ${heightPercent}%; background-color: ${ev.colorHex};">
-            <div class="event-title">${ev.title}</div>
-            <div class="mono" style="font-size: 0.60rem;">${ev.timeStr}</div>
+            <div class="event-title">${escapeHTML(ev.title)}</div>
+            <div class="mono" style="font-size: 0.60rem;">${escapeHTML(ev.timeStr)}</div>
         </div>`;
     });
     

@@ -88,6 +88,7 @@
     <script src="js/local_data.js"></script>
     <script type="module">
         import { db, USER_NODE } from './js/firebase.js';
+        import { escapeHTML } from './js/utils.js';
         document.addEventListener('DOMContentLoaded', () => {
             const currentTheme = localStorage.getItem('theme') || 'dark';
             document.documentElement.setAttribute('data-theme', currentTheme);
@@ -290,19 +291,19 @@
                                 </div>
                                 ` : ''}
                                 ${details.description ? `
-                                <p style="font-size: 0.9rem; color: var(--text-secondary); margin: 0; line-height: 1.5; font-family:var(--font-sans);">${details.description}</p>
+                                <p style="font-size: 0.9rem; color: var(--text-secondary); margin: 0; line-height: 1.5; font-family:var(--font-sans);">${escapeHTML(details.description)}</p>
                                 ` : ''}
                                 ${details.challenge ? `
                                 <div style="background: rgba(47, 129, 247, 0.05); border-left: 3px solid ${color}; padding: 12px; border-radius: 0 4px 4px 0;">
                                     <div style="font-weight: 600; font-size: 0.75rem; color: ${color}; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; display:flex; align-items:center; gap:6px;"><i data-lucide="trophy" style="width:12px; height:12px;"></i> Wyzwanie (Challenge)</div>
-                                    <p style="font-size: 0.85rem; color: var(--text-primary); margin: 0; line-height: 1.4; font-family:var(--font-sans);">${details.challenge}</p>
+                                    <p style="font-size: 0.85rem; color: var(--text-primary); margin: 0; line-height: 1.4; font-family:var(--font-sans);">${escapeHTML(details.challenge)}</p>
                                 </div>
                                 ` : ''}
                                 ${details.subtopics ? `
                                 <div style="background: rgba(255, 255, 255, 0.02); border-left: 3px solid ${color}; padding: 12px; border-radius: 0 4px 4px 0;">
                                     <div style="font-weight: 600; font-size: 0.75rem; color: ${color}; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; display:flex; align-items:center; gap:6px;"><i data-lucide="list-checks" style="width:12px; height:12px;"></i> Podtematy do opanowania</div>
                                     <ul style="font-size: 0.85rem; color: var(--text-primary); margin: 0; padding-left: 20px; line-height: 1.6; font-family:var(--font-sans);">
-                                        ${details.subtopics.map(sub => `<li>${sub}</li>`).join('')}
+                                        ${details.subtopics.map(sub => `<li>${escapeHTML(sub)}</li>`).join('')}
                                     </ul>
                                 </div>
                                 ` : ''}

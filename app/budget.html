@@ -286,6 +286,7 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script type="module">
         import { db, USER_NODE } from './js/firebase.js';
+        import { escapeHTML } from './js/utils.js';
         document.addEventListener('DOMContentLoaded', () => {
             if(window.lucide) window.lucide.createIcons();
 
@@ -880,7 +881,7 @@
                             
                             html += `
                                 <tr class="${rowClass}">
-                                    <td style="font-weight:500;">${txn.name || '—'}</td>
+                                    <td style="font-weight:500;">${escapeHTML(txn.name) || '—'}</td>
                                     <td style="font-family:var(--font-mono); font-weight:600; color:${color};">${parseFloat(txn.amount || 0).toFixed(2)} zł</td>
                                     <td style="font-family:var(--font-mono); font-size:0.85rem; color:var(--text-secondary);">${txn.date || '—'}</td>
                                     <td>
@@ -889,7 +890,7 @@
                                         </span>
                                     </td>
                                     <td>${recurDetails ? `<span style="font-size:0.7rem; padding:2px 8px; border-radius:10px; background:rgba(255,255,255,0.05); color:var(--text-secondary); font-weight:500; white-space:nowrap;" title="Cykliczność"><i data-lucide="repeat" style="width:10px; height:10px; vertical-align:middle;"></i> ${recurDetails}</span>` : '<span style="font-size:0.75rem; color:var(--text-secondary); opacity:0.5;">—</span>'}</td>
-                                    <td style="font-size:0.85rem; color:var(--text-secondary);">${txn.note || '—'}</td>
+                                    <td style="font-size:0.85rem; color:var(--text-secondary);">${escapeHTML(txn.note) || '—'}</td>
                                     <td style="display:flex; gap: 4px;">
                                         <button class="expense-delete-btn" onclick="window.editItem('${dbNode}', '${catName}', '${key}')" title="Edytuj pozycję">
                                             <i data-lucide="edit-3" style="width:14px; height:14px;"></i>

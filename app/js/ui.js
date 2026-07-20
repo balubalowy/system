@@ -1,6 +1,6 @@
 // js/ui.js
 import { db, USER_NODE } from './firebase.js';
-import { getTodayStr } from './utils.js';
+import { getTodayStr, escapeHTML } from './utils.js';
 
 export function initTopBar() {
     const dateElement = document.getElementById('current-date');
@@ -343,7 +343,7 @@ export function showKnowledgeModal(meta) {
         if(index < 0) index = 0;
         const nodeItem = treeArr[index];
         const nodeTitle = typeof nodeItem === 'object' ? nodeItem.title : nodeItem;
-        currentTopicStr = `Etap ${index+1}/${totalNodes}: ${nodeTitle}`;
+        currentTopicStr = `Etap ${index+1}/${totalNodes}: ${escapeHTML(nodeTitle)}`;
     }
 
     if(currentNode) {
@@ -351,7 +351,7 @@ export function showKnowledgeModal(meta) {
         currentNode.style.color = meta.baseColor;
     }
     
-    let html = `<p style="margin-bottom: 5px;">Rodzina dziedziny: <strong>${meta.parentTopic}</strong></p>`;
+    let html = `<p style="margin-bottom: 5px;">Rodzina dziedziny: <strong>${escapeHTML(meta.parentTopic)}</strong></p>`;
     html += `<p style="margin-bottom: 16px;">Osiągnięta biegłość bazowa: <strong style="color:${meta.baseColor}; font-size:1.1rem;">${meta.currentLevel}%</strong></p>`;
     
     html += `<h3 style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:8px;">Lista ustrukturyzowanych etapów edukacyjnych:</h3>`;
@@ -359,7 +359,8 @@ export function showKnowledgeModal(meta) {
     if (treeArr && treeArr.length > 0) {
         treeArr.forEach((node, i) => {
             let isDone = i <= index;
-            html += `<li style="font-size:0.8rem; color:${isDone ? 'var(--text-primary)' : 'var(--text-secondary)'}; opacity:${isDone?1:0.5};"><i data-lucide="${isDone?'check-circle-2':'circle'}" style="width:12px; height:12px; margin-right:6px; color:${isDone?'var(--accent-success)':'inherit'};"></i> ${i+1}. ${node}</li>`;
+            let nTitle = typeof node === 'object' ? node.title : node;
+            html += `<li style="font-size:0.8rem; color:${isDone ? 'var(--text-primary)' : 'var(--text-secondary)'}; opacity:${isDone?1:0.5};"><i data-lucide="${isDone?'check-circle-2':'circle'}" style="width:12px; height:12px; margin-right:6px; color:${isDone?'var(--accent-success)':'inherit'};"></i> ${i+1}. ${escapeHTML(nTitle)}</li>`;
         });
     } else {
         html += `<li style="font-size:0.8rem; color:var(--text-secondary);">Brak danych w bazie dla tego przedmiotu</li>`;

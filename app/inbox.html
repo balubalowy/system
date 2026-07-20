@@ -148,6 +148,7 @@
     <script type="module">
         import { db, USER_NODE } from './js/firebase.js';
         import { initIdeasEngine } from './js/ui.js';
+        import { escapeHTML } from './js/utils.js';
         
         document.addEventListener('DOMContentLoaded', () => {
             const currentTheme = localStorage.getItem('theme') || 'dark';
@@ -262,16 +263,14 @@
                 };
 
                 const tasks = Object.entries(data).map(([k,v]) => ({key: k, ...v})).sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
+                
                 tasks.forEach(t => {
                     let d = new Date(t.timestamp);
-                    let color = 'var(--text-secondary)';
-                    if(t.category === 'priority') color = 'var(--accent-primary)';
-                    if(t.category === 'light') color = 'var(--accent-info)';
-                    if(t.category === 'sensory') color = 'var(--accent-success)';
+                    let color = colors[t.category] || '#999';
                     
                     archive.innerHTML += `<div style="padding:10px; background:rgba(0,0,0,0.2); border-radius:var(--radius-sm); border-left: 2px solid ${color}; margin-bottom:8px; display:flex; justify-content:space-between; align-items:flex-start;">
                         <div>
-                            <div style="font-size:0.85rem; color:var(--text-primary); margin-bottom:4px; padding-right:8px;">${t.task}</div>
+                            <div style="font-size:0.85rem; color:var(--text-primary); margin-bottom:4px; padding-right:8px;">${escapeHTML(t.task)}</div>
                             <div style="font-size:0.7rem; color:var(--text-secondary); font-family:var(--font-mono);">${d.toLocaleDateString()} ${d.toLocaleTimeString().slice(0,5)}</div>
                         </div>
                         <button onclick="restoreTask('${t.key}', '${t.category}', '${encodeURIComponent(t.task)}')" style="background:none; border:none; color:var(--accent-info); cursor:pointer; padding:4px;" title="Przywróć do zrzutni">
