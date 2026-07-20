@@ -1,4 +1,4 @@
-// Współdzielony plik konfiguracji dla środowiska Antigravity / Twój System
+// js/firebase.js
 const firebaseConfig = {
     apiKey: "AIzaSyAmHUmkWe6SG5YR8hkYOB8ZVLKG5giLerI",
     authDomain: "system-operacyjny.firebaseapp.com",
@@ -9,17 +9,13 @@ const firebaseConfig = {
     databaseURL: "https://system-operacyjny-default-rtdb.europe-west1.firebasedatabase.app"
 };
 
-if(!firebaseConfig.databaseURL) { firebaseConfig.databaseURL = "https://system-operacyjny.firebaseio.com"; }
-
-// Ochrona przed duplikacją inicjalizacji (np. gdy podpinamy i to, i stare app.js)
-if (!firebase.apps.length) {
-    firebase.initializeApp(firebaseConfig);
+if (!window.firebase.apps.length) {
+    window.firebase.initializeApp(firebaseConfig);
 }
-const db = firebase.database();
-const auth = firebase.auth();
+export const db = window.firebase.database();
+export const auth = window.firebase.auth();
 
-// Stała bazy zmigrowana do struktury, która istnieje
-const USER_NODE = 'users/bartek/';
+export const USER_NODE = 'users/bartek/';
 
 // SYSTEM THE FIREWALL (Auth Guard)
 if (!window.location.pathname.endsWith('login.html')) {
@@ -28,4 +24,8 @@ if (!window.location.pathname.endsWith('login.html')) {
             window.location.replace('login.html');
         }
     });
+}
+
+export function initFirebase() {
+    // Left for backwards compatibility if needed
 }

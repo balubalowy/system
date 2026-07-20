@@ -58,8 +58,8 @@
         </div>
     </div>
     
-    <script src="js/firebase_init.js"></script>
-    <script>
+    <script type="module">
+        import { db, USER_NODE, auth } from './js/firebase.js';
         lucide.createIcons();
         document.getElementById('login-btn').onclick = () => {
             const email = document.getElementById('email').value.trim();
@@ -70,7 +70,7 @@
             msg.style.color = "var(--text-secondary)";
             
             // Auto register or login
-            firebase.auth().signInWithEmailAndPassword(email, pass)
+            auth.signInWithEmailAndPassword(email, pass)
             .then(() => {
                 window.location.replace('index.html');
             })
