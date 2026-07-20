@@ -100,7 +100,8 @@
         </div>
 
         <div style="display:flex; gap: var(--space-6); align-items: flex-start;">
-            <div class="inbox-grid" style="flex: 2;">
+            <div style="flex: 2; display: flex; flex-direction: column; gap: var(--space-6);">
+                <div class="inbox-grid">
                 <div class="inbox-section" style="border-top: 4px solid var(--accent-primary);">
                     <h2 style="font-size: 1.1rem; display:flex; align-items:center; gap:8px;"><i data-lucide="brain"></i> Kognitywny (Priorytet)</h2>
                     <div id="list-priority" class="inbox-task-list"></div>
@@ -124,6 +125,13 @@
                     <div id="list-sensory" class="inbox-task-list"></div>
                     <button class="btn btn-ghost add-task-btn" onclick="window.addTask('sensory')" style="margin-top: 8px; font-size: 0.8rem; width:100%; justify-content:center;"><i data-lucide="plus" style="width:14px;"></i> Dodaj zadanie</button>
                 </div>
+                </div>
+                
+                <div class="inbox-section" style="border-top: 4px solid var(--accent-warning);">
+                    <h2 style="font-size: 1.1rem; display:flex; align-items:center; gap:8px; color: var(--accent-warning);"><i data-lucide="lightbulb"></i> Zrzutnia Pomysłów</h2>
+                    <textarea id="ai-dump" rows="3" placeholder="Szybki pomysł na projekt, skrypt, funkcję... Wrzucasz, zapominasz, do zrobienia." style="width:100%; background:rgba(0,0,0,0.2); border:1px solid var(--border-subtle); color:var(--text-primary); padding:10px; font-family:var(--font-sans); font-size:0.85rem; border-radius: var(--radius-sm); resize:vertical; margin-top:12px; margin-bottom:12px; outline:none;"></textarea>
+                    <button class="btn btn-secondary" id="btn-save-idea" style="width:100%; color:var(--text-secondary); justify-content:center;"><i data-lucide="download-cloud"></i> Wrzuć do Bazy</button>
+                </div>
             </div>
 
             <!-- Archiwum Ukończonych -->
@@ -139,6 +147,7 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script type="module">
         import { db, USER_NODE } from './js/firebase.js';
+        import { initIdeasEngine } from './js/ui.js';
         
         document.addEventListener('DOMContentLoaded', () => {
             const currentTheme = localStorage.getItem('theme') || 'dark';
@@ -156,6 +165,8 @@
 
             const boxes = ['priority', 'admin', 'light', 'sensory'];
             let timeout = null;
+
+            initIdeasEngine();
 
             // Ładowanie
             db.ref(USER_NODE + 'inbox').once('value').then(snap => {
