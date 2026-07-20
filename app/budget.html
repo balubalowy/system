@@ -230,6 +230,7 @@
 <body class="no-sidebar">
     <header class="topbar">
         <div class="logo">
+            <button class="btn btn-ghost" id="mobile-menu-btn" style="padding: 4px; display: none;"><i data-lucide="menu"></i></button>
             <i data-lucide="command" class="symbol"></i>
             <h1>B <span>-Core</span></h1>
             <div style="display:flex; flex-direction:column; margin-left: 12px; gap: 2px;">
@@ -1042,6 +1043,12 @@
             window.deleteItem = function(dbNode, category, key) {
                 db.ref(USER_NODE + dbNode + '/' + category + '/' + key).remove();
             };
+        });
+    </script>
+    <script src="js/sidebar.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.renderSidebar) window.renderSidebar();
         });
     </script>
     <script type="module" src="js/topbar.js?v=20.3"></script>

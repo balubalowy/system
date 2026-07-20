@@ -477,7 +477,54 @@ body .knowledge-item.interactive:hover {
     background: var(--hover-bg);
 }
 
+/* SIDEBAR MOBILE BACKDROP */
+.sidebar-backdrop {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(2px);
+    z-index: 99; /* Tuż pod panelem (100) */
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
 @media (max-width: 1024px) {
+    /* Usuwamy lewy padding w ciele, zeby sidebar nie zostawial luki */
+    body { 
+        padding: var(--space-4) !important; 
+        overflow-x: hidden; 
+    }
+    
+    /* Wyświetlamy przycisk hamburgera w topbarze */
+    #mobile-menu-btn { display: inline-flex !important; }
+
+    /* Wygładzenie logo i topbara */
+    .topbar { padding: var(--space-3); }
+    .logo { margin-bottom: var(--space-2); }
+
+    /* Ukrywamy główny panel boczny zjeżdżając go z ekranu */
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        z-index: 100;
+        box-shadow: 10px 0 30px rgba(0,0,0,0.5);
+    }
+
+    /* Klasy aktywujące z JS */
+    .sidebar.mobile-open {
+        transform: translateX(0);
+    }
+    .sidebar-backdrop.active {
+        display: block;
+        opacity: 1;
+    }
+
+    /* Mniejsze odstępy dla bloków layoutu */
+    .blocks-layout { grid-template-columns: 1fr; gap: var(--space-4); }
+
+    /* Poprzednie reguly Knowledge */
     .knowledge-layout { grid-template-columns: 1fr; }
     .knowledge-sidebar { 
         height: auto; 
