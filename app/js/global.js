@@ -3,6 +3,8 @@ import { initFirebase, db, USER_NODE } from './firebase.js';
 import { initTopBar, initDayTimeTrack, initSidebarToggle } from './layout.js';
 import { initChecklists, initReadingList } from './routines.js';
 import { initCalendar } from './calendar.js';
+import { initNotifications, initForegroundMessaging } from './notifications.js';
+import { initSettings } from './settings.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     initFirebase();
@@ -53,6 +55,9 @@ document.addEventListener('DOMContentLoaded', () => {
     initChecklists();
     initReadingList();
     initCalendar();
+    initSettings();
+    initNotifications();
+    initForegroundMessaging();
 
     const cloudStatus = document.getElementById('cloud-status');
     if(cloudStatus) cloudStatus.style.display = 'inline';

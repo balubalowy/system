@@ -1,6 +1,7 @@
 import { db, USER_NODE } from './firebase.js';
 import { escapeHTML } from './utils.js';
 import { initWishlistEngine } from './ideas.js';
+import { dismissNotification } from './notifications.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     initWishlistEngine();
@@ -751,8 +752,11 @@ document.addEventListener('DOMContentLoaded', () => {
             };
 
             window.toggleStatus = function(dbNode, category, key, currentRealized) {
+                const newRealized = !currentRealized;
                 db.ref(USER_NODE + dbNode + '/' + category + '/' + key).update({
-                    realized: !currentRealized
+                    realized: newRealized
+                }).then(() => {
+                    if(newRealized) dismissNotification('expense-' + key);
                 });
             };
 

@@ -1,0 +1,30 @@
+name: B-Core Push Notifications
+
+on:
+  schedule:
+    - cron: '0 5,11,17 * * *' # 5:00, 11:00, 17:00 UTC (czyli 7:00, 13:00, 19:00 CEST)
+  workflow_dispatch: # Allows manual trigger
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          
+      - name: Install dependencies
+        run: |
+          cd .github/scripts
+          npm init -y
+          npm install googleapis node-fetch@2 firebase-admin
+          
+      - name: Run Notifications Script
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          FIREBASE_DB_URL: "https://system-operacyjny-default-rtdb.europe-west1.firebasedatabase.app"
+        run: node .github/scripts/check-and-notify.js

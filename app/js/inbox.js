@@ -61,6 +61,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 
                 delBtn.addEventListener('click', () => {
+                    const val = input.value.trim();
+                    if(val) {
+                        db.ref(USER_NODE + 'inbox_completed').push({
+                            task: val,
+                            category: key,
+                            timestamp: new Date().toISOString()
+                        });
+                        dismissNotification('bcore-tasks');
+                    }
                     row.remove();
                     autoSave(key);
                 });
