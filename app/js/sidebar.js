@@ -96,6 +96,15 @@ window.renderSidebar = function renderSidebar() {
                         <span class="stat-text" style="font-size:0.8rem; color:var(--text-secondary); white-space:nowrap;">Przejechane celowo:</span>
                         <span class="stat-text" id="stat-skm" style="font-size:0.9rem; font-weight:700; color:var(--accent-warning); font-family:var(--font-mono); margin-left:auto;">0 km</span>
                     </div>
+                    
+                    <div style="display:flex; flex-wrap:wrap; gap:4px; margin-top:4px;">
+                        <span style="font-size:0.65rem; padding:2px 6px; border-radius:4px; background:rgba(255,255,255,0.1); color:var(--text-secondary);">Brak: <span id="s-brak" style="font-weight:700;">0</span></span>
+                        <span style="font-size:0.65rem; padding:2px 6px; border-radius:4px; background:rgba(50,215,75,0.2); color:var(--accent-success);">Słaba: <span id="s-slaba" style="font-weight:700;">0</span></span>
+                        <span style="font-size:0.65rem; padding:2px 6px; border-radius:4px; background:rgba(255,214,10,0.2); color:var(--accent-warning);">Umiar: <span id="s-umiar" style="font-weight:700;">0</span></span>
+                        <span style="font-size:0.65rem; padding:2px 6px; border-radius:4px; background:rgba(255,105,97,0.2); color:var(--accent-danger);">Silna: <span id="s-silna" style="font-weight:700;">0</span></span>
+                        <span style="font-size:0.65rem; padding:2px 6px; border-radius:4px; background:rgba(191,90,242,0.2); color:#bf5af2;">B. Silna: <span id="s-bsilna" style="font-weight:700;">0</span></span>
+                        <span style="font-size:0.65rem; padding:2px 6px; border-radius:4px; background:rgba(255,55,95,0.2); color:#ff375f;">Ekstr: <span id="s-ekstr" style="font-weight:700;">0</span></span>
+                    </div>
                 </div>
             </section>
 

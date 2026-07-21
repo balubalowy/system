@@ -256,7 +256,63 @@
                         </div>
                         <div style="flex-grow:1; position: relative; min-height: 380px;"><canvas id="energyLineChart"></canvas></div>
                     </div>
+                    </div>
                 </div>
+            </section>
+
+            <section class="panel-section">
+                <div class="section-header">
+                    <h2>Edukacja</h2>
+                </div>
+                <div class="charts-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap: var(--space-4);">
+                    <!-- KARTA ŚREDNIA WAŻONA -->
+                    <div class="card" style="padding: 0; border: 2px solid var(--border-subtle);">
+                        <div class="card-header" style="border-bottom: 2px solid var(--border-subtle); padding: 12px 16px; justify-content:space-between;">
+                            <h3 style="font-size: 1.1rem; color: var(--text-primary); font-family:var(--font-sans); display:flex; align-items:center; gap:8px;"><i data-lucide="graduation-cap" style="color:var(--accent-primary);"></i> średnia ważona</h3>
+                            <span style="font-size:1.2rem; font-weight:700; color:var(--text-secondary);">AG</span>
+                        </div>
+                        <div style="display:flex; flex-direction:column; font-family:var(--font-mono); font-weight:700; font-size:1.1rem; color:var(--text-primary);">
+                            <div style="display:flex; border-bottom: 2px solid var(--border-subtle);">
+                                <div style="flex:1; display:flex; justify-content:space-between; padding:12px 16px; border-right: 2px solid var(--border-subtle);">
+                                    <span style="color:var(--text-secondary);">I</span><span id="edu-g1">...</span>
+                                </div>
+                                <div style="flex:1; display:flex; justify-content:space-between; padding:12px 16px;">
+                                    <span style="color:var(--text-secondary);">IV</span><span id="edu-g4">...</span>
+                                </div>
+                            </div>
+                            <div style="display:flex; border-bottom: 2px solid var(--border-subtle);">
+                                <div style="flex:1; display:flex; justify-content:space-between; padding:12px 16px; border-right: 2px solid var(--border-subtle);">
+                                    <span style="color:var(--text-secondary);">II</span><span id="edu-g2">...</span>
+                                </div>
+                                <div style="flex:1; display:flex; justify-content:space-between; padding:12px 16px;">
+                                    <span style="color:var(--text-secondary);">V</span><span id="edu-g5">...</span>
+                                </div>
+                            </div>
+                            <div style="display:flex; border-bottom: 2px solid var(--border-subtle);">
+                                <div style="flex:1; display:flex; justify-content:space-between; padding:12px 16px; border-right: 2px solid var(--border-subtle);">
+                                    <span style="color:var(--text-secondary);">III</span><span id="edu-g3">...</span>
+                                </div>
+                                <div style="flex:1; display:flex; justify-content:space-between; padding:12px 16px;">
+                                    <span style="color:var(--text-secondary);">VI</span><span id="edu-g6">...</span>
+                                </div>
+                            </div>
+                            <div style="display:flex; padding:12px 16px; justify-content:flex-start; align-items:center; background:var(--bg-secondary); border-radius: 0 0 var(--radius-md) var(--radius-md);">
+                                <span style="font-size:1.2rem; color:var(--text-secondary);">I-VI: &nbsp;</span><span id="edu-gtotal" style="font-size:1.3rem; color:var(--accent-success);">...</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- KARTA PLAN STUDIÓW -->
+                    <div class="card" style="padding: 0; border: 2px solid var(--border-subtle);">
+                        <div class="card-header" style="border-bottom: 2px solid var(--border-subtle); padding: 12px 16px;">
+                            <h3 style="font-size: 1.1rem; color: var(--text-primary); display:flex; align-items:center; gap:8px;"><i data-lucide="book" style="color:var(--accent-info);"></i> Semestr III</h3>
+                        </div>
+                        <div id="edu-plan" style="display:flex; flex-direction:column; padding:0; overflow-y:auto; font-family:var(--font-sans);">
+                            <!-- Elementy z JS -->
+                        </div>
+                    </div>
+                </div>
+            </section>
 
         </main>
     </div>

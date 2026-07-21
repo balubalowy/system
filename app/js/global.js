@@ -90,5 +90,54 @@ document.addEventListener('DOMContentLoaded', () => {
         if(document.getElementById('stat-stotal')) document.getElementById('stat-stotal').textContent = window.localAgentStats.stormTotal || 0;
         if(document.getElementById('stat-sdtotal')) document.getElementById('stat-sdtotal').textContent = window.localAgentStats.stormDaysTotal || 0;
         if(document.getElementById('stat-skm')) document.getElementById('stat-skm').textContent = (window.localAgentStats.stormKm || 0) + ' km';
+        
+        if(document.getElementById('s-brak')) document.getElementById('s-brak').textContent = window.localAgentStats.sBrak || 0;
+        if(document.getElementById('s-slaba')) document.getElementById('s-slaba').textContent = window.localAgentStats.sSlaba || 0;
+        if(document.getElementById('s-umiar')) document.getElementById('s-umiar').textContent = window.localAgentStats.sUmiar || 0;
+        if(document.getElementById('s-silna')) document.getElementById('s-silna').textContent = window.localAgentStats.sSilna || 0;
+        if(document.getElementById('s-bsilna')) document.getElementById('s-bsilna').textContent = window.localAgentStats.sBsilna || 0;
+        if(document.getElementById('s-ekstr')) document.getElementById('s-ekstr').textContent = window.localAgentStats.sEkstr || 0;
+        
+        // Edukacja - Srednie
+        const g1 = document.getElementById('edu-g1');
+        if (g1) {
+            document.getElementById('edu-g1').textContent = window.localAgentStats.g1 || '...';
+            document.getElementById('edu-g2').textContent = window.localAgentStats.g2 || '...';
+            document.getElementById('edu-g3').textContent = window.localAgentStats.g3 || '...';
+            document.getElementById('edu-g4').textContent = window.localAgentStats.g4 || '...';
+            document.getElementById('edu-g5').textContent = window.localAgentStats.g5 || '...';
+            document.getElementById('edu-g6').textContent = window.localAgentStats.g6 || '...';
+            
+            let sum = 0;
+            let count = 0;
+            [window.localAgentStats.g1, window.localAgentStats.g2, window.localAgentStats.g3, window.localAgentStats.g4, window.localAgentStats.g5, window.localAgentStats.g6].forEach(g => {
+                if (g) {
+                    let val = parseFloat(g.replace(',','.'));
+                    if (!isNaN(val)) { sum += val; count++; }
+                }
+            });
+            if (count > 0) {
+                let total = (sum / count).toFixed(2).replace('.', ',');
+                document.getElementById('edu-gtotal').textContent = total;
+            }
+        }
+        
+        // Edukacja - Plan
+        const pContainer = document.getElementById('edu-plan');
+        if (pContainer && window.localAgentStats.plan) {
+            pContainer.innerHTML = window.localAgentStats.plan.map((p, idx) => {
+                const color = p.type === 'E' ? 'var(--accent-danger)' : 'var(--accent-success)';
+                const bg = idx % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.02)';
+                return `
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 16px; background:${bg}; border-bottom:1px solid var(--border-subtle);">
+                        <span style="font-size:0.9rem; color:var(--text-primary); flex:1;">${p.name}</span>
+                        <div style="display:flex; gap:8px; align-items:center;">
+                            <span style="font-size:0.75rem; color:var(--text-secondary); font-family:var(--font-mono);">${p.ects} ECTS</span>
+                            <span style="font-size:0.75rem; font-weight:700; color:${color}; border:1px solid ${color}; border-radius:4px; padding:2px 6px;">${p.type}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
     }
 });
