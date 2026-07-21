@@ -7,6 +7,45 @@ export function initTopBar() {
     const todayStr = getTodayStr();
     if(dateElement) dateElement.textContent = todayStr;
 
+    // Live Sync & Cloud Status Monitoring
+    const cloudStatus = document.getElementById('cloud-status');
+    const miniSyncStatus = document.getElementById('mini-sync-status');
+    const syncBtn = document.getElementById('btn-force-srs-sync');
+
+    function updateSyncTime() {
+        const now = new Date();
+        const timeStr = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+        if (miniSyncStatus) miniSyncStatus.textContent = `Zsynch. ${timeStr}`;
+        if (cloudStatus) {
+            cloudStatus.textContent = 'Synced';
+            cloudStatus.style.color = 'var(--accent-success)';
+        }
+    }
+
+    if (db) {
+        db.ref('.info/connected').on('value', snap => {
+            if (snap.val() === true) {
+                updateSyncTime();
+            } else {
+                if (miniSyncStatus) miniSyncStatus.textContent = 'Offline';
+                if (cloudStatus) {
+                    cloudStatus.textContent = 'Offline';
+                    cloudStatus.style.color = 'var(--accent-warning)';
+                }
+            }
+        });
+    }
+
+    if (syncBtn) {
+        syncBtn.addEventListener('click', () => {
+            if (miniSyncStatus) miniSyncStatus.textContent = 'Łączenie...';
+            setTimeout(() => {
+                updateSyncTime();
+                if (typeof window.refreshSRS === 'function') window.refreshSRS();
+            }, 300);
+        });
+    }
+
     db.ref(USER_NODE + 'energy').once('value').then(snap => {
         const val = snap.val();
         if (typeof val === 'number') {
