@@ -102,8 +102,8 @@ window.renderSidebar = function renderSidebar() {
                         <span style="font-size:0.65rem; padding:2px 6px; border-radius:4px; background:rgba(50,215,75,0.2); color:var(--accent-success);">Słaba: <span id="s-slaba" style="font-weight:700;">0</span></span>
                         <span style="font-size:0.65rem; padding:2px 6px; border-radius:4px; background:rgba(255,214,10,0.2); color:var(--accent-warning);">Umiar: <span id="s-umiar" style="font-weight:700;">0</span></span>
                         <span style="font-size:0.65rem; padding:2px 6px; border-radius:4px; background:rgba(255,105,97,0.2); color:var(--accent-danger);">Silna: <span id="s-silna" style="font-weight:700;">0</span></span>
-                        <span style="font-size:0.65rem; padding:2px 6px; border-radius:4px; background:rgba(191,90,242,0.2); color:#bf5af2;">B. Silna: <span id="s-bsilna" style="font-weight:700;">0</span></span>
-                        <span style="font-size:0.65rem; padding:2px 6px; border-radius:4px; background:rgba(255,55,95,0.2); color:#ff375f;">Ekstr: <span id="s-ekstr" style="font-weight:700;">0</span></span>
+                        <span style="font-size:0.65rem; padding:2px 6px; border-radius:4px; background:rgba(255,55,95,0.2); color:#ff375f;">B. Silna: <span id="s-bsilna" style="font-weight:700;">0</span></span>
+                        <span style="font-size:0.65rem; padding:2px 6px; border-radius:4px; background:rgba(191,90,242,0.2); color:#bf5af2;">Ekstr: <span id="s-ekstr" style="font-weight:700;">0</span></span>
                     </div>
                 </div>
             </section>
