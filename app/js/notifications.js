@@ -16,7 +16,7 @@ export async function initNotifications() {
     }
 
     // 2. Check if user already granted permission
-    if (Notification.permission === 'granted') {
+    if ('Notification' in window && Notification.permission === 'granted') {
         await subscribeToPush();
     }
 
@@ -95,7 +95,7 @@ export function initForegroundMessaging() {
         messaging.onMessage((payload) => {
             const data = payload.data || {};
             // Show as native notification even when app is in foreground
-            if (Notification.permission === 'granted' && swRegistration) {
+            if ('Notification' in window && Notification.permission === 'granted' && swRegistration) {
                 swRegistration.showNotification(data.title || 'B-Core', {
                     body: data.body || '',
                     tag: data.tag || 'bcore-foreground',

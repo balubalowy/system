@@ -46,7 +46,11 @@ function openSettingsModal() {
     const existing = document.getElementById('settings-modal-overlay');
     if (existing) existing.remove();
 
-    const permStatus = Notification.permission;
+    let permStatus = 'denied';
+    if ('Notification' in window) {
+        permStatus = Notification.permission;
+    }
+    
     const permLabel = permStatus === 'granted' ? '✅ Przyznane' : 
                       permStatus === 'denied' ? '❌ Zablokowane' : '⏳ Nie pytano';
 
