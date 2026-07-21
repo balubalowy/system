@@ -16,11 +16,11 @@ Witaj w centralnym repozytorium **B-Core** – mojego własnego, mocno przebudow
 
 ### W czym to napisałem? (Stos Technologiczny)
 * **HTML5 / CSS3 / JavaScript (Vanilla):** Cały front-end aplikacji naklepałem z palca. Zdecydowałem się na czysty kod (olałem frameworki typu React czy Vue), bo chciałem zobaczyć, jak szybko to może śmigać na słabszych telefonach. Szczerze? Ładuje się w ułamek sekundy.
-* **Firebase (Realtime DB, Auth, Cloud Messaging):** Szybka baza NoSQL, która magazynuje moje całe cyfrowe życie. Oprócz logowania, ogarnia też wypluwanie powiadomień Push (FCM). Działa. Chociaż 14 kwietnia spędziłem bite 6 godzin szukając dlaczego tokeny na iOS nagle wyparowały...
-* **GitHub Actions & Node.js:** Mój "backend z odzysku". Node'owe skrypty budzą się na maszynach GitHuba przez crona, skanują co mam do zrobienia w bazie i szturchają mój telefon powiadomieniem.
-* **Python:** Lokalny rębajło. Skrypt `sync.bat` wywołuje kod w Pythonie, który brutalnie rozpruwa gigantyczne pliki XLSX, odcedza z nich śmieci i pakuje czysty JSON prosto do `local_data.js`. Magia.
-* **Markdown:** Wiadomo, do renderowania notatek, żeby jakoś to wyglądało bez wciskania setki przycisków formatowania (przy okazji, tabelki w markdownie czasami mnie wykańczają).
-* **Google Analytics:** Wpięte do kilku głównych widoków. Muszę przecież wiedzieć, ile godzin marnuję gapiąc się w pulpit zamiast po prostu odhaczyć zadanie.
+* **Firebase (Realtime DB, Auth, Cloud Messaging):** Szybka baza NoSQL, która magazynuje moje całe cyfrowe życie. Oprócz logowania, ogarnia też wypluwanie powiadomień Push (FCM). Chociaż 14 kwietnia spędziłem bite 6 godzin szukając dlaczego tokeny na iOS nagle wyparowały...
+* **GitHub Actions & Node.js:** Node'owe skrypty budzą się na maszynach GitHuba przez crona, skanują co mam do zrobienia w bazie i szturchają mój telefon powiadomieniem.
+* **Python:** Lokalny rębajło. Skrypt `sync.bat` wywołuje kod w Pythonie, który brutalnie rozpruwa gigantyczne pliki XLSX, odcedza z nich śmieci i pakuje czysty JSON prosto do `local_data.js`.
+* **Markdown:** Renderowanie notatek i list zadań.
+* **Google Analytics:** Wpięte do głównych widoków, żebym wiedział, ile godzin marnuję gapiąc się w pulpit zamiast po prostu odhaczyć zadanie.
 
 ## 👀 Rzut oka na interfejs
 
@@ -44,10 +44,9 @@ Osobiście wciąż mam ochotę wywalić ten ciemny pasek boczny z wersji desktop
 
 ## 🏗️ Architektura Systemu
 
-Cały ten bałagan kręci się wokół takich kawałków:
 1. **Frontend (PWA):** Zwykły Vanilla JS. Żadnej magii. Dzięki Service Workerowi śmiga offline, a na telefonie zachowuje się jak natywna apka. (Choć przyznaję, agresywne cache'owanie czasami psuje mi krew po deployu).
-2. **Baza Danych (Firebase Realtime Database):** Moja centrala.
-3. **Backend / Cron (GitHub Actions):** Odpalane parę razy dziennie skrypty Node.js. Wsysają dane z bazy i uderzają w API FCM, żeby wybudzić telefon. Skuteczne.
+2. **Baza Danych (Firebase Realtime Database):** Centralne przechowywanie danych.
+3. **Backend / Cron (GitHub Actions):** Odpalane parę razy dziennie skrypty Node.js pobierające dane z bazy.
 
 ### Schemat Przepływu Danych
 
@@ -85,75 +84,75 @@ graph TD
 
 ## 🚀 Instalacja i Konfiguracja (Self-Hosted)
 Zlepiłem to wyłącznie dla siebie (reguły bezpieczeństwa Firebase z automatu blokują obcych). Ale jak koniecznie chcesz to postawić u siebie:
-1. Sklonuj to repo.
-2. Odpal nowy projekt w [Firebase](https://firebase.google.com/) i włącz Realtime Database + Authentication (Email/Password).
+1. Sklonuj repozytorium.
+2. Utwórz nowy projekt w [Firebase](https://firebase.google.com/) i włącz Realtime Database + Authentication (Email/Password).
 3. Wyciągnij klucze konfiguracyjne ze swojej bazy i podmień je w pliku `/app/js/firebase.js`.
-4. Wygeneruj klucze VAPID (do notyfikacji Push). Wrzuć je do `notifications.js`.
-5. Dodaj sekrety z Firebase (Service Account Key) w ustawieniach repo na GitHubie, żeby Actions mogły się autoryzować.
+4. Wygeneruj klucze VAPID i wrzuć je do `notifications.js`.
+5. Dodaj sekrety z Firebase w ustawieniach repo na GitHubie, żeby Actions mogły się autoryzować.
 
 ---
 
 ## 📁 Struktura Katalogów i Plików
 
-Całe serce apki gnije w folderze `/app`. Z root-a masz tylko redirect z `index.html`.
+Główna część aplikacji znajduje się w folderze `/app`. Z root-a masz tylko redirect z `index.html`.
 
 ### 📂 /.github
-Devopsowe klamoty.
+Katalog dla skryptów automatyzacji i Github Actions.
 * `workflows/notify.yml`
-* `scripts/check-and-notify.js` – Skrypt w Node.js ładujący `firebase-admin`. Wyławia z bazy tokeny telefonów i ciska w nie payloadem powiadomień. 
+* `scripts/check-and-notify.js`
 
 ### 📂 /.private
 Lokalne brudy, których nie wypycham do GitHuba ze względów oczywistych.
-* `sync.bat` – Zmora moich wieczorów. Ten windowsowy skrypt notorycznie sypie się przy najmniejszej zmianie ścieżek na moim dysku. Nadal nie napisałem do tego solidnego path-resolvera, więc jak coś zmieniam w systemie, muszę edytować ten plik z palca. Po prostu wybudza Pythona i doi Excela.
+* `sync.bat` – Zmora moich wieczorów. Ten windowsowy skrypt notorycznie sypie się przy najmniejszej zmianie ścieżek na moim dysku. Nadal nie napisałem do tego solidnego path-resolvera, więc jak coś zmieniam w systemie, muszę edytować ten plik z palca. 
 
 ### 📂 /app
 Tutaj leży kod frontendu.
-* `manifest.json` – Plik konfiguracyjny dla PWA (kolorki, ikony, nazwa). 
-* `sw.js` – Service Worker przechwytujący push. Nienawidzę debugować tego pliku (wymusza https w środowisku testowym!).
+* `manifest.json` – Plik konfiguracyjny dla PWA.
+* `sw.js` – Service Worker obsługujący logikę Push.
 * **Widoki HTML:**
-  * `login.html` – Bramka wejściowa.
+  * `login.html`
   * `index.html` – Złożony pulpit główny naszpikowany widgetami.
-  * `inbox.html` (tu zrzucam absolutnie wszystko, co wpadnie mi do głowy)
-  * `budget.html` – Kasa, wydatki i subkonta.
+  * `inbox.html`
+  * `budget.html`
   * `knowledge.html`
 
 ### 📂 /app/css
-* `styles.css` – Jeden, chamsko wielki plik ze stylami CSS. Zamiast bawić się w podział na dziesiątki małych plików, wrzuciłem wszystko do jednego worka ze zmiennymi pod Dark Mode i układ flexboxa. Działa? Działa.
+* `styles.css` – Jeden plik ze stylami CSS, zawierający też zmienne pod Dark Mode i główny układ interfejsu.
 
 ### 📂 /app/js (Logika Aplikacji)
 Żeby to w ogóle dało się utrzymać, pociąłem kod na moduły ES6. 
 
 #### ⚙️ Konfiguracja i Narzędzia
-* `firebase.js` – Punkt wejścia do bazy. Po co coś więcej? Sprawdza też, czy logujesz się uprawnionym mailem.
-* `global.js` – Inicjalizuje statystyki w nagłówkach. Wczytywany wszędzie.
-* `local_data.js` – Zrzut jsonów wygenerowanych przez ten felerny `sync.bat`. Wystarczy banalny obiekt ze zmiennymi do natychmiastowego odczytu. Kto by chciał tracić czas na asynchroniczne fetchowanie lokalnych danych?
+* `firebase.js` – Punkt wejścia do bazy. Sprawdza też, czy logujesz się uprawnionym mailem.
+* `global.js` – Inicjalizacja statystyk w nagłówkach.
+* `local_data.js` – Statyczny obiekt wygenerowany automatycznie przez plik batch.
 * `utils.js` – Duperelki typu formatowanie dat i escapeHTML.
 * `data.js`
 
 #### 🔔 Powiadomienia i Ustawienia
-* `notifications.js` – Pobiera klucz dla danego urządzenia pod FCM.
-* `settings.js` – Po co cała podstrona, skoro wystarczy pływający modal z opcjami? Tutaj zmieniasz VAPID.
+* `notifications.js`
+* `settings.js`
 
 #### 🖥️ Pulpit Główny (`index.html`)
 * `main.js`
 * `dashboard.js`
 * `calendar.js` – Najbardziej znienawidzony kawałek kodu w tym projekcie. Ręcznie rysuje oś czasu 7 dni w tygodniu i mapuje bloki z zadaniami z Firebase'a na precyzyjne kratki z pikselami. Myślałem, że osiwieję przy przeliczaniu stref czasowych...
-* `charts.js` – Import Chart.js do malowania poziomu energii.
-* `routines.js` – Odhaczanie porannych i wieczornych rytuałów.
-* Czy mamy tu coś do blokowania ekranu? Tak, `timers.js` dusi wszystko inne trybem skupienia (Pomodoro).
+* `charts.js`
+* `routines.js`
+* `timers.js`
 
 #### 📥 Zrzutnia (`inbox.html`)
 * `inbox.js`
 * `tasks.js` – Klasyczny CRUD.
-* `ideas.js` – Miejsce na te genialne pomysły o 3 w nocy, z których rano i tak nic nie wynika.
+* `ideas.js`
 
 #### 💰 Finanse (`budget.html`)
-* `budget.js` – Dodawanie i odejmowanie dla kategorii wydatków. Nic nadzwyczajnego. Podstawa matematyki.
+* `budget.js` – Oblicza proste sumy dla kategorii wydatków.
 
 #### 🧠 Baza Wiedzy (`knowledge.html`)
-* `knowledge.js` – Zlepiłem to na kształt drzewka skilli z RPG-ów. 
+* `knowledge.js` – Wizualizacja drzewa skilli.
 * `knowledge-modal.js`
-* `srs.js` – System powtórek przestrzennych dla fiszek.
+* `srs.js` – Moduł odpowiedzialny za cykliczne powtórki.
 
 #### 📐 Layout i Interfejs
 * `layout.js` – Odpowiada za chowanie i pokazywanie kontenerów na małych ekranach.
