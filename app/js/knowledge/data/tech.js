@@ -40,6 +40,12 @@ export const techTree = {
             subtopics: ["Koncepcja rozlewania formuł (Spill Ranges #)", "Funkcje FILTER, UNIQUE, SORT, SORTBY", "Operator powiązania # w odwołaniach tablicowych"]
         },
         { 
+            title: "Power Pivot i Modelowanie Danych (Data Model)", 
+            desc: "Modelowanie relacji w Excelu i pisanie podstawowych miar DAX.", 
+            challenge: "Zadanie: Aktywuj dodatek Power Pivot i utwórz relację 1:N pomiędzy tabelą sprzedaży a wymiarem produktów.",
+            subtopics: ["Model danych (Data Model) w Excelu", "Tworzenie relacji 1:N w okienku Power Pivot", "Miary DAX w tabelach przestawnych Excela"]
+        },
+        { 
             title: "Formatowanie Warunkowe i Budowa Dashboardów", 
             desc: "Tworzenie pasków stanu, ikon i wizualnych wskaźników KPI w komórkach.", 
             challenge: "Zadanie: Ustaw regułę formatowania warunkowego podświetlającą komórki o wartości powyżej średniej całego zakresu.",
@@ -60,10 +66,22 @@ export const techTree = {
             subtopics: ["Definiowanie funkcji `def` i wartości zwracane", "Przekazywanie argumentów *args i **kwargs", "Obsługa błędów try/except/finally"]
         },
         { 
+            title: "Programowanie Obiektowe (OOP)", 
+            desc: "Definiowanie klas, metod `__init__`, dziedziczenie i enkapsulacja.", 
+            challenge: "Zadanie: Stwórz klasę `BankAccount` z metodami `deposit()` oraz `withdraw()` z weryfikacją salda.",
+            subtopics: ["Definiowanie klas i metody konstruktora `__init__`", "Instancje, atrybuty i metody instancyjne", "Dziedziczenie klas (Inheritance)"]
+        },
+        { 
             title: "Praca z biblioteką Pandas (DataFrames)", 
             desc: "Wczytywanie CSV/XLSX, filtrowanie `.loc[]`/`.iloc[]` oraz `.groupby()`.", 
             challenge: "Zadanie: Oblicz średnią wartość sprzedaży pogrupowaną wg kategorii z użyciem `df.groupby('kategoria')['sprzedaz'].mean()`.",
             subtopics: ["Tworzenie i indeksowanie DataFrames", "Filtrowanie warunkowe z loc[] i iloc[]", "Agregacja danych za pomocą `.groupby()` i `.agg()`"]
+        },
+        { 
+            title: "Pobieranie danych z API (requests & JSON)", 
+            desc: "Wysyłanie zapytań HTTP GET/POST, nagłówki, zapytania z autoryzacją API.", 
+            challenge: "Zadanie: Pobierz dane pogodowe z darmowego API przy użyciu `requests.get()` i przekształć je do Pandas DataFrame.",
+            subtopics: ["Wysyłanie zapytań `requests.get()` i `requests.post()`", "Kody statusu HTTP (200, 404, 500)", "Parsowanie odpowiedzi JSON do słownika Python"]
         },
         { 
             title: "Wizualizacja danych (Matplotlib & Seaborn)", 
@@ -98,6 +116,12 @@ export const techTree = {
             subtopics: ["Procedury zdarzeniowe Worksheet_Change", "Zdarzenie Workbook_Open i instalatory", "Wyłączanie zdarzeń Application.EnableEvents"]
         },
         { 
+            title: "Formularze użytkownika (UserForms)", 
+            desc: "Tworzenie interaktywnych okienek UserForm z przyciskami i polami tekstowymi.", 
+            challenge: "Zadanie: Zaprojektuj formularz UserForm do wprowadzania nowych rekordów sprzedaży do arkusza.",
+            subtopics: ["Projektowanie interfejsu UserForm w VBE", "Obsługa przycisków CommandButton i pól TextBox", "Walidacja danych wprowadzanych przez formularz"]
+        },
+        { 
             title: "Obsługa błędów i optymalizacja wydajności", 
             desc: "On Error GoTo, wyłączanie odświeżania ekranu (Application.ScreenUpdating = False).", 
             challenge: "Zadanie: Zastosuj przyspieszenie wykonywania makra wyłączając ScreenUpdating oraz Application.Calculation.",
@@ -122,6 +146,12 @@ export const techTree = {
             desc: "Funkcje YTD, SAMEPERIODLASTYEAR, DATEADD do porównań okresowych.", 
             challenge: "Zadanie: Stwórz miarę `Sales YTD = TOTALYTD(SUM(Sales[Amount]), 'Calendar'[Date])`.",
             subtopics: ["Wymóg ciągłej tabeli Kalendarza", "Miary narastające YTD, QTD, MTD", "Porównania okres do okresu (SAMEPERIODLASTYEAR)"]
+        },
+        { 
+            title: "Język M w Power Query Editor", 
+            desc: "Zaawansowana edycja zapytań M, tworzenie własnych funkcji w Power Query.", 
+            challenge: "Zadanie: Otwórz Edytor Zaawansowany w Power Query i zmodyfikuj kod M dodając krok filtrujący.",
+            subtopics: ["Składnia języka M (`let ... in ...`)", "Tworzenie parametrów i własnych funkcji w M", "Optymalizacja kroków (Query Folding)"]
         },
         { 
             title: "Projektowanie Raportów i RLS (Row Level Security)", 
@@ -150,6 +180,12 @@ export const techTree = {
             subtopics: ["Funkcje agregujące COUNT, SUM, AVG, MIN, MAX", "Grupowanie wierszy GROUP BY", "Filtrowanie agregatów za pomocą HAVING vs WHERE"]
         },
         { 
+            title: "Modyfikacja danych DML (INSERT, UPDATE, DELETE)", 
+            desc: "Wstawianie nowych wierszy, aktualizacja i bezpieczne usuwanie rekordów z transakcjami.", 
+            challenge: "Zadanie: Napisz zapytanie `UPDATE Produkty SET Cena = Cena * 1.1 WHERE Kategoria = 'Elektronika'`.",
+            subtopics: ["Składnia INSERT INTO, UPDATE i DELETE FROM", "Transakcje SQL (BEGIN TRANSACTION, COMMIT, ROLLBACK)", "Sprawdzanie klauzul WHERE przed uruchomieniem DELETE"]
+        },
+        { 
             title: "Podzapytania i Tabele Tymczasowe (CTE / WITH)", 
             desc: "Klauzula WITH (Common Table Expressions) i podzapytania w klauzuli FROM.", 
             challenge: "Zadanie: Napisz zapytanie z klauzulą `WITH SrednieWydatki AS (...)` obliczające odchylenie klienta od średniej.",
@@ -160,6 +196,12 @@ export const techTree = {
             desc: "Partycjonowanie danych i obliczanie narastających sum.", 
             challenge: "Zadanie: Wyznacz numer wiersza wewnątrz kategorii za pomocą `ROW_NUMBER() OVER(PARTITION BY Kategoria ORDER BY Cena DESC)`.",
             subtopics: ["Klauzula OVER() i PARTITION BY", "Funkcje rankingowe ROW_NUMBER(), RANK(), DENSE_RANK()", "Obliczanie sum narastających i średnich kroczących"]
+        },
+        { 
+            title: "Indeksowanie i optymalizacja wydajności bazy", 
+            desc: "Indeksy B-Tree, plan zapytania (EXPLAIN ANALYZE) i unikanie czyszczenia Full Table Scan.", 
+            challenge: "Zadanie: Stwórz indeks dla kolumny `CREATE INDEX idx_klient_kraj ON Klienci(Kraj)` i przeanalizuj plan wykonania.",
+            subtopics: ["Koncepcja indeksów B-Tree i Clustered vs Non-Clustered", "Analiza planu zapytania (EXPLAIN / EXPLAIN ANALYZE)", "Unikanie operacji kosztownych (Full Table Scan)"]
         }
     ],
     "R (Język programowania)": [
@@ -180,12 +222,18 @@ export const techTree = {
             desc: "Warstwowe budowanie wykresów w ggplot (aes, geom_point, geom_line).", 
             challenge: "Zadanie: Zbuduj wykres rozrzutu w ggplot2: `ggplot(df, aes(x=x, y=y)) + geom_point() + geom_smooth(method='lm')`.",
             subtopics: ["Gramatyka grafiki w ggplot2", "Geometrie (geom_point, geom_line, geom_bar)", "Mapowanie estetyki aes() i motywy (theme)"]
+        },
+        { 
+            title: "Raportowanie automatyczne w R Markdown / Quarto", 
+            desc: "Generowanie raportów PDF/HTML bezpośrednio z kodu R i tekstu Markdown.", 
+            challenge: "Zadanie: Stwórz plik `.Rmd` wyliczający statystyki i wygeneruj automatyczny raport w HTML.",
+            subtopics: ["Struktura nagłówka YAML w R Markdown", "Wstawianie bloków kodu (R Code Chunks)", "Renderowanie raportu z paczką knitr"]
         }
     ],
     "AI (Sztuczna Inteligencja)": [
         { 
             title: "Duże Modele Językowe (LLM) i Prompt Engineering", 
-            desc: "Mechanika architektury Transformer, kontekst, rola, Few-Shot Prompting.", 
+            desc: "Mechanika architektura Transformer, kontekst, rola, Few-Shot Prompting.", 
             challenge: "Zadanie: Zbuduj strukturę prompta systemowego określającego rolę, ograniczenia i format wyjściowy (JSON).",
             subtopics: ["Architektura Transformer i self-attention", "Techniki Zero-Shot, Few-Shot i Chain-of-Thought", "Strukturyzacja kontekstu i eliminacja halucynacji"]
         },
@@ -194,6 +242,12 @@ export const techTree = {
             desc: "RAG (Retrieval-Augmented Generation), wywoływanie narzędzi (Function Calling).", 
             challenge: "Zadanie: Wyjaśnij krok po kroku schemat RAG: Chunking -> Embeddings -> Vector Search -> Context Injection.",
             subtopics: ["Architektura RAG na bazach wektorowych", "Function Calling i wykonywanie akcji przez AI", "Pętla ReAct i budowa autonomicznych agentów"]
+        },
+        { 
+            title: "Frameworki dla AI (LangChain / LlamaIndex)", 
+            desc: "Budowa łańcuchów przetwarzania tekstu i integracja z zewnętrznymi API.", 
+            challenge: "Zadanie: Napisz w Pythonie łańcuch LangChain łączący prompt z modelem i parsowaniem wyjścia.",
+            subtopics: ["Koncepcja łańcuchów (Chains) w LangChain", "Łączenie modeli z bazami wektorowymi (Vector Stores)", "Parsery odpowiedzi i structured outputs"]
         },
         { 
             title: "Fine-tuning i ewaluacja modeli", 
@@ -214,6 +268,18 @@ export const techTree = {
             desc: "Nawigacja w systemie Windows/Mac bez używania myszki.", 
             challenge: "Zadanie: Przećwicz bezmyszkowe przypinanie okien (Win + Strzałka) i przełączanie pulpitów (Win + Ctrl + Strzałka).",
             subtopics: ["Skróty systemowe nawigacyjne Windows/Mac", "Zarządzanie wirtualnymi pulpitami", "Nawigacja po formularzach i przeglądarce bez myszy"]
+        },
+        { 
+            title: "Praca z wierszem poleceń (Terminal / PowerShell / Bash)", 
+            desc: "Nawigacja w konsoli, zarządzanie plikami, zmienne środowiskowe i proste skrypty shell.", 
+            challenge: "Zadanie: Przejdź w konsoli do folderu projektu, utwórz nowy podkatalog i wyświetl jego zawartość.",
+            subtopics: ["Komendy nawigacyjne (cd, ls/dir, mkdir, rm)", "Zmienne środowiskowe $env i PATH", "Uruchamianie skryptów i przesyłanie strumieni (Pipes |)"]
+        },
+        { 
+            title: "Kontrola wersji Git dla programistów", 
+            desc: "Koncepcje commits, branches, merge, rebase oraz obsługa zdalnych repozytoriów GitHub.", 
+            challenge: "Zadanie: Utwórz nową gałąź git `git checkout -b feature/nowa-funkcja`, zrób commit i wypchnij na GitHub.",
+            subtopics: ["Komendy git add, commit, status i log", "Tworzenie i scalanie gałęzi (git branch/merge)", "Praca ze zdalnymi repozytoriami git push/pull"]
         },
         { 
             title: "Automatyzacja i higiena pracy w OS", 

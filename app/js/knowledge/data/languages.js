@@ -39,6 +39,12 @@ export const languagesTree = {
             desc: "Popularne czasowniki frazowe w komunikacji biznesowej i technicznej.", 
             challenge: "Zadanie: Użyj czasowników frazowych 'call off', 'bring up' oraz 'figure out' w 3 poprawnych zdaniach.",
             subtopics: ["Rozdzielne i nierozdzielne Phrasal Verbs", "Idiomy korporacyjne (Hit the nail, Cut corners)", "Naturalne frazy używane w branży IT/Finanse"]
+        },
+        { 
+            title: "Prezentacje biznesowe i Small Talk", 
+            desc: "Prowadzenie prezentacji (Signposting), małe rozmowy towarzyskie przed spotkaniem.", 
+            challenge: "Zadanie: Zaprezentuj wykres słupkowy w 3 zdaniach z użyciem fraz 'As you can see from this chart...'.",
+            subtopics: ["Frazy łączące w prezentacjach (Signposting language)", "Sztuka Small Talku na spotkaniach międzynarodowych", "Zarządzanie pytaniami słuchaczy (Q&A session)"]
         }
     ],
     "Język hiszpański": [
@@ -65,6 +71,12 @@ export const languagesTree = {
             desc: "Planowanie wydarzeń i wyrażanie poleceń lub prośb.", 
             challenge: "Zadanie: Sformułuj 2 prośby w formie grzecznościowej (usted) w trybie rozkazującym.",
             subtopics: ["Futuro Próximo (ir a + bezokolicznik)", "Futuro Simple dla prognoz i planów", "Tryb rozkazujący Imperativo Afirmativo/Negativo"]
+        },
+        { 
+            title: "Hiszpański w pracy i podróży (Nivel B1)", 
+            desc: "Rezerwacja hotele, zamawianie w restauracji, rozmowa kwalifikacyjna.", 
+            challenge: "Zadanie: Sformułuj rezerwację stolika w restauracji z prośbą o stolik przy oknie po hiszpańsku.",
+            subtopics: ["Słownictwo związane z podróżą i lotniskiem", "Zwroty w restauracji i składanie zamówień", "Struktura prostej rozmowy kwalifikacyjnej"]
         }
     ],
     "Użytkowanie polskiego języka": [
@@ -91,6 +103,12 @@ export const languagesTree = {
             desc: "Wstawianie przecinków w zdaniach złożonych i pisownia łączna/rozłączna.", 
             challenge: "Zadanie: Wskaż zasady interpunkcji przed spójnikami podrzędnymi oraz współrzędnymi (że, ale, i, oraz).",
             subtopics: ["Interpunkcja w zdaniach złożonych", "Pisownia 'nie' z różnymi częściami mowy", "Skróty, skrótowce i ich odmiana przez przypadki"]
+        },
+        { 
+            title: "Sztuka debatowania i argumentacja logiczna", 
+            desc: "Budowanie schematu Toulmina, identyfikacja błędów poznawczych (Fallacies).", 
+            challenge: "Zadanie: Zidentyfikuj błąd w argumentacji typu 'Ad Hominem' oraz 'Chochoł' (Straw Man).",
+            subtopics: ["Model argumentacji Toulmina (Teza, Dowód, Uzasadnienie)", "Rozpoznawanie błędów logicznych i manipulacji", "Kultura dyskusji i konstruktywny opór"]
         }
     ]
 };

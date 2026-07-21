@@ -32,6 +32,12 @@ export const developmentTree = {
             desc: "Organizacja notatek metodą PARA (Projects, Areas, Resources, Archives).", 
             challenge: "Zadanie: Uporządkuj pliki w wybranym folderze według 4 struktur metody PARA.",
             subtopics: ["Struktura PARA (Projects, Areas, Resources, Archives)", "Metoda Zettelkasten i łączenie notatek", "Zarządzanie wiedzą osobistą (Personal Knowledge Management)"]
+        },
+        { 
+            title: "Automatyzacja procesów (Zapier / Make / Webhooks)", 
+            desc: "Łączenie aplikacji i integracja przepływów danych za pomocą no-code/low-code.", 
+            challenge: "Zadanie: Zaprojektuj przepływ Webhook wysyłający powiadomienie po utworzeniu nowego rekordu.",
+            subtopics: ["Mechanika działania wyzwalaczy (Triggers) i akcji", "Struktura danych JSON w wywołaniach Webhook", "Integracja no-code z arkuszami i powiadomieniami"]
         }
     ],
     "Samorozwój i ogarnianie życia (by było git)": [
@@ -58,6 +64,12 @@ export const developmentTree = {
             desc: "Praca w głębokim skupieniu (Deep Work) przeplatana pełną regeneracją.", 
             challenge: "Zadanie: Zaplanuj w kalendarzu 1 pełny dzień na całkowity detoks od pracy i urządzeń cyfrowych.",
             subtopics: ["Koncepcja Deep Work (Newport)", "Zarządzanie cyklami energii ultradialnej (90 min)", "Aktywny vs bierny wypoczynek"]
+        },
+        { 
+            title: "Biohacking i optymalizacja funkcji poznawczych", 
+            desc: "Nootropiki, zimne prysznice, ekspozycja na zimno i trening siłowy w służbie skupienia.", 
+            challenge: "Zadanie: Wprowadź 2-minutowy zimny prysznic na koniec porannej rutyny przez 5 dni z rzędu.",
+            subtopics: ["Wpływ termogenezy zimnowej na dopaminę i noradrenalinę", "Optymalizacja żywienia pod kątem ostrości umysłu", "Rola regularnego treningu fizycznego w neuroplastyczności"]
         }
     ]
 };
