@@ -57,17 +57,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const cloudStatus = document.getElementById('cloud-status');
     if(cloudStatus) cloudStatus.style.display = 'inline';
 
+    // Mini sync clock — works on every page
+    const miniSync = document.getElementById('mini-sync-status');
+    if(miniSync) {
+        const updateMiniSync = () => {
+            const now = new Date();
+            miniSync.textContent = now.toISOString().split('T')[0] + " " + now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
+        };
+        updateMiniSync();
+        setInterval(updateMiniSync, 30000); 
+    }
+
+    // Dashboard-only stats (requires local_data.js)
     if (window.localAgentStats) {
-        const miniSync = document.getElementById('mini-sync-status');
-        if(miniSync) {
-            const updateMiniSync = () => {
-                const now = new Date();
-                miniSync.textContent = now.toISOString().split('T')[0] + " " + now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
-            };
-            updateMiniSync();
-            setInterval(updateMiniSync, 30000); 
-        }
-        
         const sp = document.getElementById('stat-photos');
         const se = document.getElementById('stat-excels');
         const ss = document.getElementById('stat-storms');
