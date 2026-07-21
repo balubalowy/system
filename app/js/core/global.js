@@ -4,6 +4,7 @@ import { initTopBar, initDayTimeTrack, initSidebarToggle } from '../ui/layout.js
 import { initChecklists, initReadingList } from '../dashboard/routines.js';
 import { initCalendar } from '../dashboard/calendar.js';
 import { initNotifications, initForegroundMessaging } from '../notifications/notifications.js';
+import { initSettings } from '../notifications/settings.js';
 import { DEFAULT_KNOWLEDGE_AREAS, DEFAULT_KNOWLEDGE_TREE } from '../knowledge/data/index.js';
 
 document.addEventListener('DOMContentLoaded', () => {
