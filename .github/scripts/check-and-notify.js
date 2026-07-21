@@ -82,7 +82,7 @@ async function run() {
           title: "Zaległe zadania",
           body: `Masz ${overdueTasksCount} zadań w sekcji Priorytety. Zrób to!`,
           tag: "bcore-tasks",
-          url: "/app/inbox.html"
+          url: "inbox.html"
       });
   }
 
@@ -105,7 +105,7 @@ async function run() {
                       title: "Zbliżający się wydatek",
                       body: `${exp.name} (${exp.amount} zł) zaplanowany na ${exp.date}`,
                       tag: `expense-${key}`,
-                      url: "/app/budget.html"
+                      url: "budget.html"
                   });
               }
           }
@@ -121,7 +121,7 @@ async function run() {
           title: "Poranna Rutyna",
           body: "Czas na poranną rutynę. Zaczynamy dzień!",
           tag: "bcore-routine-morning",
-          url: "/app/index.html"
+          url: "index.html"
       });
   }
   

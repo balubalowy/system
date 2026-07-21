@@ -8,7 +8,7 @@ export async function initNotifications() {
     if (!('serviceWorker' in navigator)) return;
     
     try {
-        swRegistration = await navigator.serviceWorker.register('/app/sw.js');
+        swRegistration = await navigator.serviceWorker.register('sw.js');
         console.log('[Notifications] SW registered');
     } catch (err) {
         console.warn('[Notifications] SW registration failed:', err);
@@ -99,8 +99,8 @@ export function initForegroundMessaging() {
                 swRegistration.showNotification(data.title || 'B-Core', {
                     body: data.body || '',
                     tag: data.tag || 'bcore-foreground',
-                    icon: '/app/icons/icon-512.png',
-                    data: { url: data.url || '/app/index.html' }
+                    icon: 'icons/icon-512.png',
+                    data: { url: data.url || 'index.html' }
                 });
             }
         });

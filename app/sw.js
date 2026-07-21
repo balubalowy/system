@@ -22,9 +22,9 @@ messaging.onBackgroundMessage((payload) => {
     const options = {
         body: data.body || '',
         tag: data.tag || 'bcore-general',
-        icon: '/app/icons/icon-512.png',
-        badge: '/app/icons/icon-512.png',
-        data: { url: data.url || '/app/index.html' },
+        icon: 'icons/icon-512.png',
+        badge: 'icons/icon-512.png',
+        data: { url: data.url || 'index.html' },
         requireInteraction: data.requireInteraction === 'true',
         silent: false
     };
@@ -34,13 +34,13 @@ messaging.onBackgroundMessage((payload) => {
 // Handle notification click — open the relevant page
 self.addEventListener('notificationclick', (event) => {
     event.notification.close();
-    const url = event.notification.data?.url || '/app/index.html';
+    const url = event.notification.data?.url || 'index.html';
     
     event.waitUntil(
         clients.matchAll({ type: 'window', includeUncontrolled: true }).then(windowClients => {
             // If a B-Core tab is already open, focus it and navigate
             for (const client of windowClients) {
-                if (client.url.includes('/app/') && 'focus' in client) {
+                if (client.url.includes('system/') && 'focus' in client) {
                     client.focus();
                     client.navigate(url);
                     return;
