@@ -4,16 +4,22 @@ import { initTopBar, initDayTimeTrack, initSidebarToggle } from '../ui/layout.js
 import { initChecklists, initReadingList } from '../dashboard/routines.js';
 import { initCalendar } from '../dashboard/calendar.js';
 import { initNotifications, initForegroundMessaging } from '../notifications/notifications.js';
-import { initSettings } from '../notifications/settings.js';
+import { DEFAULT_KNOWLEDGE_AREAS, DEFAULT_KNOWLEDGE_TREE } from '../knowledge/data/index.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     initFirebase();
     
     // Global Knowledge Tree initialization (used by modals across pages)
-    window.KnowledgeTree = {};
+    if (!window.appData) window.appData = {};
+    window.appData.knowledgeAreas = DEFAULT_KNOWLEDGE_AREAS;
+    window.KnowledgeTree = DEFAULT_KNOWLEDGE_TREE;
+    
     if (db && USER_NODE) {
         db.ref(USER_NODE + 'knowledge_tree').on('value', snap => {
-            window.KnowledgeTree = snap.val() || {};
+            const val = snap.val();
+            if (val && Object.keys(val).length > 0) {
+                window.KnowledgeTree = val;
+            }
         });
     }
 

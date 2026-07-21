@@ -46,7 +46,18 @@ export function showKnowledgeModal(meta) {
         treeArr.forEach((node, i) => {
             let isDone = i <= index;
             let nTitle = typeof node === 'object' ? node.title : node;
-            html += `<li style="font-size:0.8rem; color:${isDone ? 'var(--text-primary)' : 'var(--text-secondary)'}; opacity:${isDone?1:0.5};"><i data-lucide="${isDone?'check-circle-2':'circle'}" style="width:12px; height:12px; margin-right:6px; color:${isDone?'var(--accent-success)':'inherit'};"></i> ${i+1}. ${escapeHTML(nTitle)}</li>`;
+            let nDesc = typeof node === 'object' ? node.desc : '';
+            let nChallenge = typeof node === 'object' ? node.challenge : '';
+            
+            html += `<li style="font-size:0.8rem; color:${isDone ? 'var(--text-primary)' : 'var(--text-secondary)'}; opacity:${isDone?1:0.65}; padding:6px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">`;
+            html += `<div><i data-lucide="${isDone?'check-circle-2':'circle'}" style="width:14px; height:14px; margin-right:6px; color:${isDone?'var(--accent-success)':'inherit'}; vertical-align:-2px;"></i> <strong>${i+1}. ${escapeHTML(nTitle)}</strong></div>`;
+            if (nDesc) {
+                html += `<div style="font-size:0.75rem; color:var(--text-secondary); margin-left:20px; margin-top:2px;">${escapeHTML(nDesc)}</div>`;
+            }
+            if (nChallenge) {
+                html += `<div style="font-size:0.72rem; color:var(--accent-warning, #FFD60A); margin-left:20px; margin-top:3px;"><i data-lucide="zap" style="width:11px; height:11px; margin-right:3px; vertical-align:-1px;"></i> <em>Wyzwanie: ${escapeHTML(nChallenge)}</em></div>`;
+            }
+            html += `</li>`;
         });
     } else {
         html += `<li style="font-size:0.8rem; color:var(--text-secondary);">Brak danych w bazie dla tego przedmiotu</li>`;

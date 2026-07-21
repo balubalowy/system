@@ -1,5 +1,6 @@
 import { db, USER_NODE } from '../core/firebase.js';
 import { escapeHTML } from '../core/utils.js';
+import { DEFAULT_KNOWLEDGE_TREE } from './data/index.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const currentTheme = localStorage.getItem('theme') || 'dark';
@@ -18,7 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
             let localProgress = {};
             let globalTree = {};
             db.ref(USER_NODE + 'knowledge_tree').on('value', snapTree => {
-                globalTree = snapTree.val() || {};
+                const val = snapTree.val();
+                globalTree = (val && Object.keys(val).length > 0) ? val : DEFAULT_KNOWLEDGE_TREE;
                 
                 db.ref(USER_NODE + 'knowledge').once('value').then(snap => {
                     localProgress = snap.val() || {};
