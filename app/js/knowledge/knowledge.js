@@ -46,50 +46,20 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             function getTopicDetails(category, title, item) {
-                if (typeof item === 'object') {
+                if (typeof item === 'object' && item !== null) {
                     return {
                         yt: item.yt || null,
                         challenge: item.challenge || null,
-                        description: null,
-                        subtopics: null
+                        description: item.desc || item.description || null,
+                        subtopics: item.subtopics || null
                     };
-                }
-                
-                const description = `Wprowadzenie i ustrukturyzowana wiedza do zagadnienia **${title}** w ramach ścieżki **${category}**. Temat ten obejmuje kluczowe zagadnienia teoretyczne oraz zastosowania w analizach i projektach.`;
-                
-                let subtopics = [
-                    "Koncepcja i definicje podstawowe",
-                    "Praktyczna implementacja w zadaniach analitycznych",
-                    "Najczęstsze błędy interpretacyjne i dobre praktyki"
-                ];
-                
-                const lowerCat = category.toLowerCase();
-                
-                if (lowerCat.includes('python') || lowerCat.includes('sql') || lowerCat.includes('vba')) {
-                    subtopics = [
-                        "Składnia i struktura poleceń (Syntaktyka)",
-                        "Debugowanie kodu i optymalizacja wydajności",
-                        "Przykładowe scenariusze wdrożenia w projektach"
-                    ];
-                } else if (lowerCat.includes('matematyk') || lowerCat.includes('statystyk') || lowerCat.includes('algebra') || lowerCat.includes('prawdopodob')) {
-                    subtopics = [
-                        "Wzory matematyczne i dowód twierdzenia",
-                        "Obliczanie i interpretacja wyników próbki",
-                        "Zastosowanie w modelowaniu statystycznym"
-                    ];
-                } else if (lowerCat.includes('finans') || lowerCat.includes('wycena') || lowerCat.includes('rachunkowo') || lowerCat.includes('ekonom')) {
-                    subtopics = [
-                        "Podstawa prawna i standardy sprawozdawczości",
-                        "Wskaźniki finansowe i ich znaczenie w biznesie",
-                        "Symulacja i prognozowanie przyszłych przepływów"
-                    ];
                 }
                 
                 return {
                     yt: null,
                     challenge: null,
-                    description: description,
-                    subtopics: subtopics
+                    description: `Zagadnienie **${escapeHTML(title)}** w ramach ścieżki **${escapeHTML(category)}**.`,
+                    subtopics: null
                 };
             }
 
