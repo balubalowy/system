@@ -9,7 +9,22 @@
 Witaj w centralnym repozytorium **B-Core** – zaawansowanego, osobistego systemu produktywności stworzonego na architekturze Serverless. System działa jako aplikacja PWA (Progressive Web App) w 100% hostowana na GitHub Pages, komunikująca się z bazą danych Firebase oraz wykorzystująca GitHub Actions jako darmowy "backend" do automatyzacji zadań i powiadomień.
 
 ## 👀 Rzut oka na interfejs
-*(Tutaj wstaw 2-3 screeny - np. główny pulpit na PC i obok widok z telefonu. Użyj formatu: `![Pulpit](link_do_obrazka)`)*
+
+**Wersja Desktopowa (PC)**
+<p align="center">
+  <img src="docs/desktop_1.png" width="800" alt="Pulpit Główny">
+</p>
+<p align="center">
+  <img src="docs/desktop_2.png" width="49%" alt="Widok">
+  <img src="docs/desktop_3.png" width="49%" alt="Widok">
+</p>
+
+**Wersja Mobilna (PWA / Smartfon)**
+<p align="center">
+  <img src="docs/mobile_1.jpg" width="300" alt="Widok Mobilny 1">
+  &nbsp;&nbsp;&nbsp;
+  <img src="docs/mobile_2.jpg" width="300" alt="Widok Mobilny 2">
+</p>
 
 ## 🏗️ Architektura Systemu
 
