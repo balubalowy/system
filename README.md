@@ -193,8 +193,11 @@ Jakbyś chciał pobawić się tym kodem u siebie:
 * Fix ładowania Bazy Wiedzy.
 * Wdrożenie nowego logo.
 
-### 🔮 Co dalej? (Plany)
-* **[ ]** Stabilny `sync.bat` bez błędów ścieżek.
-* **[ ]** Nowy design bocznego paska.
-* **[ ]** Zewnętrzne API dla subskrypcji.
-* **[ ]** Lepszy kalendarz na gridzie.
+### 🔮 Co dalej? (Wielkie Plany)
+* **[ ]** Optymalizacja SEO i raporty wydajnościowe (Lighthouse z F12).
+* **[ ]** Zaawansowane wykorzystanie Google Analytics oraz Google Scripts.
+* **[ ]** Wydzielenie PWA do w pełni osobnej, natywnej aplikacji.
+* **[ ]** Przebudowa bazy danych, by wpuścić więcej kont niż tylko własne.
+* **[ ]** Potężny refaktor: przepisanie całego frontendu na "coś fajnego" (React/Vue).
+* **[ ]** Zbadanie potencjału biznesowego i próba komercjalizacji (SaaS).
+* **[ ]** Dalsze szlify: stabilny `sync.bat` i przepisanie kalendarza na grid.
