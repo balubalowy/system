@@ -177,26 +177,22 @@ Jakbyś chciał pobawić się tym kodem u siebie:
 
 ## 🗺️ Roadmap & Historia Projektu
 
-Ten projekt powstawał i ewoluował w niesamowicie dynamiczny sposób, głównie w oparciu o szybkie iteracje. Poniżej krótki zapis z placu boju:
+### Faza 1: Fundamenty PWA
+* Architektura Vanilla JS.
+* Integracja z Firebase (DB + Auth).
+* Widoki: Dashboard, Inbox, Budget, Knowledge.
+* Powiadomienia Push (GitHub Actions).
 
-### Faza 1: Fundamenty i PWA
-* Wybór technologii: Czysty Vanilla JS, bez frameworków, żeby uzyskać ekstremalną wydajność na telefonach (PWA).
-* Integracja Firebase: Podpięcie bazy Realtime Database oraz Auth (tylko dla jednego autoryzowanego maila).
-* Utworzenie głównych widoków: Dashboard, Inbox, Budget, Knowledge (Drzewko Skilli RPG).
-* Architektura powiadomień: Zbudowanie darmowego backendu z użyciem GitHub Actions + Node.js (Cron), który budzi telefony przez Firebase Cloud Messaging.
+### Faza 2: Iteracje i poprawki
+* Dark Mode i glassmorphism.
+* Nowe kolory dla nawyków.
+* Debugowanie Push na iOS.
+* Modularyzacja plików JS.
+* Fix ładowania Bazy Wiedzy.
+* Wdrożenie nowego logo.
 
-### Faza 2: Iteracje i Debugowanie
-* **Zmiany wizualne:** Wdrażanie Dark Mode i glassmorphismu. Dopracowanie skali kolorystycznej nawyków (ekstremalny fioletowy, silny bordowy).
-* **Walka z powiadomieniami:** Godziny debugowania Service Workerów (wymuszających HTTPS) oraz wygasających tokenów na iOS.
-* **Rozbijanie monolitu JS:** Pocięcie logiki frontendu na moduły (ES6), żeby w ogóle dało się to utrzymać. 
-* **Krytyczne poprawki:** Naprawienie "wiecznego ładowania" w Bazie Wiedzy (błahy błąd podwójnej deklaracji zmiennej `currentTheme`, który zabił cały skrypt). Zastąpienie starych ikon nowym, dedykowanym logo B-Core we wszystkich plikach HTML.
-
-### Faza 3: "Humanizacja" Dokumentacji
-* **Testowanie detektorów AI:** Intensywne analizy psychologii LLM. Usuwanie korporacyjnych zwrotów i sztucznej struktury w README.
-* **Perplexity & Burstiness:** Całkowite zaoranie opisów plików – pozbycie się "humanized-by-checklist" na rzecz prawdziwej, makro-strukturalnej nieregularności tekstu. Dokumentacja ma teraz duszę programisty pracującego o 3 nad ranem.
-
-### 🔮 Co dalej? (Plany na przyszłość)
-* **[ ]** Doprowadzenie do porządku pliku `sync.bat`, który aktualnie notorycznie psuje się na ścieżkach Windowsa (może przepisanie go w pełni na Node/Pythona bez batcha).
-* **[ ]** Zmiana layoutu na desktopie: znalezienie lepszej alternatywy dla ciemnego paska bocznego (gryzie się z glassmorphismem).
-* **[ ]** Integracja zewnętrznych API do automatycznego dociągania kosztów subskrypcji lub zadań.
-* **[ ]** Stworzenie bardziej niezawodnego kalendarza na siatce (grid), bo ten obecny jest koszmarem w utrzymaniu.
+### 🔮 Co dalej? (Plany)
+* **[ ]** Stabilny `sync.bat` bez błędów ścieżek.
+* **[ ]** Nowy design bocznego paska.
+* **[ ]** Zewnętrzne API dla subskrypcji.
+* **[ ]** Lepszy kalendarz na gridzie.
