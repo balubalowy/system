@@ -14,6 +14,15 @@
 
 Witaj w centralnym repozytorium **B-Core** – zaawansowanego, osobistego systemu produktywności stworzonego na architekturze Serverless. System działa jako aplikacja PWA (Progressive Web App) w 100% hostowana na GitHub Pages, komunikująca się z bazą danych Firebase oraz wykorzystująca GitHub Actions jako darmowy "backend" do automatyzacji zadań i powiadomień.
 
+### W czym to napisaliśmy? (Stos Technologiczny)
+* **HTML5 / CSS3 / JavaScript (Vanilla):** Cały front-end aplikacji. Zdecydowaliśmy się na czysty kod (bez frameworków takich jak React czy Vue), aby aplikacja była ekstremalnie lekka i ładowała się w ułamku sekundy jako PWA.
+* **Firebase (Realtime DB, Auth, Cloud Messaging):** Szybka baza danych NoSQL trzymająca całe życie użytkownika. Odpowiada za logowanie oraz dostarczanie powiadomień Push (FCM).
+* **GitHub Actions & Node.js:** Nasz darmowy backend. Skrypty napisane w środowisku Node.js odpalają się na serwerach GitHuba według harmonogramu Cron, sprawdzają zadania w Firebase i wysyłają powiadomienia na sprzęt.
+* **Python:** Niewidzialny pracownik lokalny. Wykorzystywany pod maską w skrypcie `sync.bat` do potężnej analizy plików Excel, czyszczenia danych i wstrzykiwania ich prosto do B-Core'a.
+* **Markdown:** System renderujący notatki w zadaniach i zrzutni, co pozwala błyskawicznie formatować tekst.
+* **Google Analytics:** Spięty z widokami w celu monitorowania ruchu i analizowania czasu trwania sesji na pulpicie.
+
+
 ## 👀 Rzut oka na interfejs
 
 **Wersja Desktopowa (PC)**
