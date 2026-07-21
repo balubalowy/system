@@ -69,6 +69,36 @@ window.renderSidebar = function renderSidebar() {
                 <button class="btn btn-ghost" id="add-reading-btn" style="width:100%; justify-content:flex-start; margin-top:8px; font-size: 0.8rem; color: var(--text-secondary);"><i data-lucide="plus" style="width:14px;"></i> Dodaj pozycję (Enter)</button>
             </section>
 
+            <!-- Pamiętnik Burz -->
+            <section class="naked-section" style="margin-top: 30px; border-top: 1px solid var(--border-subtle); padding-top: var(--space-4);">
+                <div style="display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-3); color: var(--text-secondary);">
+                    <i data-lucide="cloud-lightning" style="width: 14px; color:var(--accent-warning);"></i>
+                    <h2 style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; white-space:nowrap;">Pamiętnik Burz</h2>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:12px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span class="stat-text" style="font-size:0.8rem; color:var(--text-secondary); white-space:nowrap;">Liczba burz (łowy):</span>
+                        <span class="stat-text" id="stat-shunts" style="font-size:0.9rem; font-weight:700; color:var(--text-primary); font-family:var(--font-mono); margin-left:auto;">0</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span class="stat-text" style="font-size:0.8rem; color:var(--text-secondary); white-space:nowrap;">Dni burzowe (łowy):</span>
+                        <span class="stat-text" id="stat-sdays" style="font-size:0.9rem; font-weight:700; color:var(--text-primary); font-family:var(--font-mono); margin-left:auto;">0</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span class="stat-text" style="font-size:0.8rem; color:var(--text-secondary); white-space:nowrap;">Przeżyte burze (ogół):</span>
+                        <span class="stat-text" id="stat-stotal" style="font-size:0.9rem; font-weight:700; color:var(--text-primary); font-family:var(--font-mono); margin-left:auto;">0</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span class="stat-text" style="font-size:0.8rem; color:var(--text-secondary); white-space:nowrap;">Przeżyte dni (ogół):</span>
+                        <span class="stat-text" id="stat-sdtotal" style="font-size:0.9rem; font-weight:700; color:var(--text-primary); font-family:var(--font-mono); margin-left:auto;">0</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span class="stat-text" style="font-size:0.8rem; color:var(--text-secondary); white-space:nowrap;">Przejechane celowo:</span>
+                        <span class="stat-text" id="stat-skm" style="font-size:0.9rem; font-weight:700; color:var(--accent-warning); font-family:var(--font-mono); margin-left:auto;">0 km</span>
+                    </div>
+                </div>
+            </section>
+
             <!-- Local Agent Stats w Sidebar -->
             <section class="naked-section" style="margin-top: 30px; border-top: 1px solid var(--border-subtle); padding-top: var(--space-4);">
                 <div style="display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-3); color: var(--text-secondary);">
@@ -83,7 +113,7 @@ window.renderSidebar = function renderSidebar() {
                     </div>
                     <div style="display:flex; align-items:center; gap:8px;">
                         <i data-lucide="table-2" style="width:16px;"></i>
-                        <span class="stat-text" style="font-size:0.8rem; color:var(--text-secondary); white-space:nowrap;">Excel:</span>
+                        <span class="stat-text" style="font-size:0.8rem; color:var(--text-secondary); white-space:nowrap;">Modele Excel:</span>
                         <span class="stat-text" id="stat-excels" style="font-size:0.9rem; font-weight:700; color:var(--text-primary); font-family:var(--font-mono); margin-left:auto;">0</span>
                     </div>
                     <div style="display:flex; align-items:center; gap:8px;">

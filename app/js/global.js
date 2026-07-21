@@ -84,5 +84,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if(se) se.textContent = window.localAgentStats.excels || 0;
         if(ss) ss.textContent = window.localAgentStats.storms || 0;
         if(ssync) ssync.textContent = "Sync: " + (window.localAgentStats.lastSync || 'Brak');
+        
+        if(document.getElementById('stat-shunts')) document.getElementById('stat-shunts').textContent = window.localAgentStats.stormHunts || 0;
+        if(document.getElementById('stat-sdays')) document.getElementById('stat-sdays').textContent = window.localAgentStats.stormDaysHunts || 0;
+        if(document.getElementById('stat-stotal')) document.getElementById('stat-stotal').textContent = window.localAgentStats.stormTotal || 0;
+        if(document.getElementById('stat-sdtotal')) document.getElementById('stat-sdtotal').textContent = window.localAgentStats.stormDaysTotal || 0;
+        if(document.getElementById('stat-skm')) document.getElementById('stat-skm').textContent = (window.localAgentStats.stormKm || 0) + ' km';
     }
 });
