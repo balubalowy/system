@@ -14,10 +14,10 @@ System składa się z trzech głównych filarów:
 ```mermaid
 graph TD
     subgraph "Urządzenia Użytkownika (PWA)"
-        PC[Przeglądarka PC]
-        Mobile[iPhone / Safari]
-        SW[Service Worker (sw.js)]
-        PC <-->|Zapis/Odczyt| FB[(Firebase DB)]
+        PC["Przeglądarka PC"]
+        Mobile["iPhone / Safari"]
+        SW["Service Worker (sw.js)"]
+        PC <-->|Zapis/Odczyt| FB[("Firebase DB")]
         Mobile <-->|Zapis/Odczyt| FB
         PC -->|Generuje FCM Token| FB
         Mobile -->|Generuje FCM Token| FB
@@ -25,12 +25,12 @@ graph TD
 
     subgraph "Chmura Google (Firebase)"
         FB
-        FCM((Firebase Cloud Messaging))
+        FCM(("Firebase Cloud Messaging"))
     end
 
     subgraph "Backend (GitHub Actions)"
-        GH_CRON{Cron 5:00, 11:00, 17:00}
-        NODE[Node.js Script]
+        GH_CRON{"Cron 5:00, 11:00, 17:00"}
+        NODE["Node.js Script"]
         GH_CRON --> NODE
         NODE -->|Pobiera Zadania i Tokeny| FB
         NODE -->|Wysyła Payload Push| FCM
