@@ -36,13 +36,25 @@ export const mathTree = {
             subtopics: ["Zupełny układ hipotez", "Wzór na prawdopodobieństwo całkowite", "Wzór Bayesa i prawdopodobieństwo a posteriori"]
         },
         { 
-            title: "Zmienne losowe i ich rozkłady", 
-            desc: "Zmienne dyskretne i ciągłe, dystrybuanta, wartość oczekiwana i wariancja.", 
-            challenge: "Zadanie: Wyznacz wartość oczekiwaną i wariancję dla rzutu symetryczną kostką.",
-            subtopics: ["Funkcja prawdopodobieństwa i gęstość", "Dystrybuanta F(x) i jej własności", "Wartość oczekiwana E(X) i wariancja Var(X)"]
+            title: "Zmienne losowe dyskretne", 
+            desc: "Funkcja prawdopodobieństwa, rozkład dwumianowy (Bernoulliego) i Poissona.", 
+            challenge: "Zadanie: Oblicz prawdopodobieństwo uzyskania 3 sukcesów w 5 próbach Bernoulliego z p=0.4.",
+            subtopics: ["Rozkład dwumianowy (Binomial distribution)", "Rozkład Poissona dla zdarzeń rzadkich", "Rozkład geometryczny i hipergeometryczny"]
         },
         { 
-            title: "Wielowymiarowe zmienne losowe", 
+            title: "Zmienne losowe ciągłe", 
+            desc: "Funkcja gęstości prawdopodobieństwa f(x) i dystrybuanta F(x).", 
+            challenge: "Zadanie: Oblicz P(1 < X < 3) całkując gęstość f(x) = 0.5 w przedziale (0, 4).",
+            subtopics: ["Funkcja gęstości prawdopodobieństwa f(x)", "Całkowa definicja dystrybuanty F(x)", "Własności rozkładów ciągłych"]
+        },
+        { 
+            title: "Rozkład Normalny i twierdzenia graniczne", 
+            desc: "Gęstość rozkładu Gaussa N(μ, σ) oraz Centralne Twierdzenie Graniczne (CTG).", 
+            challenge: "Zadanie: Użyj tablic rozkładu N(0,1) do wyznaczenia P(Z < 1.96).",
+            subtopics: ["Standaryzacja zmiennej do N(0,1)", "Reguła trzech sigm (68-95-99.7)", "Centralne Twierdzenie Graniczne (Lindeberga-Lévy'ego)"]
+        },
+        { 
+            title: "Wielowymiarowe zmienne losowe i kowariancja", 
             desc: "Rozkłady łączne, brzegowe i warunkowe dwóch zmiennych losowych.", 
             challenge: "Zadanie: Wyznacz kowariancję pomiędzy dwoma zmiennymi losowymi ze wzoru Cov(X,Y).",
             subtopics: ["Łączny rozkład dwóch zmiennych", "Rozkłady brzegowe i warunkowe", "Kowariancja Cov(X,Y) i współczynnik korelacji"]
@@ -74,16 +86,22 @@ export const mathTree = {
             subtopics: ["Współczynnik skośności Pearsona", "Momenty centralne III i IV rzędu", "Kurtoza i eksces rozkładu"]
         },
         { 
+            title: "Analiza zmiennej w czasie (Indeksy dynamiki)", 
+            desc: "Indeksy jednopodstawowe, łańcuchowe, jednopodstawowe tempo zmian.", 
+            challenge: "Zadanie: Przelicz przyrosty względne i jednopodstawowy indeks sprzedaży za 5 lat.",
+            subtopics: ["Indeksy indywidualne jednopodstawowe i łańcuchowe", "Średnioroczne tempo zmian (Średnia geometryczna)", "Przeliczanie baz indeksów"]
+        },
+        { 
             title: "Korelacja liniowa Pearsona", 
             desc: "Współczynnik korelacji r-Pearsona, kowariancja i wykresy rozrzutu.", 
             challenge: "Zadanie: Oblicz i zinterpretuj r = 0.85 pomiędzy wydatkami na reklamę a sprzedażą.",
             subtopics: ["Kowariancja Cov(X,Y)", "Współczynnik r-Pearsona i jego właściwości", "Test istotności współczynnika korelacji"]
         },
         { 
-            title: "Korelacja rang Spearmana", 
+            title: "Korelacja rang Spearmana i Kendalla", 
             desc: "Mierzenie zależności dla zmiennych na skali porządkowej.", 
             challenge: "Zadanie: Oblicz współczynnik Spearmana dla rankingu 5 produktów w dwóch testach.",
-            subtopics: ["Rangi obserwacji i różnice rang d_i", "Wzór na korelację rang Spearmana r_s", "Zastosowanie dla danych jakościowych"]
+            subtopics: ["Rangi obserwacji i różnice rang d_i", "Wzór na korelację rang Spearmana r_s", "Współczynnik korelacji tau-Kendalla"]
         }
     ],
     "Statystyka matematyczna": [
@@ -106,10 +124,10 @@ export const mathTree = {
             subtopics: ["Sformułowanie H0 i H1", "Błędy I i II rodzaju oraz moc testu", "Kryterium p-value i obszar krytyczny"]
         },
         { 
-            title: "Test Chi-kwadrat niezależności", 
-            desc: "Weryfikacja zależności pomiędzy dwoma zmiennymi jakościowymi.", 
+            title: "Test Chi-kwadrat niezależności i zgodności", 
+            desc: "Weryfikacja zależności pomiędzy dwoma zmiennymi jakościowymi oraz testy zgodności rozkładów.", 
             challenge: "Zadanie: Zbuduj tablicę 2x2 i oblicz statystykę testową Chi-kwadrat.",
-            subtopics: ["Tablice wielodzielcze (Contingency tables)", "Liczebności oczekiwane vs obserwowane", "Statystyka testowa Chi2 i stopnie swobody"]
+            subtopics: ["Tablice wielodzielcze (Contingency tables)", "Liczebności oczekiwane vs obserwowane", "Test zgodności Chi-kwadrat i test Kolmogorov-Smirnov"]
         },
         { 
             title: "Analiza wariancji (ANOVA)", 
@@ -122,6 +140,12 @@ export const mathTree = {
             desc: "Metoda Najmniejszych Kwadratów, współczynnik determinacji R^2.", 
             challenge: "Zadanie: Zinterpretuj b1=2.5 w równaniu y = 10 + 2.5x oraz współczynnik R^2=0.81.",
             subtopics: ["Kryterium sumy kwadratów reszt (MNK)", "Interpretacja parametrów b0 i b1", "Współczynnik determinacji R2 i dopasowanie modelu"]
+        },
+        { 
+            title: "Regresja wieloraka i weryfikacja założeń", 
+            desc: "Modele z wieloma objaśniającymi, współliniowość (VIF) i analiza reszt.", 
+            challenge: "Zadanie: Zinterpretuj współczynnik VIF = 12 dla zmiennej objaśniającej.",
+            subtopics: ["Estymacja MNK w ujęciu macierzowym", "Multikoliniowość i współczynnik VIF", "Normalność i homoskedastyczność reszt"]
         }
     ],
     "Matematyka wyższa": [
@@ -148,6 +172,12 @@ export const mathTree = {
             desc: "Definicja pochodnej, reguła różniczkowania i monotoniczność funkcji.", 
             challenge: "Zadanie: Wyznacz extrema lokalne funkcji f(x) = x^3 - 3x.",
             subtopics: ["Interpretacja geometryczna pochodnej", "Reguły różniczkowania iloczynu i ilorazu", "Badanie ekstremów lokalnych i wklęsłości"]
+        },
+        { 
+            title: "Pochodne cząstkowe funkcji wielu zmiennych", 
+            desc: "Pochodne cząstkowe I i II rzędu, gradient i ekstrema funkcji dwojga zmiennych.", 
+            challenge: "Zadanie: Wyznacz pochodne cząstkowe f_x i f_y dla f(x,y) = x^2 * y + 3y.",
+            subtopics: ["Definicja pochodnej cząstkowej ∂f/∂x i ∂f/∂y", "Macierz Hesjan i badanie ekstremów dwojga zmiennych", "Gradient i pochodna kierunkowa"]
         },
         { 
             title: "Całki nieoznaczone i oznaczone", 

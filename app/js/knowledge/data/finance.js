@@ -40,6 +40,12 @@ export const financeTree = {
             desc: "Radar opadowy, detektory wyładowań (Blitzortung) i szacowanie toru burzy.", 
             challenge: "Zadanie: Wyznacz szacowaną odległość od burzy przy różnicy czasu 6 sekund między błyskiem a grzmotem.",
             subtopics: ["Echo radarowe odbiciowości (dBZ)", "Sieci detekcji wyładowań Blitzortung", "Szacowanie toru superkomórki burzowej"]
+        },
+        { 
+            title: "Instabilność atmosferyczna i wskaźniki CAPE/CIN", 
+            desc: "Energia potencjalna dostępna konwekcyjnie (CAPE) i hamowanie konwekcji (CIN).", 
+            challenge: "Zadanie: Zinterpretuj wartość CAPE = 2500 J/kg i CIN = -15 J/kg.",
+            subtopics: ["Wskaźnik CAPE (Convective Available Potential Energy)", "Wskaźnik CIN i uwalnianie konwekcji", "Ścinanie wiatru (Wind Shear) i organizacja burz"]
         }
     ],
     "Finanse": [
@@ -78,6 +84,12 @@ export const financeTree = {
             desc: "Kontrakty futures, opcje call/put oraz strategie zabezpieczające (hedging).", 
             challenge: "Zadanie: Sporządź profil wypłaty dla nabytej opcji Call o cenie wykonania K=100 zł.",
             subtopics: ["Mechanika kontraktów Futures i Forward", "Opcje kupna (Call) i sprzedaży (Put)", "Hedging ryzyka walutowego i stóp procentowych"]
+        },
+        { 
+            title: "Zarządzanie kapitałem obrotowym i płynnością", 
+            desc: "Cykl konwersji gotówki (CCC), zarządzanie zapasami i należnościami.", 
+            challenge: "Zadanie: Oblicz Cykl Konwersji Gotówki dla DSO=30, DIO=45 i DPO=40 dni.",
+            subtopics: ["Cykl operacyjny i cykl konwersji gotówki", "Wskaźnik DSO (Days Sales Outstanding) i DIO", "Zarządzanie płynnością finansową w krótkim okresie"]
         }
     ],
     "Rachunkowość": [
@@ -110,9 +122,21 @@ export const financeTree = {
             desc: "Wskaźnik bieżącej płynności, ROE, ROA, ROS.", 
             challenge: "Zadanie: Zinterpretuj wskaźnik rentowności kapitału własnego ROE = 18%.",
             subtopics: ["Wskaźniki płynności III stopni (bieżący, szybki, gotówkowy)", "Wskaźniki rentowności ROE, ROA, ROS", "Analiza DuPonta i dekompozycja ROE"]
+        },
+        { 
+            title: "Sprawozdawczość wg MSR/IFRS vs UoR", 
+            desc: "Różnice pomiędzy Polską Ustawą o Rachunkowości a Międzynarodowymi Standardami.", 
+            challenge: "Zadanie: Wyjaśnij podejście do wyceny nieruchomości inwestycyjnych wg MSR 40.",
+            subtopics: ["Zasady tworzenia sprawozdania skonsolidowanego", "MSR 16 Środki trwałe i MSR 38 Wartości niematerialne", "Tymczasowe różnice podatkowe i odroczony podatek podwójny"]
         }
     ],
     "Ekonomia": [
+        { 
+            title: "Rzadkość zasobów i koszt alternatywny", 
+            desc: "Problem rzadkości w ekonomii, granica możliwości produkcyjnych (KMP).", 
+            challenge: "Zadanie: Wyznacz koszt alternatywny wyprodukowania dodatkowej jednostki dobra A kosztem dobra B.",
+            subtopics: ["Krzywa możliwości produkcyjnych (KMP / PPF)", "Koszt alternatywny (Opportunity Cost) w wyborach konsumenta", "Problem rzadkości a alokacja zasobów w gospodarce"]
+        },
         { 
             title: "Mikroekonomia: Popyt, Podaż i Równowaga", 
             desc: "Prawo popytu i podaży, punkt równowagi rynkowej i elastyczność cenowa.", 
@@ -142,6 +166,12 @@ export const financeTree = {
             desc: "Rola Banku Centralnego, stopa rezerw, stopy procentowe i budżet państwa.", 
             challenge: "Zadanie: Opisz wpływ podwyżki stopy rezerwy obowiązkowej na kreację pieniądza w bankach.",
             subtopics: ["Narzędzia banku centralnego (stopy, operacje otwartego rynku)", "Podatki i wydatki rządowe (Polityka fiskalna)", "Mnożnik kreacji pieniądza i mnożnik budżetowy"]
+        },
+        { 
+            title: "Handel Międzynarodowy i Kursy Walutowe", 
+            desc: "Teoria przewagi komparatywnej Davida Ricardo, bilans płatniczy i kursy walut.", 
+            challenge: "Zadanie: Wyjaśnij teorię parytetu siły nabywczej (PPP) w ustalaniu kursów walutowych.",
+            subtopics: ["Przewaga bezwzględna vs przewaga komparatywna", "Bilans obrotów bieżących i płatniczy", "Systemy kursów walutowych (płynny vs sztywny)"]
         }
     ]
 };
