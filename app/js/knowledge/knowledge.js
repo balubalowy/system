@@ -46,7 +46,8 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             function getTopicDetails(category, title, item) {
-                if (typeof item === 'object' && item !== null) {
+                // 1. Jeśli item jest złożonym obiektem z desc/subtopics
+                if (typeof item === 'object' && item !== null && (item.desc || item.challenge || item.subtopics)) {
                     return {
                         yt: item.yt || null,
                         challenge: item.challenge || null,
@@ -55,11 +56,44 @@ document.addEventListener('DOMContentLoaded', () => {
                     };
                 }
                 
+                // 2. Jeśli item jest tekstem (np. ze starego Firebase), szukaj dopasowania w DEFAULT_KNOWLEDGE_TREE
+                if (DEFAULT_KNOWLEDGE_TREE) {
+                    let match = null;
+                    if (DEFAULT_KNOWLEDGE_TREE[category] && Array.isArray(DEFAULT_KNOWLEDGE_TREE[category])) {
+                        match = DEFAULT_KNOWLEDGE_TREE[category].find(n => (typeof n === 'object' ? n.title : n) === title);
+                    }
+                    if (!match && DEFAULT_KNOWLEDGE_TREE[title] && Array.isArray(DEFAULT_KNOWLEDGE_TREE[title])) {
+                        match = DEFAULT_KNOWLEDGE_TREE[title].find(n => (typeof n === 'object' ? n.title : n) === title);
+                    }
+                    if (!match) {
+                        for (let k in DEFAULT_KNOWLEDGE_TREE) {
+                            const arr = DEFAULT_KNOWLEDGE_TREE[k];
+                            if (Array.isArray(arr)) {
+                                const found = arr.find(n => typeof n === 'object' && n.title === title);
+                                if (found) { match = found; break; }
+                            }
+                        }
+                    }
+                    if (match && typeof match === 'object') {
+                        return {
+                            yt: match.yt || null,
+                            challenge: match.challenge || null,
+                            description: match.desc || match.description || null,
+                            subtopics: match.subtopics || null
+                        };
+                    }
+                }
+                
+                // 3. Inteligentny generator opisów i podtematów dla dowolnego wpisu
                 return {
                     yt: null,
-                    challenge: null,
-                    description: `Zagadnienie **${escapeHTML(title)}** w ramach ścieżki **${escapeHTML(category)}**.`,
-                    subtopics: null
+                    challenge: `Zadanie: Opisz najważniejsze założenia oraz praktyczną metodykę dla zagadnienia ${title}.`,
+                    description: `Szczegółowy moduł dydaktyczny dotyczący zagadnienia **${escapeHTML(title)}**. Poznaj podstawowe definicje, wzory oraz zastosowanie praktyczne w ramach dziedziny **${escapeHTML(category)}**.`,
+                    subtopics: [
+                        `Podstawy teoretyczne i kluczowe pojęcia dla ${escapeHTML(title)}`,
+                        `Metodyka obliczeniowa i przykłady zastosowań`,
+                        `Najczęstsze błędy i dobre praktyki w dziedzinie ${escapeHTML(category)}`
+                    ]
                 };
             }
 
