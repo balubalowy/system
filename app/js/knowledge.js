@@ -4,9 +4,7 @@ import { escapeHTML } from './utils.js';
 document.addEventListener('DOMContentLoaded', () => {
     const currentTheme = localStorage.getItem('theme') || 'dark';
     document.documentElement.setAttribute('data-theme', currentTheme);
-const currentTheme = localStorage.getItem('theme') || 'dark';
-            document.documentElement.setAttribute('data-theme', currentTheme);
-            const themeBtn = document.getElementById('theme-toggle-btn');
+    const themeBtn = document.getElementById('theme-toggle-btn');
             if(themeBtn) {
                 themeBtn.addEventListener('click', () => {
                     let theme = document.documentElement.getAttribute('data-theme');
