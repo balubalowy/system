@@ -44,7 +44,7 @@ Tutaj centralne repozytorium **B-Core** – własny, mocno przebudowany system p
 
 Osobiście ciągle są podejmowane rozkminy nad wyglądem aplikacji, szczególnie paskiem bocznym i całym motywem, aktualnie jest do dyspozycji 6 motywów przy ikonce księżyca. Do tego zmiana układu tzw. hamburgera podczas sesji mobilnej.
 
-## 🏗️ Architektura Systemu
+## Architektura Systemu
 
 1. **Frontend (PWA):** Zwykły Vanilla JS. Dzięki Service Workerowi śmiga offline, a na telefonie zachowuje się jak natywna apka. (Choć przy szybkich aktualizacjach zapisywanie w pamięci podręcznej Cache często dodawało irytacji).
 2. **Baza Danych (Firebase Realtime Database):** Centralne przechowywanie danych, dostęp zabezpieczony kilkoma metodami.
