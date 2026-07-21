@@ -66,20 +66,44 @@ Główny folder z widokami aplikacji PWA.
 ### 📂 /app/css
 * `styles.css` – Główny i jedyny plik stylów. Wykorzystuje zmienne CSS dla ułatwienia zmian motywu (Dark Mode), responsywność w oparciu o Flexbox/Grid i nowoczesny "glassmorphism".
 
-### 📂 /app/js
-Rozbicie logiki na moduły (Moduły ES6). Wszystko importowane i spinane ze sobą w zależności od widoku.
-* `firebase.js` – Konfiguracja połączenia z Firebase. Inicjuje instancję `db` oraz `auth`, z których korzystają pozostałe skrypty. Definiuje też "Auth Guard" (wyrzuca niezalogowanych do `login.html`).
-* `global.js` – Skrypt ładowany na KAŻDEJ stronie. Spina globalne elementy UI (topbar, sidebar) oraz odpala moduły ustawień i powiadomień.
-* `notifications.js` – Front-endowy klient powiadomień. Rejestruje Service Workera, generuje unikalny token FCM i zapisuje go w Firebase. Obsługuje też odbieranie powiadomień w trybie pierwszoplanowym.
-* `settings.js` – Dynamiczny modal ustawień. Zarządza parametrami użytkownika (czas przypomnień, klucz VAPID) i komunikuje się z `notifications.js` przy nadawaniu uprawnień (Przycisk "Włącz powiadomienia").
-* `utils.js` – Narzędzia pomocnicze (np. `escapeHTML`, generowanie UUID), zapobiegające m.in. atakom XSS.
-* **Logika Domenowa (Widoki):**
-  * `dashboard.js`, `main.js`, `routines.js`, `timers.js` – Odpowiadają za funkcje Pulpitu (rutyny, timery, podsumowania).
-  * `inbox.js`, `tasks.js`, `ideas.js` – Logika Zrzutni (zarządzanie zadaniami, odhaczanie, ładowanie z Firebase).
-  * `budget.js` – Rozbudowana logika modułu finansowego (obliczanie podsumowań, zysków/strat, zarządzanie subkontami, cykliczne wydatki).
-  * `knowledge.js`, `knowledge-modal.js` – Zarządzanie kartami w Bazie Wiedzy.
-  * `calendar.js` – Moduł obsługujący pełny, autorski widok kalendarza w Pulpicie.
-  * `sidebar.js`, `layout.js` – Zarządzanie animacjami, wysuwaniem menu na mobile, itp.
+### 📂 /app/js (Logika Aplikacji)
+Logika została precyzyjnie podzielona na mniejsze moduły (ES6), aby łatwiej było nią zarządzać i skalować kod.
+
+#### ⚙️ Konfiguracja i Narzędzia
+* `firebase.js` – Serce autoryzacji i połączenia z chmurą. Inicjuje instancję `db` oraz `auth`, z których korzystają pozostałe skrypty. Zabezpiecza stronę (Auth Guard), wyrzucając niezalogowanych.
+* `global.js` – Główny skrypt ładowany na każdej stronie. Łączy globalne elementy UI (topbar, statystyki edukacji i burz) oraz inicjuje podstawowe usługi.
+* `local_data.js` – Plik generowany automatycznie przez `sync.bat`. Przechowuje statystyki z komputera (zdjęcia, excel, python, pamiętnik burz, średnie I-VI), by PWA mogło je odczytać błyskawicznie bez serwera.
+* `utils.js` – Zestaw uniwersalnych narzędzi (np. formatowanie dat, `escapeHTML`, generowanie UUID), zapobiegające m.in. atakom XSS.
+* `data.js` – Plik przechowujący bazowe, statyczne zbiory danych (np. hierarchię dziedzin Bazy Wiedzy).
+
+#### 🔔 Powiadomienia i Ustawienia
+* `notifications.js` – Front-endowy klient powiadomień Push. Rejestruje Service Workera (`sw.js`), generuje unikalny token urządzenia FCM i paruje go z Twoją bazą Firebase.
+* `settings.js` – Dynamiczny modal ustawień użytkownika (klucz VAPID, parametry czasowe). Komunikuje się z systemem operacyjnym przy żądaniu uprawnień do powiadomień Push.
+
+#### 🖥️ Pulpit Główny (`index.html`)
+* `main.js` – Punkt wejścia dla głównego pulpitu. Rejestruje kluczowe zdarzenia i bootuje komponenty.
+* `dashboard.js` – Odpowiada za agregację i wyświetlanie dziennych wskaźników postępu na pulpicie.
+* `calendar.js` – Renderuje autorski, 7-dniowy układ kalendarza (Oś czasu), mapując Twoje bloki operacyjne na konkretne godziny.
+* `charts.js` – Wizualizacja analityki za pomocą biblioteki Chart.js. Rysuje wykres liniowy poziomu energii oraz wykres słupkowy kompetencji.
+* `routines.js` – Moduł obsługujący Twoje codzienne, cykliczne rutyny (Nawyki / Dziennik) widoczne na pulpicie.
+* `timers.js` – Zaawansowany moduł zarządzający pełnoekranowym Trybem Skupienia (Focus Mode) i licznikami pomodoro/flow.
+
+#### 📥 Zrzutnia (`inbox.html`)
+* `inbox.js` – Główny kontroler Zrzutni, sterujący przepływem informacji i zakładkami.
+* `tasks.js` – Operacje bazodanowe na zdaniach. Pozwala dodawać, kategoryzować, odkładać w czasie i odhaczać To-Do'sy.
+* `ideas.js` – Oddzielny strumień dla szybkich notówek, pomysłów (Ideas), które nie są stricte zadaniami do zrobienia.
+
+#### 💰 Finanse (`budget.html`)
+* `budget.js` – Potężny silnik finansowy. Zlicza salda na subkontach inwestycyjnych i bieżących, kalkuluje przepływy (wydatki/dochody) i informuje o nadchodzących subskrypcjach.
+
+#### 🧠 Baza Wiedzy (`knowledge.html`)
+* `knowledge.js` – Tworzy interaktywne "Drzewo Wiedzy", grupując kompetencje na dziedziny takie jak Programowanie czy Kognitywistyka.
+* `knowledge-modal.js` – Obsługa modalnego okna pop-up, które wyświetla się po kliknięciu w konkretną dziedzinę (zawiera jej detale i linki).
+* `srs.js` – Moduł Powtórek Przestrzennych (Spaced Repetition System). Algorytm do inteligentnego przepytywania z fiszek, podobny do Anki.
+
+#### 📐 Layout i Interfejs
+* `layout.js` – Kontroler responsywnego układu. Pilnuje ukrywania/pokazywania elementów na mniejszych ekranach (smartfonach).
+* `sidebar.js` – Generuje i animuje lewy panel boczny w PWA. Tworzy przyciski nawigacyjne oraz renderuje dynamiczne podsumowania Pamiętnika Burz i Pamięci Lokalnej.
 
 ---
 
