@@ -1,10 +1,10 @@
 // js/global.js
 import { initFirebase, db, USER_NODE } from './firebase.js';
-import { initTopBar, initDayTimeTrack, initSidebarToggle } from './layout.js';
-import { initChecklists, initReadingList } from './routines.js';
-import { initCalendar } from './calendar.js';
-import { initNotifications, initForegroundMessaging } from './notifications.js';
-import { initSettings } from './settings.js';
+import { initTopBar, initDayTimeTrack, initSidebarToggle } from '../ui/layout.js';
+import { initChecklists, initReadingList } from '../dashboard/routines.js';
+import { initCalendar } from '../dashboard/calendar.js';
+import { initNotifications, initForegroundMessaging } from '../notifications/notifications.js';
+import { initSettings } from '../notifications/settings.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     initFirebase();

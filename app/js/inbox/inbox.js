@@ -1,5 +1,5 @@
-import { db, USER_NODE } from './firebase.js';
-import { escapeHTML } from './utils.js';
+import { db, USER_NODE } from '../core/firebase.js';
+import { escapeHTML } from '../core/utils.js';
 import { initIdeasEngine, initWishlistEngine } from './ideas.js';
 
 document.addEventListener('DOMContentLoaded', () => {

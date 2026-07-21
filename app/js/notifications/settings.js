@@ -1,5 +1,5 @@
 // js/settings.js — Settings modal for notification preferences
-import { db, USER_NODE } from './firebase.js';
+import { db, USER_NODE } from '../core/firebase.js';
 import { enableNotifications } from './notifications.js';
 
 const DEFAULT_SETTINGS = {

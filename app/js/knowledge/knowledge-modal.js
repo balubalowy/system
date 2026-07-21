@@ -1,5 +1,5 @@
 // js/knowledge-modal.js
-import { escapeHTML } from './utils.js';
+import { escapeHTML } from '../core/utils.js';
 
 export function showKnowledgeModal(meta) {
     const modal = document.getElementById('knowledge-modal');

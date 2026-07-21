@@ -1,6 +1,6 @@
 // js/ideas.js
-import { db, USER_NODE } from './firebase.js';
-import { escapeHTML } from './utils.js';
+import { db, USER_NODE } from '../core/firebase.js';
+import { escapeHTML } from '../core/utils.js';
 
 export function initIdeasEngine() {
     const btn = document.getElementById('btn-save-idea');

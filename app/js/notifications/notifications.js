@@ -1,5 +1,5 @@
 // js/notifications.js — FCM client, token management, dismiss helpers
-import { db, auth, USER_NODE } from './firebase.js';
+import { db, auth, USER_NODE } from '../core/firebase.js';
 
 let swRegistration = null;
 

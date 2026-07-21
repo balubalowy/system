@@ -1,5 +1,5 @@
-import { db, USER_NODE } from './firebase.js';
-import { escapeHTML } from './utils.js';
+import { db, USER_NODE } from '../core/firebase.js';
+import { escapeHTML } from '../core/utils.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const currentTheme = localStorage.getItem('theme') || 'dark';

@@ -1,6 +1,6 @@
 // js/layout.js
-import { db, USER_NODE } from './firebase.js';
-import { getTodayStr } from './utils.js';
+import { db, USER_NODE } from '../core/firebase.js';
+import { getTodayStr } from '../core/utils.js';
 
 export function initTopBar() {
     const dateElement = document.getElementById('current-date');

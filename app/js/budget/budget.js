@@ -1,7 +1,7 @@
-import { db, USER_NODE } from './firebase.js';
-import { escapeHTML } from './utils.js';
-import { initWishlistEngine } from './ideas.js';
-import { dismissNotification } from './notifications.js';
+import { db, USER_NODE } from '../core/firebase.js';
+import { escapeHTML } from '../core/utils.js';
+import { initWishlistEngine } from '../inbox/ideas.js';
+import { dismissNotification } from '../notifications/notifications.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     initWishlistEngine();

@@ -1,6 +1,6 @@
 // js/calendar.js
-import { db, USER_NODE } from './firebase.js';
-import { getTodayStr, escapeHTML } from './utils.js';
+import { db, USER_NODE } from '../core/firebase.js';
+import { getTodayStr, escapeHTML } from '../core/utils.js';
 
 const START_HOUR = 7;
 const END_HOUR = 22;

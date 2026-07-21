@@ -119,43 +119,49 @@ Tutaj leży kod frontendu.
 * `styles.css` – jeden plik ze stylami CSS (ładniee zwane Kaskadowymi Arkuszami Stylów), zawierający też zmienne pod Dark Mode i główny układ interfejsu, tutaj jest cały wygląd, bez którego wszystko wyglądałoby jak notatka w markdownie/wordzie
 
 ### 📂 /app/js 
-Dla jasnego (logicznego) utrzymania wszystko jest pocięte na moduły ES6. Nie byłoby czytelne to gdybym miał kilka tysięcy linjek w jednym pliku, a tak pliki mieszczą się w zakresie 100-600 linijek. 
+Dla jasnego (logicznego) utrzymania wszystko jest pocięte na moduły ES6 i zorganizowane w czytelnych podfolderach tematycznych:
 
-####  Konfiguracja i Narzędzia
+#### 📁 `/app/js/core/` (Konfiguracja i Narzędzia)
 * `firebase.js` – punkt wejścia do bazy, sprawdza też, czy loguje się uprawnionym mailem
 * `global.js` – inicjalizacja statystyk w nagłówkach
 * `local_data.js` – statyczny obiekt wygenerowany automatycznie przez plik batch
 * `utils.js` – formatowanie dat, escapeHTML
 * `data.js` - lista rutyn i drzewko skilli (szablony)
 
-####  Powiadomienia i Ustawienia
+#### 📁 `/app/js/notifications/` (Powiadomienia i Ustawienia)
 * `notifications.js` - system powiadomień
-* `settings.js` - ustawienia systemu (aktualnie tylko pod system powiadomień, w przyszłości więcej funkcji)
+* `settings.js` - ustawienia systemu
 
-####  Pulpit Główny (`index.html`)
+#### 📁 `/app/js/dashboard/` (Pulpit Główny)
 * `main.js` - zaciąga z poniższych plików
 * `dashboard.js`- odpowiedzialny za zadania
-* `calendar.js` – rozbudowana część do wywołania kalendarza, także jest odporny na zmiany stref czasowych
-* `charts.js` -  sekcja z postępami w nauce i wykresem energii
+* `calendar.js` – rozbudowana część do wywołania kalendarza
+* `charts.js` - sekcja z postępami w nauce i wykresem energii
 * `routines.js` - rutyny (szablon)
-* `timers.js` - sekcja z Timerami do odliczenia po rozpoczęciu sekcji skupienia (aktualnie nie działa)
+* `timers.js` - sekcja z Timerami
 
-####  Zrzutnia (`inbox.html`)
-* `inbox.js` - wszystko tutaj w formie CRUD (Create, Read, Update, Delete) - zrzutnia
+#### 📁 `/app/js/inbox/` (Zrzutnia)
+* `inbox.js` - zarządza zrzutnią
 * `tasks.js` – CRUD od zadań
 * `ideas.js` - CRUD od pomysłów
 
-####  Finanse (`budget.html`)
-* `budget.js` – działanie arkusza z budżetem, wydatkami i wpływami (także przyszłymi), umożliwia także powtarzalne wpływy/wydatki
+#### 📁 `/app/js/budget/` (Finanse)
+* `budget.js` – działanie arkusza z budżetem, wydatkami i wpływami
 
-####  Baza Wiedzy (`knowledge.html`)
+#### 📁 `/app/js/knowledge/` (Baza Wiedzy)
 * `knowledge.js` – zwizualizowane sekcje wiedzy 
 * `knowledge-modal.js` - ciąg dalszy sekcji wiedzy
 * `srs.js` – system SRS (Space Repetition System) do powtórek (fiszki)
 
+<<<<<<< HEAD
 ####  Layout i Interfejs
 * `layout.js` – odpowiada za dopasowywanie się sekcji do wielkości ekranu
 * `sidebar.js` – odpowiedzialny za boczny pasek (jego ukrywanie się i pokazywanie)
+=======
+#### 📁 `/app/js/ui/` (Layout i Interfejs)
+* `layout.js` – odpowiada za dopasowywanie się sekcji do wielkości ekranu
+* `sidebar.js` – odpowiedzialny za boczny pasek
+>>>>>>> 827a55c (refactor: reorganize app/js into modular subdirectories)
 
 ---
 

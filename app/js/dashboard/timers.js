@@ -1,6 +1,6 @@
 // js/timers.js
-import { db, USER_NODE } from './firebase.js';
-import { getTodayStr } from './utils.js';
+import { db, USER_NODE } from '../core/firebase.js';
+import { getTodayStr } from '../core/utils.js';
 
 let focusInterval;
 let isFocusPaused = false;
