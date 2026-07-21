@@ -1,6 +1,6 @@
-// js/srs.js
 import { db, USER_NODE } from '../core/firebase.js';
 import { getTodayStr } from '../core/utils.js';
+import { DEFAULT_SRS_DECK } from './data/srs_starter.js';
 
 export function initSRS() {
     const qDisplay = document.getElementById('srs-q');
@@ -45,7 +45,8 @@ export function initSRS() {
         const activeTopic = window.ACTIVE_SRS_TOPIC || "all";
         
         dbSrsRef.once('value').then(snap => {
-            const deck = snap.val();
+            const val = snap.val();
+            const deck = (val && Object.keys(val).length > 0) ? val : DEFAULT_SRS_DECK;
             let dueCards = [];
             
             for(let key in deck) {
