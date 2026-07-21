@@ -148,7 +148,7 @@ async function run() {
               tokens: fcmTokens
           };
           try {
-              const response = await messaging.sendMulticast(message);
+              const response = await messaging.sendEachForMulticast(message);
               console.log(`Sent "${payload.title}":`, response.successCount, "successes,", response.failureCount, "failures.");
           } catch (e) {
               console.error("Error sending notification:", e);
