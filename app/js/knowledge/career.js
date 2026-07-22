@@ -174,21 +174,22 @@ export const CAREER_ROADMAP = [
     {
         id: "phase8",
         title: "8. Portfolio & Capstone Projects (Zwieńczenie)",
-        badge: "Portfolio & CV",
+        badge: "Portfolio & Web Dev",
         color: "#FF2D55",
         icon: "trophy",
-        goal: "Po tej fazie posiadasz publiczne, profesjonalne portfolio na GitHubie oraz gotowe projekty do pokazania rekruterom i pracodawcom.",
-        desc: "Praktyczne zwieńczenie nauki: budowanie realnych aplikacji i dashboardów przekształconych w publiczne portfolio.",
+        goal: "Po tej fazie posiadasz publiczne, profesjonalne portfolio na GitHubie oraz interaktywne aplikacje webowe do pokazania rekruterom i pracodawcom.",
+        desc: "Praktyczne zwieńczenie nauki: budowanie gotowych serwisów webowych (HTML/CSS/JS), aplikacji AI oraz raportów przekształconych w publiczne portfolio.",
         resources: [
             { name: "📁 [Lokalny Folder] Rozwój [8]", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] ROZWÓJ/[8] PORTFOLIO I PROJEKTY" },
-            { name: "📁 [Folder Lokalny] Markdown CV", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] PROGRAMOWANIE/markdown-cv-master" },
-            { name: "🔗 [GitHub Topic] #powerbi-projects", url: "https://github.com/topics/powerbi-projects" }
+            { name: "📁 [Folder Lokalny] MS Web Dev", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] PROGRAMOWANIE/Web-Dev-For-Beginners-main/Web-Dev-For-Beginners-main" },
+            { name: "🔗 [GitHub Repo] MS Web Dev", url: "https://github.com/microsoft/Web-Dev-For-Beginners" },
+            { name: "📁 [Folder Lokalny] Markdown CV", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] PROGRAMOWANIE/markdown-cv-master" }
         ],
         milestones: [
             { id: "m8_1", text: "Projekt Enterprise BI: Raport Power BI połączony z Azure SQL Database i RLS Security", est: "20-25h", test: "Opublikuj gotowy dashboard Power BI z dokumentacją architektury relacyjnej." },
-            { id: "m8_2", text: "Projekt Python ETL: Automatyczny skrypt pobierający dane z API i zapisujący w bazie", est: "20-25h", test: "Stwórz repozytorium ze skryptem Python uruchamianym automatycznie (np. GitHub Actions)." },
+            { id: "m8_2", text: "Projekt Python ETL & Web: Automatyczny skrypt API oraz dedykowany interfejs webowy (HTML/JS)", est: "20-25h", test: "Stwórz aplikację webową pobierającą dane z API i wyświetlającą je na interaktywnym wykresie." },
             { id: "m8_3", text: "Projekt Machine Learning: Model klasyfikacji/predykcji na realnym zbiorze z Kaggle", est: "25-30h", test: "Prześlij rozwiązaną analizę na Kaggle z opisem metodologii i wskaźników dokładności." },
-            { id: "m8_4", text: "Publiczne Portfolio & CV: Dokumentacja projektów na GitHubie i prezentacja profilowa", est: "15-20h", test: "Przygotuj stronę profilową GitHub Readme z opisem swoich projektów i umieść ją publicznie." }
+            { id: "m8_4", text: "Publiczne Web Portfolio & CV: Dokumentacja projektów na GitHub Pages i własna witryna PWA", est: "15-20h", test: "Przygotuj stronę profilową GitHub Readme oraz witrynę portfolio HTML/CSS/JS i umieść ją publicznie." }
         ]
     }
 ];
@@ -242,7 +243,7 @@ function renderCareerRoadmap(container, completedMap) {
     let rankColor = "var(--text-secondary)";
     
     if (totalPct >= 89) {
-        currentRank = "💎 Master Data & AI Architect";
+        currentRank = "💎 Master Data, Web & AI Architect";
         rankColor = "#FF2D55";
     } else if (totalPct >= 78) {
         currentRank = "🧬 AI Systems Engineer";
@@ -277,7 +278,7 @@ function renderCareerRoadmap(container, completedMap) {
                         <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary); margin: 0;">9-Etapowy System Progresu Kariery</h3>
                         <span style="font-size: 0.75rem; font-weight: 700; color: ${rankColor}; background: rgba(255,255,255,0.05); border: 1px solid ${rankColor}; padding: 3px 12px; border-radius: 20px;">${currentRank}</span>
                     </div>
-                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 6px 0 0 0;">Atomowe kamienie milowe z weryfikacją: Math ➔ Excel ➔ SQL ➔ Azure ➔ Power BI ➔ Python ➔ ML ➔ AI ➔ Portfolio</p>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 6px 0 0 0;">Atomowe kamienie milowe z weryfikacją: Math ➔ Excel ➔ SQL ➔ Azure ➔ Power BI ➔ Python ➔ ML ➔ AI ➔ Web Portfolio</p>
                 </div>
                 
                 <!-- Prawy Blok Liczników Godzinowych i Milestones -->
