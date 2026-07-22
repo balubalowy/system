@@ -1,8 +1,10 @@
 import { db, USER_NODE } from '../core/firebase.js';
 import { escapeHTML } from '../core/utils.js';
 import { DEFAULT_KNOWLEDGE_TREE } from './data/index.js';
+import { initCareerProgress } from './career.js';
 
 document.addEventListener('DOMContentLoaded', () => {
+    initCareerProgress();
     const currentTheme = localStorage.getItem('theme') || 'dark';
     document.documentElement.setAttribute('data-theme', currentTheme);
     const themeBtn = document.getElementById('theme-toggle-btn');
