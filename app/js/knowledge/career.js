@@ -10,6 +10,10 @@ export const CAREER_ROADMAP = [
         icon: "sheet",
         goal: "Po tej fazie potrafisz bezbłędnie czyścić, przekształcać i łączyć surowe pliki danych bez używania baz danych.",
         desc: "Opanowanie zaawansowanych funkcji Excela, automatyzacji Power Query i dynamicznych formuł tablicowych.",
+        resources: [
+            { name: "📁 Otwórz folder programowania", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] PROGRAMOWANIE" },
+            { name: "🔗 GitHub: Excel Formulas Guide", url: "https://github.com/mdeering/excel-formulas" }
+        ],
         milestones: [
             { id: "m1_1", text: "Excel Advanced: XLOOKUP, INDEX/MATCH, Tabele Przestawne i pola kalkulowane", est: "~1 tyg." },
             { id: "m1_2", text: "Power Query: Importowanie danych, Unpivot, czyszczenie i przekształcanie kolumn", est: "~1 tyg." },
@@ -24,6 +28,11 @@ export const CAREER_ROADMAP = [
         icon: "database",
         goal: "Po tej fazie umiesz samodzielnie wyciągać, filtrować i łączyć dane z wielu relacyjnych tabel transakcyjnych do raportu.",
         desc: "Naturalna progresja SQL: od prostej projekcji danych, przez złączenia relacyjne, po zaawansowane funkcje okienkowe.",
+        resources: [
+            { name: "🎮 SQL Murder Mystery (Gra z zapytaniami)", url: "https://github.com/NUKnightLab/sql-murder-mystery" },
+            { name: "🔗 Ultimate SQL Resources Hub", url: "https://github.com/amartinson193/The-Ultimate-List-of-Free-SQL-Resources" },
+            { name: "📊 DataWithBaraa SQL Course", url: "https://github.com/BaraaKhatibSalkini/sql-ultimate-course" }
+        ],
         milestones: [
             { id: "m2_1", text: "Podstawy SQL: Zapytania SELECT, WHERE, ORDER BY, GROUP BY oraz HAVING", est: "~1-2 tyg." },
             { id: "m2_2", text: "SQL Relacyjny: Złączenia tabel INNER JOIN, LEFT JOIN, RIGHT JOIN i obsługa NULL", est: "~2 tyg." },
@@ -38,6 +47,10 @@ export const CAREER_ROADMAP = [
         icon: "cloud",
         goal: "Po tej fazie rozumiesz architekturę chmury i potrafisz podłączyć się do Azure SQL Database oraz zautomatyzować rury danych w Data Factory.",
         desc: "Fundament chmurowy niezbędny do pracy w dużej skali (Enterprise BI). Bez chmury Power BI działa po omacku przy większych projektach.",
+        resources: [
+            { name: "☁️ Microsoft AZ-900 Official Repo", url: "https://github.com/MicrosoftLearning/AZ-900T0A-MicrosoftAzureFundamentals" },
+            { name: "🔗 Azure Data Factory Samples", url: "https://github.com/Azure/Azure-DataFactory" }
+        ],
         milestones: [
             { id: "m3_1", text: "Azure Fundamentals (AZ-900): Koncepcje chmury, usługi IaaS/PaaS/SaaS i zasoby Azure", est: "~2 tyg." },
             { id: "m3_2", text: "Azure SQL Database: Tworzenie, zarządzanie i odczyt chmurowej bazy relacyjnej", est: "~2 tyg." },
@@ -52,6 +65,11 @@ export const CAREER_ROADMAP = [
         icon: "bar-chart-3",
         goal: "Po tej fazie potrafisz zbudować od zera zautomatyzowany, czytelny dashboard KPI z modelowaniem relacji i kalkulacjami DAX.",
         desc: "Nauka Power BI w podziale na rosnącą złożoność: od interfejsu i importu z Azure SQL, po model danych, DAX i publikację z RLS.",
+        resources: [
+            { name: "🌟 Awesome Power BI Hub", url: "https://github.com/NajiElKotob/Awesome-Power-BI" },
+            { name: "📊 MS Power BI Official Samples (.pbix)", url: "https://github.com/microsoft/powerbi-desktop-samples" },
+            { name: "⚡ 30 Days of Power BI Learning", url: "https://github.com/Prath-Digital/MS_Power_BI_Practice" }
+        ],
         milestones: [
             { id: "m4_1", text: "Interfejs & Import: Pobieranie danych z Azure SQL/Excela i praca w Edytorze Power Query", est: "~1 tyg." },
             { id: "m4_2", text: "Data Model & Star Schema: Tworzenie relacji 1:N, tabele faktów i wymiarów (Kalendarz)", est: "~2 tyg." },
@@ -65,8 +83,12 @@ export const CAREER_ROADMAP = [
         badge: "Python",
         color: "var(--accent-warning, #FF9F0A)",
         icon: "code-2",
-        goal: "Po tej fazie umiesz pisać własne skrypty automatyzacji, analizować duże ramki danych w Pandas i zbierać dane przez API/Scraping.",
+        goal: "Po tej fazie umiesz pisać własne skrypts automatyzacji, analizować duże ramki danych w Pandas i zbierać dane przez API/Scraping.",
         desc: "Programowanie analityczne w Pythonie: od składni i operacji na plikach, przez manipulację w Pandas, po zaawansowane zbieranie danych z sieci.",
+        resources: [
+            { name: "📁 MS Data Science (Lokalny folder)", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] PROGRAMOWANIE/Data-Science-For-Beginners-main/Data-Science-For-Beginners-main" },
+            { name: "🔗 MS Data Science (GitHub)", url: "https://github.com/microsoft/Data-Science-For-Beginners" }
+        ],
         milestones: [
             { id: "m5_1", text: "Python Core: Składnia, pętle, funkcje, dict comprehensions i obsługa try/except", est: "~2 tyg." },
             { id: "m5_2", text: "Pandas DataFrames: Wczytywanie CSV/XLSX, filtrowanie loc/iloc oraz agregacje groupby", est: "~2 tyg." },
@@ -83,6 +105,10 @@ export const CAREER_ROADMAP = [
         icon: "activity",
         goal: "Po tej fazie umiesz trenować i ewaluować podstawowe modele uczenia maszynowego w Scikit-Learn do prognozowania i klasyfikacji.",
         desc: "Wejście w uczenie maszynowe przed AI Engineering: nauka innego sposobu myślenia (statystyka predykcyjna zamiast prostego kodowania).",
+        resources: [
+            { name: "📁 MS Machine Learning (Lokalny folder)", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] PROGRAMOWANIE/ML-For-Beginners-main/ML-For-Beginners-main" },
+            { name: "🔗 MS Machine Learning (GitHub)", url: "https://github.com/microsoft/ML-For-Beginners" }
+        ],
         milestones: [
             { id: "m6_1", text: "Microsoft ML for Beginners (EN): Wprowadzenie do uczenia z nadzorem i bez nadzoru", est: "~2 tyg." },
             { id: "m6_2", text: "Regresja & Przewidywanie: Regresja liniowa, wieloraka i wskaźniki R^2 / MAE / RMSE", est: "~2 tyg." },
@@ -97,6 +123,11 @@ export const CAREER_ROADMAP = [
         icon: "brain-circuit",
         goal: "Po tej fazie potrafisz budować własne aplikacje wykorzystujące RAG, agentów AI oraz rozumiesz głęboką teorię z OSSU Computer Science.",
         desc: "Zaawansowany etap AI: architektoniczne łączenie modeli językowych z bazami wektorowymi, dostrajaniem wag i teorią akademicką.",
+        resources: [
+            { name: "📁 OSSU Computer Science (Lokalny folder)", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] PROGRAMOWANIE/computer-science-master/computer-science-master" },
+            { name: "🔗 OSSU Computer Science (GitHub)", url: "https://github.com/ossu/computer-science" },
+            { name: "📁 ML Curriculum (Lokalny folder)", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] PROGRAMOWANIE/machine-learning-curriculum-master/machine-learning-curriculum-master" }
+        ],
         milestones: [
             { id: "m7_1", text: "Prompt Engineering & AI: Role systemowe, eliminacja halucynacji i nadrzędny kontekst", est: "~1-2 tyg." },
             { id: "m7_2", text: "RAG & Bazy Wektorowe: Architektura Chunking -> Embeddings -> Vector Search", est: "~3 tyg." },
@@ -129,7 +160,6 @@ function renderCareerRoadmap(container, completedMap) {
 
     const totalPct = totalMilestones > 0 ? Math.round((completedCount / totalMilestones) * 100) : 0;
     
-    // Określenie rzetelnej rangi w zależności od wykończonego postępu w 7 fazach
     let currentRank = "Nowicjusz Analityki (Excel & Power Query)";
     let rankColor = "var(--text-secondary)";
     
@@ -211,9 +241,20 @@ function renderCareerRoadmap(container, completedMap) {
                     <span>Postęp Fazy ${phaseIdx + 1}</span>
                     <span style="font-family: var(--font-mono); color: ${phase.color}; font-weight: 600;">${phasePct}%</span>
                 </div>
-                <div style="height: 5px; background: rgba(255, 255, 255, 0.05); border-radius: 3px; overflow: hidden; margin-bottom: 14px;">
+                <div style="height: 5px; background: rgba(255, 255, 255, 0.05); border-radius: 3px; overflow: hidden; margin-bottom: 12px;">
                     <div style="width: ${phasePct}%; height: 100%; background: ${phase.color}; transition: width 0.3s ease;"></div>
                 </div>
+
+                <!-- Zasoby & Linki do Folderów / GitHub -->
+                ${phase.resources && phase.resources.length > 0 ? `
+                    <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px dashed var(--border-subtle);">
+                        ${phase.resources.map(res => `
+                            <a href="${res.url}" target="_blank" rel="noopener" style="font-size: 0.73rem; color: var(--text-primary); background: rgba(255,255,255,0.04); border: 1px solid var(--border-subtle); padding: 3px 8px; border-radius: 4px; text-decoration: none; display: flex; align-items: center; gap: 4px; transition: background 0.2s;" onmouseenter="this.style.background='rgba(255,255,255,0.08)'" onmouseleave="this.style.background='rgba(255,255,255,0.04)'">
+                                <span>${res.name}</span>
+                            </a>
+                        `).join('')}
+                    </div>
+                ` : ''}
 
                 <!-- Lista Kamieni Milowych z Estymacją Czasu -->
                 <div style="display: flex; flex-direction: column; gap: 8px; margin-top: auto;">
