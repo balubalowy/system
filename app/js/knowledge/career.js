@@ -260,7 +260,7 @@ function renderCareerRoadmap(container, completedMap) {
             </div>
 
             <!-- Karty 9 Faz Kariery -->
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 16px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 16px; align-items: start;">
     `;
 
     CAREER_ROADMAP.forEach((phase, phaseIdx) => {
@@ -307,7 +307,7 @@ function renderCareerRoadmap(container, completedMap) {
                 ` : ''}
 
                 <!-- Atomowa Lista Kamieni Milowych z Estymacją w Godzinach i Kryterium Weryfikacji -->
-                <div style="display: flex; flex-direction: column; gap: 10px; margin-top: auto;">
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
         `;
 
         phase.milestones.forEach(m => {
