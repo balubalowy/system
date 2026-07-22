@@ -193,6 +193,15 @@ export const CAREER_ROADMAP = [
     }
 ];
 
+function parseHours(estStr) {
+    if (!estStr) return { min: 0, max: 0 };
+    const match = estStr.match(/(\d+)(?:-(\d+))?h/i);
+    if (!match) return { min: 0, max: 0 };
+    const min = parseInt(match[1], 10);
+    const max = match[2] ? parseInt(match[2], 10) : min;
+    return { min, max };
+}
+
 export function initCareerProgress() {
     const container = document.getElementById('career-progress-container');
     if (!container) return;
@@ -207,10 +216,23 @@ function renderCareerRoadmap(container, completedMap) {
     let totalMilestones = 0;
     let completedCount = 0;
 
+    let remHoursMin = 0;
+    let remHoursMax = 0;
+    let doneHoursMin = 0;
+    let doneHoursMax = 0;
+
     CAREER_ROADMAP.forEach(phase => {
         totalMilestones += phase.milestones.length;
         phase.milestones.forEach(m => {
-            if (completedMap[m.id] === true) completedCount++;
+            const h = parseHours(m.est);
+            if (completedMap[m.id] === true) {
+                completedCount++;
+                doneHoursMin += h.min;
+                doneHoursMax += h.max;
+            } else {
+                remHoursMin += h.min;
+                remHoursMax += h.max;
+            }
         });
     });
 
@@ -248,7 +270,7 @@ function renderCareerRoadmap(container, completedMap) {
     let html = `
         <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-subtle); border-radius: var(--radius-md, 12px); padding: 20px; margin-bottom: 24px;">
             <!-- Nagłówek Poziomu Kariery -->
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px; margin-bottom: 16px;">
                 <div>
                     <div style="display: flex; align-items: center; gap: 10px;">
                         <i data-lucide="trophy" style="width: 22px; height: 22px; color: ${rankColor};"></i>
@@ -257,9 +279,14 @@ function renderCareerRoadmap(container, completedMap) {
                     </div>
                     <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 6px 0 0 0;">Atomowe kamienie milowe z weryfikacją: Math ➔ Excel ➔ SQL ➔ Azure ➔ Power BI ➔ Python ➔ ML ➔ AI ➔ Portfolio</p>
                 </div>
-                <div style="text-align: right; min-width: 140px;">
-                    <div style="font-size: 1.4rem; font-family: var(--font-mono); font-weight: 700; color: ${rankColor};">${totalPct}%</div>
+                
+                <!-- Prawy Blok Liczników Godzinowych i Milestones -->
+                <div style="text-align: right; min-width: 220px; display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
+                    <div style="font-size: 1.5rem; font-family: var(--font-mono); font-weight: 700; color: ${rankColor}; line-height: 1;">${totalPct}%</div>
                     <div style="font-size: 0.75rem; color: var(--text-secondary);">${completedCount} z ${totalMilestones} kamieni milowych</div>
+                    <div style="font-size: 0.78rem; font-family: var(--font-mono); color: var(--accent-warning, #FF9F0A); margin-top: 4px; font-weight: 600; background: rgba(255,159,10,0.08); border: 1px solid rgba(255,159,10,0.25); padding: 4px 10px; border-radius: 6px; display: inline-flex; align-items: center; gap: 6px;" title="Szacowana suma pozostałych godzin nauki">
+                        <i data-lucide="clock" style="width: 14px; height: 14px;"></i> Pozostało: <strong>${remHoursMin}-${remHoursMax}h</strong> pracy
+                    </div>
                 </div>
             </div>
 
@@ -274,8 +301,17 @@ function renderCareerRoadmap(container, completedMap) {
 
     CAREER_ROADMAP.forEach((phase, phaseIdx) => {
         let phaseDone = 0;
+        let phaseRemMin = 0;
+        let phaseRemMax = 0;
+
         phase.milestones.forEach(m => {
-            if (completedMap[m.id] === true) phaseDone++;
+            const h = parseHours(m.est);
+            if (completedMap[m.id] === true) {
+                phaseDone++;
+            } else {
+                phaseRemMin += h.min;
+                phaseRemMax += h.max;
+            }
         });
         const phasePct = Math.round((phaseDone / phase.milestones.length) * 100);
 
@@ -296,9 +332,12 @@ function renderCareerRoadmap(container, completedMap) {
                     <div style="font-size: 0.78rem; color: var(--text-primary); line-height: 1.35;">${phase.goal}</div>
                 </div>
 
-                <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 4px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 4px;">
                     <span>Postęp Fazy ${phaseIdx}</span>
-                    <span style="font-family: var(--font-mono); color: ${phase.color}; font-weight: 600;">${phasePct}%</span>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <span style="font-family: var(--font-mono); color: var(--text-secondary); opacity: 0.8; font-size: 0.7rem;">(⏱️ ${phaseRemMin}-${phaseRemMax}h)</span>
+                        <span style="font-family: var(--font-mono); color: ${phase.color}; font-weight: 600;">${phasePct}%</span>
+                    </div>
                 </div>
                 <div style="height: 5px; background: rgba(255, 255, 255, 0.05); border-radius: 3px; overflow: hidden; margin-bottom: 12px;">
                     <div style="width: ${phasePct}%; height: 100%; background: ${phase.color}; transition: width 0.3s ease;"></div>
