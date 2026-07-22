@@ -36,9 +36,10 @@ export function initInteractiveTasks() {
                 
                 if (activeTasks.length > 0) {
                     activeTasks.forEach(activeTask => {
+                        let cleanActive = activeTask.replace(/^[-*]\s*/, '').trim();
                         html += `
                         <div class="task-active-card" style="border-left: 2px solid ${b.btnColor};">
-                            <div style="font-size:0.95rem; font-weight:500; color:var(--text-primary); line-height:1.4; margin-bottom: 12px;">${escapeHTML(activeTask)}</div>
+                            <div style="font-size:0.95rem; font-weight:500; color:var(--text-primary); line-height:1.4; margin-bottom: 12px;">${escapeHTML(cleanActive)}</div>
                             <div style="display:flex; gap:6px;">
                                 <button class="btn btn-ghost task-action-btn" data-key="${b.key}" data-action="reject" data-task="${encodeURIComponent(activeTask)}" style="flex:1; padding: 6px; font-size:0.8rem; color:var(--accent-warning); border:1px solid rgba(255,159,10,0.2);" title="Wyrzuć z powrotem do zrzutni"><i data-lucide="x" style="width:14px; margin-right:4px;"></i> Cofnij</button>
                                 <button class="btn btn-secondary task-action-btn" data-key="${b.key}" data-action="complete" data-task="${encodeURIComponent(activeTask)}" style="flex:1; padding: 6px; font-size:0.8rem; color:var(--accent-success); border:1px solid rgba(43,191,113,0.3);"><i data-lucide="check" style="width:14px; margin-right:4px;"></i> Ukończ</button>
@@ -52,8 +53,8 @@ export function initInteractiveTasks() {
                     html += `<div style="margin-bottom: 8px; font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase;">Zrzutnia Zadań:</div>`;
                     html += `<div style="display:flex; flex-direction:column; gap:4px;">`;
                     lines.forEach(line => {
-                        let cleanLine = line.startsWith('-') ? line.substring(1).trim() : line;
-                        html += `<a href="#" class="task-list-link task-action-btn" data-key="${b.key}" data-action="activate" data-task="${encodeURIComponent(line)}" title="Wrzut do góry!"><span style="line-height:1.4;">- ${escapeHTML(cleanLine)}</span> <i data-lucide="arrow-up-right" style="width:14px; height:14px; flex-shrink:0; opacity:0.5; margin-top:2px;"></i></a>`;
+                        let cleanLine = line.replace(/^[-*]\s*/, '').trim();
+                        html += `<a href="#" class="task-list-link task-action-btn" data-key="${b.key}" data-action="activate" data-task="${encodeURIComponent(line)}" title="Wrzut do góry!"><span style="line-height:1.4;">${escapeHTML(cleanLine)}</span> <i data-lucide="arrow-up-right" style="width:14px; height:14px; flex-shrink:0; opacity:0.5; margin-top:2px;"></i></a>`;
                     });
                     html += `</div></div>`;
                 }
@@ -129,7 +130,7 @@ window.quickAddTask = function(key) {
         db.ref(USER_NODE + 'inbox/' + key).once('value').then(s => {
             let text = s.val() || "";
             let lines = text.split('\n').filter(l => l.trim() !== "");
-            lines.push("- " + task.trim());
+            lines.push(task.trim().replace(/^[-*]\s*/, ''));
             db.ref(USER_NODE + 'inbox/' + key).set(lines.join('\n'));
         });
     }

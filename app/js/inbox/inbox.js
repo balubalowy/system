@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const input = document.createElement('input');
                 input.className = 'inbox-task-input';
                 input.type = 'text';
-                input.value = text.startsWith('- ') ? text.substring(2) : text;
+                input.value = text.replace(/^[-*]\s*/, '').trim();
                 input.placeholder = "Wpisz czynność...";
                 
                 const delBtn = document.createElement('button');
@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const val = input.value.trim();
                     if(val) {
                         db.ref(USER_NODE + 'inbox_completed').push({
-                            task: val,
+                            task: val.replace(/^[-*]\s*/, ''),
                             category: key,
                             timestamp: new Date().toISOString()
                         });
@@ -84,8 +84,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     const inputs = container.querySelectorAll('.inbox-task-input');
                     const lines = [];
                     inputs.forEach(inp => {
-                        const val = inp.value.trim();
-                        if(val.length > 0) lines.push("- " + val);
+                        const val = inp.value.trim().replace(/^[-*]\s*/, '');
+                        if(val.length > 0) lines.push(val);
                     });
                     db.ref(USER_NODE + 'inbox/' + key).set(lines.join('\n'));
                 }, 800);
