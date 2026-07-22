@@ -3,6 +3,25 @@ import { db, USER_NODE } from '../core/firebase.js';
 
 export const CAREER_ROADMAP = [
     {
+        id: "phase0",
+        title: "0. Matematyka & Statystyka (Fundament Analityczny)",
+        badge: "Math & Stats",
+        color: "var(--accent-info, #54A0FF)",
+        icon: "calculator",
+        goal: "Po tej fazie potrafisz interpretować rozkłady, wnioskować statystycznie z próby, obliczać korelacje i rozumieć macierzowe operacje na wielowymiarowych zbiorach danych.",
+        desc: "Ścisłe podstawy ilościowe niezbędne do prawidłowej interpretacji wyników biznesowych, wnioskowania i późniejszego zrozumienia algorytmów ML.",
+        resources: [
+            { name: "📐 B-Core: Baza Wiedzy - Matematyka", url: "knowledge.html" }
+        ],
+        milestones: [
+            { id: "m0_1", text: "Statystyka Opisowa: Średnia, mediana, odchylenie standardowe, kwartyle, skośność i korelacje", est: "~1-2 tyg." },
+            { id: "m0_2", text: "Rachunek Prawdopodobieństwa: Zdarzenia, prawdopodobieństwo warunkowe, wzór Bayesa i rozkład normalny", est: "~2 tyg." },
+            { id: "m0_3", text: "Statystyka Matematyczna: Testowanie hipotez (p-value, test t, Chi-kwadrat) i przedziały ufności", est: "~2 tyg." },
+            { id: "m0_4", text: "Algebra Liniowa: Wektory, operacje macierzowe (mnożenie, transpozycja, wyznaczniki) i układy równań", est: "~2 tyg." },
+            { id: "m0_5", text: "Analiza Danych Wielowymiarowych: Redukcja wymiarowości (PCA), analiza skupień i standaryzacja danych", est: "~2-3 tyg." }
+        ]
+    },
+    {
         id: "phase1",
         title: "1. Excel & Dane (Fundament)",
         badge: "Fundament",
@@ -83,7 +102,7 @@ export const CAREER_ROADMAP = [
         badge: "Python",
         color: "var(--accent-warning, #FF9F0A)",
         icon: "code-2",
-        goal: "Po tej fazie umiesz pisać własne skrypts automatyzacji, analizować duże ramki danych w Pandas i zbierać dane przez API/Scraping.",
+        goal: "Po tej fazie umiesz pisać własne skrypty automatyzacji, analizować duże ramki danych w Pandas i zbierać dane przez API/Scraping.",
         desc: "Programowanie analityczne w Pythonie: od składni i operacji na plikach, przez manipulację w Pandas, po zaawansowane zbieranie danych z sieci.",
         resources: [
             { name: "📁 MS Data Science (Lokalny folder)", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] PROGRAMOWANIE/Data-Science-For-Beginners-main/Data-Science-For-Beginners-main" },
@@ -160,28 +179,28 @@ function renderCareerRoadmap(container, completedMap) {
 
     const totalPct = totalMilestones > 0 ? Math.round((completedCount / totalMilestones) * 100) : 0;
     
-    let currentRank = "Nowicjusz Analityki (Excel & Power Query)";
+    let currentRank = "📐 Student Matematyki & Statystyki";
     let rankColor = "var(--text-secondary)";
     
-    if (totalPct >= 86) {
+    if (totalPct >= 88) {
         currentRank = "🔥 Master AI & Cloud Architect";
         rankColor = "var(--accent-purple, #BF5AF2)";
-    } else if (totalPct >= 72) {
+    } else if (totalPct >= 75) {
         currentRank = "🤖 Machine Learning Engineer";
         rankColor = "var(--accent-danger, #FF375F)";
-    } else if (totalPct >= 58) {
+    } else if (totalPct >= 63) {
         currentRank = "🐍 Python Data Scientist";
         rankColor = "var(--accent-warning, #FF9F0A)";
-    } else if (totalPct >= 43) {
+    } else if (totalPct >= 50) {
         currentRank = "📈 Senior Power BI & Business Analyst";
         rankColor = "var(--accent-success, #30D158)";
-    } else if (totalPct >= 29) {
+    } else if (totalPct >= 38) {
         currentRank = "☁️ Azure Cloud & BI Developer";
         rankColor = "var(--accent-secondary, #5E5CE6)";
-    } else if (totalPct >= 15) {
+    } else if (totalPct >= 25) {
         currentRank = "📊 SQL Data Specialist";
         rankColor = "var(--accent-info, #54A0FF)";
-    } else if (totalPct > 0) {
+    } else if (totalPct >= 13) {
         currentRank = "📂 Excel & Data Analyst";
         rankColor = "var(--accent-primary, #0A84FF)";
     }
@@ -193,10 +212,10 @@ function renderCareerRoadmap(container, completedMap) {
                 <div>
                     <div style="display: flex; align-items: center; gap: 10px;">
                         <i data-lucide="trophy" style="width: 22px; height: 22px; color: ${rankColor};"></i>
-                        <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary); margin: 0;">7-Etapowy System Progresu Kariery</h3>
+                        <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary); margin: 0;">8-Etapowy System Progresu Kariery</h3>
                         <span style="font-size: 0.75rem; font-weight: 700; color: ${rankColor}; background: rgba(255,255,255,0.05); border: 1px solid ${rankColor}; padding: 3px 12px; border-radius: 20px;">${currentRank}</span>
                     </div>
-                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 6px 0 0 0;">Spójna progresja trudności: Excel ➔ SQL ➔ Azure ➔ Power BI ➔ Python ➔ ML ➔ AI Engineering</p>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 6px 0 0 0;">Spójna progresja: Math & Stats ➔ Excel ➔ SQL ➔ Azure ➔ Power BI ➔ Python ➔ ML ➔ AI Engineering</p>
                 </div>
                 <div style="text-align: right; min-width: 140px;">
                     <div style="font-size: 1.4rem; font-family: var(--font-mono); font-weight: 700; color: ${rankColor};">${totalPct}%</div>
@@ -209,7 +228,7 @@ function renderCareerRoadmap(container, completedMap) {
                 <div style="width: ${totalPct}%; height: 100%; background: ${rankColor}; transition: width 0.4s ease;"></div>
             </div>
 
-            <!-- Karty 7 Faz Kariery -->
+            <!-- Karty 8 Faz Kariery -->
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px;">
     `;
 
@@ -238,7 +257,7 @@ function renderCareerRoadmap(container, completedMap) {
                 </div>
 
                 <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 4px;">
-                    <span>Postęp Fazy ${phaseIdx + 1}</span>
+                    <span>Postęp Fazy ${phaseIdx}</span>
                     <span style="font-family: var(--font-mono); color: ${phase.color}; font-weight: 600;">${phasePct}%</span>
                 </div>
                 <div style="height: 5px; background: rgba(255, 255, 255, 0.05); border-radius: 3px; overflow: hidden; margin-bottom: 12px;">
