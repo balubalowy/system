@@ -11,6 +11,7 @@ export const CAREER_ROADMAP = [
         goal: "Po tej fazie potrafisz interpretować rozkłady, wnioskować statystycznie z próby, obliczać korelacje i rozumieć macierzowe operacje na wielowymiarowych zbiorach danych.",
         desc: "Ścisłe podstawy ilościowe niezbędne do prawidłowej interpretacji wyników biznesowych, wnioskowania i późniejszego zrozumienia algorytmów ML.",
         resources: [
+            { name: "📁 [Lokalny Folder] Rozwój [0]", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] ROZWÓJ/[0] MATEMATYKA I STATYSTYKA" },
             { name: "📚 [Baza B-Core] Matematyka & Statystyka", url: "knowledge.html" }
         ],
         milestones: [
@@ -33,7 +34,8 @@ export const CAREER_ROADMAP = [
         goal: "Po tej fazie potrafisz bezbłędnie czyścić, przekształcać i łączyć surowe pliki danych bez używania baz danych.",
         desc: "Opanowanie zaawansowanych funkcji Excela, automatyzacji Power Query i dynamicznych formuł tablicowych.",
         resources: [
-            { name: "📁 [Folder Lokalny] Programowanie", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] PROGRAMOWANIE" },
+            { name: "📁 [Lokalny Folder] Rozwój [1]", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] ROZWÓJ/[1] EXCEL I DANE" },
+            { name: "📁 [Lokalny Folder] Programowanie", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] PROGRAMOWANIE" },
             { name: "🔗 [GitHub Repo] Excel Formulas Guide", url: "https://github.com/mdeering/excel-formulas" }
         ],
         milestones: [
@@ -52,6 +54,7 @@ export const CAREER_ROADMAP = [
         goal: "Po tej fazie umiesz samodzielnie wyciągać, filtrować i łączyć dane z wielu relacyjnych tabel transakcyjnych do raportu.",
         desc: "Naturalna progresja SQL: od prostej projekcji danych, przez złączenia relacyjne, po zaawansowane funkcje okienkowe.",
         resources: [
+            { name: "📁 [Lokalny Folder] Rozwój [2]", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] ROZWÓJ/[2] SQL I BAZY DANYCH" },
             { name: "🎮 [Praktyczna Gra] SQL Murder Mystery", url: "https://github.com/NUKnightLab/sql-murder-mystery" },
             { name: "🔗 [GitHub Repo] Ultimate SQL Resources Hub", url: "https://github.com/amartinson193/The-Ultimate-List-of-Free-SQL-Resources" },
             { name: "📚 [GitHub Kurs] DataWithBaraa SQL Course", url: "https://github.com/BaraaKhatibSalkini/sql-ultimate-course" }
@@ -72,6 +75,7 @@ export const CAREER_ROADMAP = [
         goal: "Po tej fazie rozumiesz architekturę chmury i potrafisz podłączyć się do Azure SQL Database oraz zautomatyzować rury danych w Data Factory.",
         desc: "Fundament chmurowy niezbędny do pracy w dużej skali (Enterprise BI). Bez chmury Power BI działa po omacku przy większych projektach.",
         resources: [
+            { name: "📁 [Lokalny Folder] Rozwój [3]", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] ROZWÓJ/[3] AZURE I CHMURA" },
             { name: "📚 [Oficjalny GitHub] Microsoft AZ-900", url: "https://github.com/MicrosoftLearning/AZ-900T0A-MicrosoftAzureFundamentals" },
             { name: "🔗 [GitHub Repo] Azure Data Factory Samples", url: "https://github.com/Azure/Azure-DataFactory" }
         ],
@@ -90,6 +94,7 @@ export const CAREER_ROADMAP = [
         goal: "Po tej fazie potrafisz zbudować od zera zautomatyzowany, czytelny dashboard KPI z modelowaniem relacji i kalkulacjami DAX.",
         desc: "Nauka Power BI w podziale na rosnącą złożoność: od interfejsu i importu z Azure SQL, po model danych, DAX i publikację z RLS.",
         resources: [
+            { name: "📁 [Lokalny Folder] Rozwój [4]", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] ROZWÓJ/[4] POWER BI I BUSINESS INTELLIGENCE" },
             { name: "🌟 [GitHub Repo] Awesome Power BI Hub", url: "https://github.com/NajiElKotob/Awesome-Power-BI" },
             { name: "📊 [Oficjalny GitHub] MS Power BI Samples (.pbix)", url: "https://github.com/microsoft/powerbi-desktop-samples" },
             { name: "⚡ [GitHub Kurs] 30 Days of Power BI Practice", url: "https://github.com/Prath-Digital/MS_Power_BI_Practice" }
@@ -111,6 +116,7 @@ export const CAREER_ROADMAP = [
         goal: "Po tej fazie umiesz pisać własne skrypty automatyzacji, analizować duże ramki danych w Pandas i zbierać dane przez API/Scraping.",
         desc: "Programowanie analityczne w Pythonie: od składni i operacji na plikach, przez manipulację w Pandas, po zaawansowane zbieranie danych z sieci.",
         resources: [
+            { name: "📁 [Lokalny Folder] Rozwój [5]", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] ROZWÓJ/[5] PYTHON I DATA ANALYTICS" },
             { name: "📁 [Folder Lokalny] MS Data Science", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] PROGRAMOWANIE/Data-Science-For-Beginners-main/Data-Science-For-Beginners-main" },
             { name: "🔗 [GitHub Repo] MS Data Science", url: "https://github.com/microsoft/Data-Science-For-Beginners" }
         ],
@@ -132,6 +138,7 @@ export const CAREER_ROADMAP = [
         goal: "Po tej fazie umiesz trenować i ewaluować podstawowe modele uczenia maszynowego w Scikit-Learn do prognozowania i klasyfikacji.",
         desc: "Wejście w uczenie maszynowe przed AI Engineering: nauka innego sposobu myślenia (statystyka predykcyjna zamiast prostego kodowania).",
         resources: [
+            { name: "📁 [Lokalny Folder] Rozwój [6]", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] ROZWÓJ/[6] MACHINE LEARNING" },
             { name: "📁 [Folder Lokalny] MS Machine Learning", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] PROGRAMOWANIE/ML-For-Beginners-main/ML-For-Beginners-main" },
             { name: "🔗 [GitHub Repo] MS Machine Learning", url: "https://github.com/microsoft/ML-For-Beginners" }
         ],
@@ -151,6 +158,7 @@ export const CAREER_ROADMAP = [
         goal: "Po tej fazie potrafisz budować własne aplikacje wykorzystujące RAG, agentów AI oraz rozumiesz głęboką teorię z OSSU Computer Science.",
         desc: "Zaawansowany etap AI: architektoniczne łączenie modeli językowych z bazami wektorowymi, dostrajaniem wag i teorią akademicką.",
         resources: [
+            { name: "📁 [Lokalny Folder] Rozwój [7]", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] ROZWÓJ/[7] AI ENGINEERING" },
             { name: "📁 [Folder Lokalny] OSSU Computer Science", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] PROGRAMOWANIE/computer-science-master/computer-science-master" },
             { name: "🔗 [GitHub Repo] OSSU Computer Science", url: "https://github.com/ossu/computer-science" },
             { name: "📁 [Folder Lokalny] ML Curriculum", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] PROGRAMOWANIE/machine-learning-curriculum-master/machine-learning-curriculum-master" }
@@ -172,6 +180,7 @@ export const CAREER_ROADMAP = [
         goal: "Po tej fazie posiadasz publiczne, profesjonalne portfolio na GitHubie oraz gotowe projekty do pokazania rekruterom i pracodawcom.",
         desc: "Praktyczne zwieńczenie nauki: budowanie realnych aplikacji i dashboardów przekształconych w publiczne portfolio.",
         resources: [
+            { name: "📁 [Lokalny Folder] Rozwój [8]", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] ROZWÓJ/[8] PORTFOLIO I PROJEKTY" },
             { name: "📁 [Folder Lokalny] Markdown CV", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] PROGRAMOWANIE/markdown-cv-master" },
             { name: "🔗 [GitHub Topic] #powerbi-projects", url: "https://github.com/topics/powerbi-projects" }
         ],
