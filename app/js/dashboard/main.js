@@ -12,6 +12,9 @@ document.addEventListener('DOMContentLoaded', () => {
     initSRS();
     initIdeasEngine();
     initInteractiveTasks();
-    
-    setTimeout(() => { initCharts(); }, 500);
+    if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(() => initCharts());
+    } else {
+        requestAnimationFrame(() => initCharts());
+    }
 });
