@@ -54,7 +54,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         yt: item.yt || null,
                         challenge: item.challenge || null,
                         description: item.desc || item.description || null,
-                        subtopics: item.subtopics || null
+                        subtopics: item.subtopics || null,
+                        resources: item.resources || null
                     };
                 }
                 
@@ -101,15 +102,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
             function getCatColor(cat) {
                 let t = cat.toLowerCase();
-                if(t.includes('matematyk') || t.includes('statystyk') || t.includes('algebra') || t.includes('excel') || t.includes('power')) return '#2BBF71';
-                if(t.includes('ekonomia') || t.includes('finans') || t.includes('wycena') || t.includes('rachunkowo')) return '#0A84FF';
-                if(t.includes('python') || t.includes('programowanie') || t.includes('bazy danych') || t.includes('sql')) return '#5E5CE6';
-                if(t.includes('rozwój') || t.includes('zarządzanie') || t.includes('biznes') || t.includes('mba') || t.includes('pmp')) return '#FF9F0A';
-                if(t.includes('adhd') || t.includes('kognitywistyka') || t.includes('dopamin')) return '#FF375F';
-                if(t.includes('angielski') || t.includes('język')) return '#64D2FF';
-                if(t.includes('prezentacja') || t.includes('wizualizacja')) return '#FF453A';
+                if(t.includes('finans') || t.includes('rachunkowo')) return '#0A84FF'; // niebieski
+                if(t.includes('excel') || t.includes('power')) return '#2BBF71'; // zielony
+                if(t.includes('statystyk') || t.includes('matematyk')) return '#FF9F0A'; // pomaranczowy
+                if(t.includes('sql')) return '#BF5AF2'; // fioletowy
+                if(t.includes('python')) return '#32ADE6'; // blekitny
+                if(t.includes('angielski') || t.includes('język')) return '#FF375F'; // koralowy
                 return '#8B949E';
             }
+
+            const PREFERRED_ORDER = [
+                'Finanse i rachunkowość',
+                'Excel i Power BI',
+                'Statystyka matematyczna i opisowa',
+                'SQL',
+                'Python',
+                'Język Angielski'
+            ];
 
             function renderSidebar() {
                 const sidebar = document.getElementById('k-sidebar');
@@ -119,6 +128,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     sidebar.innerHTML = '<div style="color:var(--text-secondary); text-align:center;">Oczekuje na zapis bazy przez Agenta w tle... (Odśwież)</div>';
                     return;
                 }
+
+                // Sztywne sortowanie wg ustalonej sekwencji
+                keys.sort((a, b) => {
+                    const idxA = PREFERRED_ORDER.indexOf(a);
+                    const idxB = PREFERRED_ORDER.indexOf(b);
+                    if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+                    if (idxA !== -1) return -1;
+                    if (idxB !== -1) return 1;
+                    return a.localeCompare(b);
+                });
 
                 sidebar.innerHTML = '';
                 
@@ -224,6 +243,14 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <div style="font-weight: 600; font-size: 0.75rem; color: ${color}; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; display:flex; align-items:center; gap:6px;"><i data-lucide="list-checks" style="width:12px; height:12px;"></i> Podtematy do opanowania</div>
                                     <ul style="font-size: 0.85rem; color: var(--text-primary); margin: 0; padding-left: 20px; line-height: 1.6; font-family:var(--font-sans);">
                                         ${details.subtopics.map(sub => `<li>${escapeHTML(sub)}</li>`).join('')}
+                                    </ul>
+                                </div>
+                                ` : ''}
+                                ${details.resources && details.resources.length > 0 ? `
+                                <div style="background: rgba(10, 132, 255, 0.05); border-left: 3px solid var(--accent-info); padding: 12px; border-radius: 0 4px 4px 0;">
+                                    <div style="font-weight: 600; font-size: 0.75rem; color: var(--accent-info); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; display:flex; align-items:center; gap:6px;"><i data-lucide="folder-git-2" style="width:12px; height:12px;"></i> Zasoby i materiały powiązane</div>
+                                    <ul style="font-size: 0.85rem; color: var(--text-primary); margin: 0; padding-left: 20px; line-height: 1.6; font-family:var(--font-sans);">
+                                        ${details.resources.map(res => `<li><a href="${escapeHTML(res.url)}" target="_blank" style="color:var(--accent-info); text-decoration:none;">${escapeHTML(res.name)}</a></li>`).join('')}
                                     </ul>
                                 </div>
                                 ` : ''}
