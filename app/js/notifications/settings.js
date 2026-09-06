@@ -51,8 +51,8 @@ function openSettingsModal() {
         permStatus = Notification.permission;
     }
     
-    const permLabel = permStatus === 'granted' ? '✅ Przyznane' : 
-                      permStatus === 'denied' ? '❌ Zablokowane' : '⏳ Nie pytano';
+    const permLabel = permStatus === 'granted' ? 'Przyznane' : 
+                      permStatus === 'denied' ? 'Zablokowane' : 'Nie pytano';
 
     const overlay = document.createElement('div');
     overlay.id = 'settings-modal-overlay';
@@ -160,7 +160,7 @@ function openSettingsModal() {
     document.getElementById('btn-enable-notif').addEventListener('click', async () => {
         const ok = await enableNotifications();
         if (ok) {
-            document.getElementById('btn-enable-notif').textContent = '✅ Powiadomienia aktywne';
+            document.getElementById('btn-enable-notif').textContent = 'Powiadomienia aktywne';
         }
     });
 

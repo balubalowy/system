@@ -31,12 +31,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Theme Switcher — cycles through all available themes
     const THEMES = ['dark', 'light', 'amber-night', 'ocean-deep', 'rose-dusk', 'arctic'];
     const THEME_LABELS = {
-        'dark': '🌑 Ciemny',
-        'light': '☀️ Jasny',
-        'amber-night': '🌙 Amber Noc',
-        'ocean-deep': '🌊 Ocean',
-        'rose-dusk': '🌸 Różowy Zmierzch',
-        'arctic': '❄️ Arktyczny'
+        'dark': 'Ciemny',
+        'light': 'Jasny',
+        'amber-night': 'Amber Noc',
+        'ocean-deep': 'Ocean',
+        'rose-dusk': 'Różowy Zmierzch',
+        'arctic': 'Arktyczny'
     };
     const currentTheme = localStorage.getItem('theme') || 'dark';
     document.documentElement.setAttribute('data-theme', currentTheme);

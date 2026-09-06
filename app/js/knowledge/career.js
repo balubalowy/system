@@ -11,8 +11,8 @@ export const CAREER_ROADMAP = [
         goal: "Po tej fazie potrafisz interpretować rozkłady, wnioskować statystycznie z próby, obliczać korelacje i rozumieć macierzowe operacje na wielowymiarowych zbiorach danych.",
         desc: "Ścisłe podstawy ilościowe niezbędne do prawidłowej interpretacji wyników biznesowych, wnioskowania i późniejszego zrozumienia algorytmów ML.",
         resources: [
-            { name: "📁 [Lokalny Folder] Rozwój [0]", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] ROZWÓJ/[0] MATEMATYKA I STATYSTYKA" },
-            { name: "📚 [Baza B-Core] Matematyka & Statystyka", url: "knowledge.html" }
+            { name: "[Lokalny Folder] Rozwój [0]", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] ROZWÓJ/[0] MATEMATYKA I STATYSTYKA" },
+            { name: "[Baza B-Core] Matematyka & Statystyka", url: "knowledge.html" }
         ],
         milestones: [
             { id: "m0_1", text: "Statystyka Opisowa: Średnia, mediana, odchylenie standardowe i kwartyle", est: "8-10h", test: "Oblicz i zinterpretuj różnicę między średnią a medianą na zbiorze z wartościami odstającymi." },
@@ -34,9 +34,9 @@ export const CAREER_ROADMAP = [
         goal: "Po tej fazie potrafisz bezbłędnie czyścić, przekształcać i łączyć surowe pliki danych bez używania baz danych.",
         desc: "Opanowanie zaawansowanych funkcji Excela, automatyzacji Power Query i dynamicznych formuł tablicowych.",
         resources: [
-            { name: "📁 [Lokalny Folder] Rozwój [1]", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] ROZWÓJ/[1] EXCEL I DANE" },
-            { name: "📁 [Lokalny Folder] Programowanie", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] PROGRAMOWANIE" },
-            { name: "🔗 [GitHub Repo] Excel Formulas Guide", url: "https://github.com/mdeering/excel-formulas" }
+            { name: "[Lokalny Folder] Rozwój [1]", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] ROZWÓJ/[1] EXCEL I DANE" },
+            { name: "[Lokalny Folder] Programowanie", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] PROGRAMOWANIE" },
+            { name: "[GitHub Repo] Excel Formulas Guide", url: "https://github.com/mdeering/excel-formulas" }
         ],
         milestones: [
             { id: "m1_1", text: "Wyszukiwanie Danych: Funkcje XLOOKUP oraz INDEX/MATCH w trudnych układach", est: "6-8h", test: "Połącz dwie tabele po 2 kluczach wyszukiwania bez stosowania VLOOKUP." },
@@ -54,10 +54,10 @@ export const CAREER_ROADMAP = [
         goal: "Po tej fazie umiesz samodzielnie wyciągać, filtrować i łączyć dane z wielu relacyjnych tabel transakcyjnych do raportu.",
         desc: "Naturalna progresja SQL: od prostej projekcji danych, przez złączenia relacyjne, po zaawansowane funkcje okienkowe.",
         resources: [
-            { name: "📁 [Lokalny Folder] Rozwój [2]", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] ROZWÓJ/[2] SQL I BAZY DANYCH" },
-            { name: "🎮 [Praktyczna Gra] SQL Murder Mystery", url: "https://github.com/NUKnightLab/sql-murder-mystery" },
-            { name: "🔗 [GitHub Repo] Ultimate SQL Resources Hub", url: "https://github.com/amartinson193/The-Ultimate-List-of-Free-SQL-Resources" },
-            { name: "📚 [GitHub Kurs] DataWithBaraa SQL Course", url: "https://github.com/BaraaKhatibSalkini/sql-ultimate-course" }
+            { name: "[Lokalny Folder] Rozwój [2]", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] ROZWÓJ/[2] SQL I BAZY DANYCH" },
+            { name: "[Praktyczna Gra] SQL Murder Mystery", url: "https://github.com/NUKnightLab/sql-murder-mystery" },
+            { name: "[GitHub Repo] Ultimate SQL Resources Hub", url: "https://github.com/amartinson193/The-Ultimate-List-of-Free-SQL-Resources" },
+            { name: "[GitHub Kurs] DataWithBaraa SQL Course", url: "https://github.com/BaraaKhatibSalkini/sql-ultimate-course" }
         ],
         milestones: [
             { id: "m2_1", text: "Podstawy Zapytania: SELECT, WHERE, ORDER BY, GROUP BY oraz HAVING", est: "8-10h", test: "Napisz zapytanie zwracające kategorie z wartością sprzedaży wyższą niż 10,000 PLN." },
@@ -75,9 +75,9 @@ export const CAREER_ROADMAP = [
         goal: "Po tej fazie rozumiesz architekturę chmury i potrafisz podłączyć się do Azure SQL Database oraz zautomatyzować rury danych w Data Factory.",
         desc: "Fundament chmurowy niezbędny do pracy w dużej skali (Enterprise BI). Bez chmury Power BI działa po omacku przy większych projektach.",
         resources: [
-            { name: "📁 [Lokalny Folder] Rozwój [3]", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] ROZWÓJ/[3] AZURE I CHMURA" },
-            { name: "📚 [Oficjalny GitHub] Microsoft AZ-900", url: "https://github.com/MicrosoftLearning/AZ-900T0A-MicrosoftAzureFundamentals" },
-            { name: "🔗 [GitHub Repo] Azure Data Factory Samples", url: "https://github.com/Azure/Azure-DataFactory" }
+            { name: "[Lokalny Folder] Rozwój [3]", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] ROZWÓJ/[3] AZURE I CHMURA" },
+            { name: "[Oficjalny GitHub] Microsoft AZ-900", url: "https://github.com/MicrosoftLearning/AZ-900T0A-MicrosoftAzureFundamentals" },
+            { name: "[GitHub Repo] Azure Data Factory Samples", url: "https://github.com/Azure/Azure-DataFactory" }
         ],
         milestones: [
             { id: "m3_1", text: "Azure Fundamentals: Koncepcje chmury, usługi IaaS/PaaS/SaaS i zasoby Azure (AZ-900)", est: "10-12h", test: "Wyjaśnij różnicę między Azure SQL Database a maszyną wirtualną z SQL Server." },
@@ -94,10 +94,10 @@ export const CAREER_ROADMAP = [
         goal: "Po tej fazie potrafisz zbudować od zera zautomatyzowany, czytelny dashboard KPI z modelowaniem relacji i kalkulacjami DAX.",
         desc: "Nauka Power BI w podziale na rosnącą złożoność: od interfejsu i importu z Azure SQL, po model danych, DAX i publikację z RLS.",
         resources: [
-            { name: "📁 [Lokalny Folder] Rozwój [4]", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] ROZWÓJ/[4] POWER BI I BUSINESS INTELLIGENCE" },
-            { name: "🌟 [GitHub Repo] Awesome Power BI Hub", url: "https://github.com/NajiElKotob/Awesome-Power-BI" },
-            { name: "📊 [Oficjalny GitHub] MS Power BI Samples (.pbix)", url: "https://github.com/microsoft/powerbi-desktop-samples" },
-            { name: "⚡ [GitHub Kurs] 30 Days of Power BI Practice", url: "https://github.com/Prath-Digital/MS_Power_BI_Practice" }
+            { name: "[Lokalny Folder] Rozwój [4]", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] ROZWÓJ/[4] POWER BI I BUSINESS INTELLIGENCE" },
+            { name: "[GitHub Repo] Awesome Power BI Hub", url: "https://github.com/NajiElKotob/Awesome-Power-BI" },
+            { name: "[Oficjalny GitHub] MS Power BI Samples (.pbix)", url: "https://github.com/microsoft/powerbi-desktop-samples" },
+            { name: "[GitHub Kurs] 30 Days of Power BI Practice", url: "https://github.com/Prath-Digital/MS_Power_BI_Practice" }
         ],
         milestones: [
             { id: "m4_1", text: "Interfejs & Import: Pobieranie danych z Azure SQL/Excela i edycja w Power Query", est: "6-8h", test: "Zaimportuj dane z dwóch źródeł i poustawiaj typy danych bez błędów w Power Query." },
@@ -116,9 +116,9 @@ export const CAREER_ROADMAP = [
         goal: "Po tej fazie umiesz pisać własne skrypty automatyzacji, analizować duże ramki danych w Pandas i zbierać dane przez API/Scraping.",
         desc: "Programowanie analityczne w Pythonie: od składni i operacji na plikach, przez manipulację w Pandas, po zaawansowane zbieranie danych z sieci.",
         resources: [
-            { name: "📁 [Lokalny Folder] Rozwój [5]", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] ROZWÓJ/[5] PYTHON I DATA ANALYTICS" },
-            { name: "📁 [Folder Lokalny] MS Data Science", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] PROGRAMOWANIE/Data-Science-For-Beginners-main/Data-Science-For-Beginners-main" },
-            { name: "🔗 [GitHub Repo] MS Data Science", url: "https://github.com/microsoft/Data-Science-For-Beginners" }
+            { name: "[Lokalny Folder] Rozwój [5]", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] ROZWÓJ/[5] PYTHON I DATA ANALYTICS" },
+            { name: "[Folder Lokalny] MS Data Science", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] PROGRAMOWANIE/Data-Science-For-Beginners-main/Data-Science-For-Beginners-main" },
+            { name: "[GitHub Repo] MS Data Science", url: "https://github.com/microsoft/Data-Science-For-Beginners" }
         ],
         milestones: [
             { id: "m5_1", text: "Python Core: Składnia, funkcje, listy, słowniki i obsługa błędów try/except", est: "10-12h", test: "Napisz funkcję przeliczającą waluty z obsługą błędów niepoprawnego typu danych." },
@@ -138,9 +138,9 @@ export const CAREER_ROADMAP = [
         goal: "Po tej fazie umiesz trenować i ewaluować podstawowe modele uczenia maszynowego w Scikit-Learn do prognozowania i klasyfikacji.",
         desc: "Wejście w uczenie maszynowe przed AI Engineering: nauka innego sposobu myślenia (statystyka predykcyjna zamiast prostego kodowania).",
         resources: [
-            { name: "📁 [Lokalny Folder] Rozwój [6]", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] ROZWÓJ/[6] MACHINE LEARNING" },
-            { name: "📁 [Folder Lokalny] MS Machine Learning", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] PROGRAMOWANIE/ML-For-Beginners-main/ML-For-Beginners-main" },
-            { name: "🔗 [GitHub Repo] MS Machine Learning", url: "https://github.com/microsoft/ML-For-Beginners" }
+            { name: "[Lokalny Folder] Rozwój [6]", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] ROZWÓJ/[6] MACHINE LEARNING" },
+            { name: "[Folder Lokalny] MS Machine Learning", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] PROGRAMOWANIE/ML-For-Beginners-main/ML-For-Beginners-main" },
+            { name: "[GitHub Repo] MS Machine Learning", url: "https://github.com/microsoft/ML-For-Beginners" }
         ],
         milestones: [
             { id: "m6_1", text: "Microsoft ML for Beginners (EN): Podział na uczenie z nadzorem i bez nadzoru", est: "10-12h", test: "Zidentyfikuj rodzaj problemu uczenia maszynowego dla 5 opisanych przypadków biznesowych." },
@@ -158,10 +158,10 @@ export const CAREER_ROADMAP = [
         goal: "Po tej fazie potrafisz budować własne aplikacje wykorzystujące RAG, agentów AI oraz rozumiesz głęboką teorię z OSSU Computer Science.",
         desc: "Zaawansowany etap AI: architektoniczne łączenie modeli językowych z bazami wektorowymi, dostrajaniem wag i teorią akademicką.",
         resources: [
-            { name: "📁 [Lokalny Folder] Rozwój [7]", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] ROZWÓJ/[7] AI ENGINEERING" },
-            { name: "📁 [Folder Lokalny] OSSU Computer Science", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] PROGRAMOWANIE/computer-science-master/computer-science-master" },
-            { name: "🔗 [GitHub Repo] OSSU Computer Science", url: "https://github.com/ossu/computer-science" },
-            { name: "📁 [Folder Lokalny] ML Curriculum", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] PROGRAMOWANIE/machine-learning-curriculum-master/machine-learning-curriculum-master" }
+            { name: "[Lokalny Folder] Rozwój [7]", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] ROZWÓJ/[7] AI ENGINEERING" },
+            { name: "[Folder Lokalny] OSSU Computer Science", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] PROGRAMOWANIE/computer-science-master/computer-science-master" },
+            { name: "[GitHub Repo] OSSU Computer Science", url: "https://github.com/ossu/computer-science" },
+            { name: "[Folder Lokalny] ML Curriculum", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] PROGRAMOWANIE/machine-learning-curriculum-master/machine-learning-curriculum-master" }
         ],
         milestones: [
             { id: "m7_1", text: "Prompt Engineering: Role systemowe, sterowanie kontekstem i eliminacja halucynacji", est: "8-10h", test: "Zbuduj szablon promptu z rygorystycznymi ograniczeniami formatu wyjściowego JSON." },
@@ -180,10 +180,10 @@ export const CAREER_ROADMAP = [
         goal: "Po tej fazie posiadasz publiczne, profesjonalne portfolio na GitHubie oraz interaktywne aplikacje webowe do pokazania rekruterom i pracodawcom.",
         desc: "Praktyczne zwieńczenie nauki: budowanie gotowych serwisów webowych (HTML/CSS/JS), aplikacji AI oraz raportów przekształconych w publiczne portfolio.",
         resources: [
-            { name: "📁 [Lokalny Folder] Rozwój [8]", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] ROZWÓJ/[8] PORTFOLIO I PROJEKTY" },
-            { name: "📁 [Folder Lokalny] MS Web Dev", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] PROGRAMOWANIE/Web-Dev-For-Beginners-main/Web-Dev-For-Beginners-main" },
-            { name: "🔗 [GitHub Repo] MS Web Dev", url: "https://github.com/microsoft/Web-Dev-For-Beginners" },
-            { name: "📁 [Folder Lokalny] Markdown CV", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] PROGRAMOWANIE/markdown-cv-master" }
+            { name: "[Lokalny Folder] Rozwój [8]", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] ROZWÓJ/[8] PORTFOLIO I PROJEKTY" },
+            { name: "[Folder Lokalny] MS Web Dev", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] PROGRAMOWANIE/Web-Dev-For-Beginners-main/Web-Dev-For-Beginners-main" },
+            { name: "[GitHub Repo] MS Web Dev", url: "https://github.com/microsoft/Web-Dev-For-Beginners" },
+            { name: "[Folder Lokalny] Markdown CV", url: "file:///C:/Users/baluk/OneDrive - Uniwersytet Ekonomiczny we Wrocławiu/hanuenane cz. 3/[-] PROGRAMOWANIE/markdown-cv-master" }
         ],
         milestones: [
             { id: "m8_1", text: "Projekt Enterprise BI: Raport Power BI połączony z Azure SQL Database i RLS Security", est: "20-25h", test: "Opublikuj gotowy dashboard Power BI z dokumentacją architektury relacyjnej." },
@@ -239,32 +239,32 @@ function renderCareerRoadmap(container, completedMap) {
 
     const totalPct = totalMilestones > 0 ? Math.round((completedCount / totalMilestones) * 100) : 0;
     
-    let currentRank = "📐 Student Matematyki & Statystyki";
+    let currentRank = "Student Matematyki & Statystyki";
     let rankColor = "var(--text-secondary)";
     
     if (totalPct >= 89) {
-        currentRank = "💎 Master Data, Web & AI Architect";
+        currentRank = "Master Data, Web & AI Architect";
         rankColor = "#FF2D55";
     } else if (totalPct >= 78) {
-        currentRank = "🧬 AI Systems Engineer";
+        currentRank = "AI Systems Engineer";
         rankColor = "#BF5AF2";
     } else if (totalPct >= 67) {
-        currentRank = "🤖 Machine Learning Engineer";
+        currentRank = "Machine Learning Engineer";
         rankColor = "#FF375F";
     } else if (totalPct >= 55) {
-        currentRank = "🐍 Python Data Scientist";
+        currentRank = "Python Data Scientist";
         rankColor = "#32ADE6";
     } else if (totalPct >= 44) {
-        currentRank = "📈 Senior Power BI & Business Analyst";
+        currentRank = "Senior Power BI & Business Analyst";
         rankColor = "#FF9F0A";
     } else if (totalPct >= 33) {
-        currentRank = "☁️ Azure Cloud & BI Developer";
+        currentRank = "️ Azure Cloud & BI Developer";
         rankColor = "#00C7BE";
     } else if (totalPct >= 22) {
-        currentRank = "📊 SQL Data Specialist";
+        currentRank = "SQL Data Specialist";
         rankColor = "#30D158";
     } else if (totalPct >= 11) {
-        currentRank = "📂 Excel & Data Analyst";
+        currentRank = "Excel & Data Analyst";
         rankColor = "#0A84FF";
     }
 
@@ -278,7 +278,7 @@ function renderCareerRoadmap(container, completedMap) {
                         <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary); margin: 0;">9-Etapowy System Progresu Kariery</h3>
                         <span style="font-size: 0.75rem; font-weight: 700; color: ${rankColor}; background: rgba(255,255,255,0.05); border: 1px solid ${rankColor}; padding: 3px 12px; border-radius: 20px;">${currentRank}</span>
                     </div>
-                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 6px 0 0 0;">Atomowe kamienie milowe z weryfikacją: Math ➔ Excel ➔ SQL ➔ Azure ➔ Power BI ➔ Python ➔ ML ➔ AI ➔ Web Portfolio</p>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 6px 0 0 0;">Atomowe kamienie milowe z weryfikacją: Math -> Excel -> SQL -> Azure -> Power BI -> Python -> ML -> AI -> Web Portfolio</p>
                 </div>
                 
                 <!-- Prawy Blok Liczników Godzinowych i Milestones -->
@@ -336,7 +336,7 @@ function renderCareerRoadmap(container, completedMap) {
                 <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 4px;">
                     <span>Postęp Fazy ${phaseIdx}</span>
                     <div style="display: flex; gap: 8px; align-items: center;">
-                        <span style="font-family: var(--font-mono); color: var(--text-secondary); opacity: 0.8; font-size: 0.7rem;">(⏱️ ${phaseRemMin}-${phaseRemMax}h)</span>
+                        <span style="font-family: var(--font-mono); color: var(--text-secondary); opacity: 0.8; font-size: 0.7rem;">(️ ${phaseRemMin}-${phaseRemMax}h)</span>
                         <span style="font-family: var(--font-mono); color: ${phase.color}; font-weight: 600;">${phasePct}%</span>
                     </div>
                 </div>
@@ -368,11 +368,11 @@ function renderCareerRoadmap(container, completedMap) {
                             <input type="checkbox" data-milestone="${m.id}" ${isChecked ? 'checked' : ''} style="margin-top: 2px; accent-color: ${phase.color}; cursor: pointer; flex-shrink: 0;">
                             <span style="font-weight: 600; line-height: 1.35; ${isChecked ? 'text-decoration: line-through; opacity: 0.6;' : ''}">${m.text}</span>
                         </div>
-                        <span style="font-size: 0.7rem; font-family: var(--font-mono); color: ${phase.color}; opacity: 0.85; white-space: nowrap; flex-shrink: 0; padding-top: 1px; font-weight: 600;">⏱️ ${m.est}</span>
+                        <span style="font-size: 0.7rem; font-family: var(--font-mono); color: ${phase.color}; opacity: 0.85; white-space: nowrap; flex-shrink: 0; padding-top: 1px; font-weight: 600;">️ ${m.est}</span>
                     </label>
                     ${m.test ? `
                         <div style="font-size: 0.73rem; color: var(--text-secondary); opacity: 0.8; padding-left: 22px; line-height: 1.3;">
-                            <span style="color: ${phase.color}; font-weight: 600;">💡 Weryfikacja:</span> ${m.test}
+                            <span style="color: ${phase.color}; font-weight: 600;">Weryfikacja:</span> ${m.test}
                         </div>
                     ` : ''}
                 </div>
