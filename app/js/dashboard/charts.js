@@ -2,87 +2,48 @@
 import { db, USER_NODE } from '../core/firebase.js';
 import { showKnowledgeModal } from '../knowledge/knowledge-modal.js';
 
-const CATEGORY_COLORS = {
-    "Matematyka & Statystyka": "#2F81F7", 
-    "Ekonomia & Finanse": "#3FB950",      
-    "Technologie & Analityka": "#A371F7", 
-    "Języki & Komunikacja": "#D29922",    
-    "Specjalistyczne & Rozwój": "#F85149" 
-};
+const KNOWLEDGE_CATEGORIES = [
+    { title: 'Finanse i rachunkowość', color: '#0A84FF' },
+    { title: 'Excel i Power BI', color: '#2BBF71' },
+    { title: 'Statystyka matematyczna i opisowa', color: '#FF9F0A' },
+    { title: 'SQL', color: '#BF5AF2' },
+    { title: 'Python', color: '#32ADE6' },
+    { title: 'Język Angielski', color: '#FF375F' },
+    { title: 'Samorozwój i pewność siebie', color: '#FFD60A' }
+];
 
 let skillsChartInstance = null;
+let cachedKnowledgeData = {};
+let currentSortBy = 'section';
 
 export function initCharts() {
-    function buildSkillsChart(sortBy = 'section') {
-        const areas = window.appData ? window.appData.knowledgeAreas : null;
-        const canvas = document.getElementById('skillsBarChart');
-        if(!areas || !canvas) return; // Fail-safe
-        const ctxBar = canvas.getContext('2d');
-        
-        let itemsList = [];
-        let keyIdx = 0;
-        for (const key in areas) {
-            const categoryColor = CATEGORY_COLORS[areas[key].title] || "#8B949E";
-            areas[key].items.forEach((item, indexWithinCategory) => {
-                itemsList.push({
-                    title: item.title,
-                    level: item.level,
-                    color: categoryColor,
-                    parentTopic: areas[key].title,
-                    sectionOrder: keyIdx * 1000 + indexWithinCategory
-                });
-            });
-            keyIdx++;
-        }
+    const canvas = document.getElementById('skillsBarChart');
+    if (!canvas) return;
 
-        if (sortBy === 'desc') {
+    function renderSkillsChart() {
+        const ctxBar = canvas.getContext('2d');
+        let itemsList = KNOWLEDGE_CATEGORIES.map((cat, idx) => ({
+            title: cat.title,
+            color: cat.color,
+            level: (cachedKnowledgeData[cat.title] && cachedKnowledgeData[cat.title].level !== undefined)
+                ? cachedKnowledgeData[cat.title].level
+                : 0,
+            sectionOrder: idx
+        }));
+
+        if (currentSortBy === 'desc') {
             itemsList.sort((a, b) => b.level - a.level);
-        } else if (sortBy === 'asc') {
+        } else if (currentSortBy === 'asc') {
             itemsList.sort((a, b) => a.level - b.level);
-        } else if (sortBy === 'alpha') {
+        } else if (currentSortBy === 'alpha') {
             itemsList.sort((a, b) => a.title.localeCompare(b.title, 'pl'));
-        } else if (sortBy === 'priority') {
-            const customPriorityOrder = [
-                "wycena spółek (corporate finance)", "finanse", "rachunkowość", "rachunkowość finansowa", "rynki finansowe",
-                "python", "python (pandas/numpy)", "sql", "bazy danych (sql)", "r (język programowania)", "power bi / r", "excel", "excel zaawansowany", "vba", "power bi", "automatyzacja (vba)", "ai (sztuczna inteligencja)",
-                "statystyka opisowa", "statystyka matematyczna", "matematyka", "algebra liniowa", "matematyka wyższa", "rachunek prawdopodobieństwa",
-                "język angielski", "angielski (biznesowy)", "język hiszpański", "samorozwój i ogarnianie życia (by było git)", "tworzenie systemowe i planowanie", "samorozwój i ogarnianie życia", "samorozwój", "kognitywistyka / adhd", "meteorologia"
-            ];
-            itemsList.sort((a, b) => {
-                let idxA = customPriorityOrder.findIndex(p => a.title.toLowerCase().includes(p) || p.includes(a.title.toLowerCase()));
-                let idxB = customPriorityOrder.findIndex(p => b.title.toLowerCase().includes(p) || p.includes(b.title.toLowerCase()));
-                if (idxA === -1) idxA = 999;
-                if (idxB === -1) idxB = 999;
-                return idxA - idxB;
-            });
         } else {
             itemsList.sort((a, b) => a.sectionOrder - b.sectionOrder);
         }
 
-        let labels = [];
-        let data = [];
-        let bgColors = [];
-        let modalDataMap = [];
-
-        itemsList.forEach(item => {
-            labels.push(item.title);
-            data.push(item.level);
-            bgColors.push(item.color);
-            modalDataMap.push({
-                categoryTitle: item.title,
-                baseColor: item.color,
-                currentLevel: item.level,
-                parentTopic: item.parentTopic
-            });
-        });
-
-        const legendContainer = document.getElementById('skills-legend');
-        if(legendContainer) {
-            legendContainer.innerHTML = '';
-            labels.forEach((lbl, idx) => {
-                legendContainer.innerHTML += `<span style="display:flex; align-items:center; gap:4px;"><span style="width:8px; height:8px; border-radius:50%; background:${bgColors[idx]};"></span> ${lbl} <span style="font-family:var(--font-mono); opacity:0.5; margin-left:2px;">(${data[idx]}%)</span></span>`;
-            });
-        }
+        const labels = itemsList.map(i => i.title);
+        const data = itemsList.map(i => i.level);
+        const bgColors = itemsList.map(i => i.color);
 
         if (skillsChartInstance) {
             skillsChartInstance.destroy();
@@ -93,10 +54,10 @@ export function initCharts() {
             data: {
                 labels: labels,
                 datasets: [{
-                    label: 'Poziom wiedzy / Umiejętności (%)',
+                    label: 'Poziom wiedzy (%)',
                     data: data,
                     backgroundColor: bgColors,
-                    borderRadius: 2
+                    borderRadius: 3
                 }]
             },
             options: {
@@ -104,34 +65,52 @@ export function initCharts() {
                 responsive: true,
                 maintainAspectRatio: false,
                 scales: {
-                    x: { max: 100, grid: { color: 'rgba(255, 255, 255, 0.05)' }, ticks: { color: '#8B949E', font: { family: 'JetBrains Mono' }, callback: function(value) { return value + '%'; } } },
-                    y: { grid: { display: false }, ticks: { color: '#C9D1D9', font: { family: 'Inter', size: 11 } } }
+                    x: {
+                        min: 0,
+                        max: 100,
+                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                        ticks: {
+                            color: '#8B949E',
+                            font: { family: 'JetBrains Mono' },
+                            callback: value => value + '%'
+                        }
+                    },
+                    y: {
+                        grid: { display: false },
+                        ticks: { color: '#C9D1D9', font: { family: 'Inter', size: 12 } }
+                    }
                 },
                 plugins: {
                     legend: { display: false },
                     tooltip: {
                         callbacks: {
-                            label: function(context) { return context.parsed.x + '%'; }
+                            label: context => context.parsed.x + '% opanowania'
                         }
                     }
                 },
                 onClick: (e, activeElements) => {
                     if (activeElements.length > 0) {
-                        const idx = activeElements[0].index;
-                        const meta = modalDataMap[idx];
-                        showKnowledgeModal(meta);
+                        window.location.href = 'knowledge.html';
                     }
                 }
             }
         });
     }
 
-    buildSkillsChart('section');
+    if (db && USER_NODE) {
+        db.ref(USER_NODE + 'knowledge').on('value', snap => {
+            cachedKnowledgeData = snap.val() || {};
+            renderSkillsChart();
+        });
+    } else {
+        renderSkillsChart();
+    }
 
     const sortSelect = document.getElementById('chart-sort');
     if (sortSelect) {
         sortSelect.onchange = (e) => {
-            buildSkillsChart(e.target.value);
+            currentSortBy = e.target.value;
+            renderSkillsChart();
         };
     }
 

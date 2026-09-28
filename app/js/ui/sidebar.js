@@ -26,49 +26,6 @@ window.renderSidebar = function renderSidebar() {
                 <div class="checklist" id="morning-routine" style="display:block;"></div>
                 <div class="checklist" id="evening-routine" style="display:none;"></div>
             </section>
-
-            <section class="naked-section sidebar-section" style="margin-bottom: var(--space-6);">
-                <div class="sidebar-header" style="display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-3);">
-                    <i data-lucide="cloud" style="width: 14px; height: 14px; color: var(--text-secondary); flex-shrink: 0;"></i>
-                    <h3 style="font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; white-space:nowrap;">iCloud Notes</h3>
-                </div>
-                <div style="display:flex; flex-direction:column; gap:2px;">
-                    <a href="https://www.icloud.com/notes/note/UHJpdmF0ZTo6Tm90ZXM6OmN1cnJlbnRVc2VyOjo3YTAyZmZhYi1lNDk2LTQ1MWQtYWU2ZC1mY2VlNjJlZWI1MmQ=" target="_blank" class="btn btn-ghost" style="justify-content: flex-start; padding: 4px 8px; font-size: 0.85rem;"><span style="display:inline-block; width:4px; height:4px; border-radius:50%; background:#666; margin-right:12px; margin-left:6px; flex-shrink:0;"></span> Sny</a>
-                    <a href="https://www.icloud.com/notes/note/UHJpdmF0ZTo6Tm90ZXM6OmN1cnJlbnRVc2VyOjo5MUNDMTJGMi01MDQwLTRFNkMtOUFGMC0wQzA4NUZBNzM1RkM=" target="_blank" class="btn btn-ghost" style="justify-content: flex-start; padding: 4px 8px; font-size: 0.85rem;"><span style="display:inline-block; width:4px; height:4px; border-radius:50%; background:#666; margin-right:12px; margin-left:6px; flex-shrink:0;"></span> Zdrowie</a>
-                    <a href="https://www.icloud.com/notes/note/UHJpdmF0ZTo6Tm90ZXM6OmN1cnJlbnRVc2VyOjo5Yjk3ZDI0ZC0zNTQxLTQ1MmEtODJmOS0yNDE3MzExMDhlMTY=" target="_blank" class="btn btn-ghost" style="justify-content: flex-start; padding: 4px 8px; font-size: 0.85rem;"><span style="display:inline-block; width:4px; height:4px; border-radius:50%; background:#666; margin-right:12px; margin-left:6px; flex-shrink:0;"></span> Rozwój Osobisty</a>
-                    <a href="https://www.icloud.com/notes/note/UHJpdmF0ZTo6Tm90ZXM6OmN1cnJlbnRVc2VyOjphZjcwZjk1Zi1kYWVkLTQ4ODQtOTM4Yy0xNmE0ZGYzZDcxMzQ=" target="_blank" class="btn btn-ghost" style="justify-content: flex-start; padding: 4px 8px; font-size: 0.85rem;"><span style="display:inline-block; width:4px; height:4px; border-radius:50%; background:#666; margin-right:12px; margin-left:6px; flex-shrink:0;"></span> Ważne Linki</a>
-                </div>
-            </section>
-
-            <section class="naked-section sidebar-section" style="margin-bottom: var(--space-6);">
-                <div class="sidebar-header" style="display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-3);">
-                    <i data-lucide="cloud" style="width: 14px; height: 14px; color: var(--text-secondary); flex-shrink: 0;"></i>
-                    <h3 style="font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; white-space:nowrap;">OneDrive Workspace</h3>
-                </div>
-                <div style="display:flex; flex-direction:column; gap:2px;">
-                    <a href="https://uewrc-my.sharepoint.com/:f:/g/personal/196659_student_ue_wroc_pl/IgCK2YL0jKFNRYAI0-pBkIFXAWH8zOPLfTpT0MQQnPdg2Gg?e=xKFcBC" target="_blank" class="btn btn-ghost" style="justify-content: flex-start; padding: 4px 8px; font-size: 0.85rem;"><span style="display:inline-block; width:4px; height:4px; border-radius:50%; background:#666; margin-right:12px; margin-left:6px; flex-shrink:0;"></span> Antigravity OS</a>
-                    <a href="https://uewrc-my.sharepoint.com/:f:/g/personal/196659_student_ue_wroc_pl/IgDMD7FeGcaZS7LlcJ3h7XbjAQQmRcbvBnl4sQsc3EM6PyY?e=aojfCY" target="_blank" class="btn btn-ghost" style="justify-content: flex-start; padding: 4px 8px; font-size: 0.85rem;"><span style="display:inline-block; width:4px; height:4px; border-radius:50%; background:#666; margin-right:12px; margin-left:6px; flex-shrink:0;"></span> Skrypty Python</a>
-                    <a href="https://uewrc-my.sharepoint.com/:f:/g/personal/196659_student_ue_wroc_pl/IgDWKVrPV0OERJX8UxQcWxfWAQU5QvKP3CUqnC6-O7Q86xQ?e=4ciAWN" target="_blank" class="btn btn-ghost" style="justify-content: flex-start; padding: 4px 8px; font-size: 0.85rem;"><span style="display:inline-block; width:4px; height:4px; border-radius:50%; background:#666; margin-right:12px; margin-left:6px; flex-shrink:0;"></span> Dokumenty</a>
-                    <a href="https://uewrc-my.sharepoint.com/:f:/g/personal/196659_student_ue_wroc_pl/IgDSpbEHMaIVTaw9DZjJ_jIjAdtLRq2lh6OROUvd40tpl0w?e=XE4cS2" target="_blank" class="btn btn-ghost" style="justify-content: flex-start; padding: 4px 8px; font-size: 0.85rem;"><span style="display:inline-block; width:4px; height:4px; border-radius:50%; background:#666; margin-right:12px; margin-left:6px; flex-shrink:0;"></span> Modele Excel</a>
-                    <a href="https://uewrc-my.sharepoint.com/:f:/g/personal/196659_student_ue_wroc_pl/IgBGJhuX5Is9Q5GWjNME6biKAScXxnqsiZLLd9Zhb3KcnUo?e=ypyUoM" target="_blank" class="btn btn-ghost" style="justify-content: flex-start; padding: 4px 8px; font-size: 0.85rem;"><span style="display:inline-block; width:4px; height:4px; border-radius:50%; background:#666; margin-right:12px; margin-left:6px; flex-shrink:0;"></span> Media</a>
-                    <a href="https://uewrc-my.sharepoint.com/:f:/g/personal/196659_student_ue_wroc_pl/IgBGJhuX5Is9Q5GWjNME6biKAScXxnqsiZLLd9Zhb3KcnUo?e=ypyUoM" target="_blank" class="btn btn-ghost" style="justify-content: flex-start; padding: 4px 8px; font-size: 0.85rem;"><span style="display:inline-block; width:4px; height:4px; border-radius:50%; background:#666; margin-right:12px; margin-left:6px; flex-shrink:0;"></span> Fotografie</a>
-                    <a href="https://uewrc-my.sharepoint.com/:f:/g/personal/196659_student_ue_wroc_pl/IgAvouBmXk2uSbxOAe-18upfAUYhzBLPMqr79bLmE_8cYnk?e=G3iJu9" target="_blank" class="btn btn-ghost" style="justify-content: flex-start; padding: 4px 8px; font-size: 0.85rem;"><span style="display:inline-block; width:4px; height:4px; border-radius:50%; background:#666; margin-right:12px; margin-left:6px; flex-shrink:0;"></span> Inne (Zrzuty)</a>
-                </div>
-            </section>
-
-            <section class="naked-section" style="margin-bottom: var(--space-6);">
-                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-3);">
-                    <div style="display: flex; align-items: center; gap: var(--space-2);">
-                        <i data-lucide="library" style="width: 14px; height: 14px; color: var(--text-secondary);"></i>
-                        <h3 style="font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">Baza Czytelnicza</h3>
-                    </div>
-                </div>
-                <div id="reading-list-container" style="display:flex; flex-direction:column; gap:var(--space-1);">
-                    <div style="font-size: 0.85rem; color: var(--text-secondary); padding: 4px 8px;">Synchronizacja bazy...</div>
-                </div>
-                <button class="btn btn-ghost" id="add-reading-btn" style="width:100%; justify-content:flex-start; margin-top:8px; font-size: 0.8rem; color: var(--text-secondary);"><i data-lucide="plus" style="width:14px;"></i> Dodaj pozycję (Enter)</button>
-            </section>
-
             <!-- Pamiętnik Burz -->
             <section class="naked-section" style="margin-top: 30px; border-top: 1px solid var(--border-subtle); padding-top: var(--space-4);">
                 <div style="display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-3); color: var(--text-secondary);">

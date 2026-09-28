@@ -4,13 +4,15 @@ import { financeCategory, financeTree } from './finance.js';
 import { techCategory, techTree } from './tech.js';
 import { languagesCategory, languagesTree } from './languages.js';
 import { developmentCategory, developmentTree } from './development.js';
+import { selfConfidenceCategory, selfConfidenceTree } from './self_confidence.js';
 
 export const DEFAULT_KNOWLEDGE_AREAS = {
     [mathCategory.title]: mathCategory,
     [financeCategory.title]: financeCategory,
     [techCategory.title]: techCategory,
     [languagesCategory.title]: languagesCategory,
-    [developmentCategory.title]: developmentCategory
+    [developmentCategory.title]: developmentCategory,
+    [selfConfidenceCategory.title]: selfConfidenceCategory
 };
 
 export const DEFAULT_KNOWLEDGE_TREE = {
@@ -18,5 +20,7 @@ export const DEFAULT_KNOWLEDGE_TREE = {
     ...financeTree,
     ...techTree,
     ...languagesTree,
-    ...developmentTree
+    ...developmentTree,
+    ...selfConfidenceTree
 };
+

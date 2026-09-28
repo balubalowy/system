@@ -81,7 +81,8 @@ window.appData = {
             title: "Specjalistyczne & Rozwój",
             items: [
                 { title: "Tworzenie systemowe i planowanie", level: 65, topics: ["Zarządzanie czasem", "Time-Grid"] },
-                { title: "Samorozwój i ogarnianie życia (by było git)", level: 85, topics: ["Kognitywistyka / ADHD", "Działanie układu dopaminergicznego"] }
+                { title: "Samorozwój i ogarnianie życia (by było git)", level: 85, topics: ["Kognitywistyka / ADHD", "Działanie układu dopaminergicznego"] },
+                { title: "Samorozwój i pewność siebie", level: 0, topics: ["Rezyliencja poznawcza", "Evidence Log", "Wystąpienia publiczne"] }
             ]
         }
     }

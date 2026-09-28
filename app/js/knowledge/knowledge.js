@@ -108,6 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if(t.includes('sql')) return '#BF5AF2'; // fioletowy
                 if(t.includes('python')) return '#32ADE6'; // blekitny
                 if(t.includes('angielski') || t.includes('język')) return '#FF375F'; // koralowy
+                if(t.includes('samorozwój') || t.includes('pewność') || t.includes('rozwój')) return '#FFD60A'; // bursztynowo-zloty
                 return '#8B949E';
             }
 
@@ -117,7 +118,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 'Statystyka matematyczna i opisowa',
                 'SQL',
                 'Python',
-                'Język Angielski'
+                'Język Angielski',
+                'Samorozwój i pewność siebie'
             ];
 
             function renderSidebar() {
