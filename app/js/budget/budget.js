@@ -146,13 +146,37 @@ document.addEventListener('DOMContentLoaded', () => {
                 if(window.lucide) window.lucide.createIcons();
             }
 
-            function expandOccurrences(items) {
+            const HORIZON_OPTIONS = [
+                { months: 1, label: '1 mies.' },
+                { months: 2, label: '2 mies.' },
+                { months: 3, label: '3 mies.' },
+                { months: 6, label: '6 mies.' },
+                { months: 12, label: '1 rok' },
+                { months: 24, label: '2 lata' },
+                { months: 36, label: '3 lata' },
+                { months: 48, label: '4 lata' },
+                { months: 60, label: '5 lat' },
+                { months: 120, label: '10 lat' }
+            ];
+            let activeHorizonMonths = 12;
+
+            window.setBudgetHorizon = function(m) {
+                activeHorizonMonths = m;
+                renderSummary();
+            };
+
+            function expandOccurrences(items, horizonMonths = activeHorizonMonths) {
                 const expanded = [];
+                const now = new Date();
+                const horizonEndDate = new Date(now.getFullYear(), now.getMonth() + horizonMonths, now.getDate(), 23, 59, 59, 999);
+
                 items.forEach(item => {
                     let currentDt = new Date(item.date || new Date());
+                    const isRealized = item.realized !== false;
                     
-                    // Always add the first occurrence.
-                    expanded.push({ ...item, date: currentDt.toISOString().split('T')[0] });
+                    if (isRealized || currentDt <= horizonEndDate) {
+                        expanded.push({ ...item, date: currentDt.toISOString().split('T')[0] });
+                    }
                     
                     if (!item.recurring) return;
                     
@@ -160,13 +184,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     const maxCount = item.recurCount ? parseInt(item.recurCount) : null;
                     const endDtStr = item.recurEnd ? item.recurEnd : null;
                     const endDt = endDtStr ? new Date(endDtStr) : null;
-                    
-                    // Fallback to exactly 12 occurrences for infinite loops
-                    const fallbackCount = 12;
 
                     while (true) {
                         if (maxCount && count >= maxCount) break;
-                        if (!maxCount && !endDt && count >= fallbackCount) break;
                         
                         if (item.recurring === 'weekly') currentDt.setDate(currentDt.getDate() + 7);
                         else if (item.recurring === 'monthly') currentDt.setMonth(currentDt.getMonth() + 1);
@@ -174,11 +194,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         else if (item.recurring === 'yearly') currentDt.setFullYear(currentDt.getFullYear() + 1);
                         
                         if (endDt && currentDt > endDt) break;
+                        if (currentDt > horizonEndDate) break;
+                        if (count >= 1200) break;
                         
                         expanded.push({ 
                             ...item, 
                             date: currentDt.toISOString().split('T')[0],
-                            realized: false // Future generated occurrences are always planned
+                            realized: false
                         });
                         count++;
                     }
@@ -194,8 +216,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const incFlatRaw = getFlatData(allIncomes, INCOME_CATS, 'income');
                 const invFlat = getFlatData(allInvestments, INV_CATS, 'investment');
 
-                const expFlat = expandOccurrences(expFlatRaw);
-                const incFlat = expandOccurrences(incFlatRaw);
+                const expFlat = expandOccurrences(expFlatRaw, activeHorizonMonths);
+                const incFlat = expandOccurrences(incFlatRaw, activeHorizonMonths);
 
                 const expReal = expFlat.filter(e => e.realized !== false).reduce((s, e) => s + (parseFloat(e.amount) || 0), 0);
                 const expPlan = expFlat.filter(e => e.realized === false).reduce((s, e) => s + (parseFloat(e.amount) || 0), 0);
@@ -207,12 +229,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 const projectedNet = netReal + incPlan - expPlan;
                 const totalAssets = invFlat.reduce((s, e) => s + (parseFloat(e.balance) || 0), 0);
 
+                const activeHorizonObj = HORIZON_OPTIONS.find(h => h.months === activeHorizonMonths) || HORIZON_OPTIONS[4];
+                const horizonPills = HORIZON_OPTIONS.map(opt => `
+                    <button class="horizon-btn ${opt.months === activeHorizonMonths ? 'active' : ''}" 
+                            onclick="window.setBudgetHorizon(${opt.months})">
+                        ${opt.label}
+                    </button>
+                `).join('');
+
                 let html = `
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-subtle);">
-                        <h2 style="font-size: 1.3rem; color: var(--text-primary); font-weight: 600; display:flex; align-items:center; gap: 10px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border-subtle);">
+                        <h2 style="font-size: 1.3rem; color: var(--text-primary); font-weight: 600; display:flex; align-items:center; gap: 10px; margin:0;">
                             <div style="width: 10px; height: 22px; background: linear-gradient(180deg, #FF9F0A, #FF375F); border-radius: 3px;"></div>
                             Podsumowanie Finansowe
                         </h2>
+                        <div class="horizon-selector">
+                            <span style="font-size:0.72rem; color:var(--text-secondary); text-transform:uppercase; font-weight:600; margin-right:4px;">Perspektywa:</span>
+                            ${horizonPills}
+                        </div>
                     </div>
 
                     <div class="expense-summary-bar">
@@ -234,7 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </div>
 
-                    <h3 style="font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin: 24px 0 12px;">Planowane Operacje</h3>
+                    <h3 style="font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin: 24px 0 12px;">Planowane Operacje (${activeHorizonObj.label})</h3>
                     <div style="display:flex; gap: 30px; margin-bottom: 30px;">
                         <div style="flex:1; background:rgba(0,0,0,0.15); padding:16px; border-radius:8px; border:1px solid rgba(255,159,10,0.2);">
                             <span style="font-size:0.8rem; color:var(--text-secondary); text-transform:uppercase; font-weight:600;">Oczekujące Wydatki</span>
@@ -248,7 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </div>
                     
-                    <h3 style="font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin: 24px 0 12px;">Analiza Przepływów</h3>
+                    <h3 style="font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin: 24px 0 12px;">Analiza Przepływów (${activeHorizonObj.label})</h3>
                     <div style="background: rgba(0,0,0,0.2); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 16px;">
                         <div style="position: relative; height:300px; width:100%;">
                             <canvas id="budgetChart"></canvas>
@@ -286,6 +320,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         else monthlyData[monthKey].incPlan += amt;
                     }
                 });
+
+                const now = new Date();
+                const horizonEndDate = new Date(now.getFullYear(), now.getMonth() + activeHorizonMonths, now.getDate());
+                const horizonEndMonth = horizonEndDate.toISOString().substring(0, 7);
+                if (maxMonth < horizonEndMonth) maxMonth = horizonEndMonth;
 
                 // Generate continuous labels
                 const labels = [];
@@ -398,7 +437,14 @@ document.addEventListener('DOMContentLoaded', () => {
                         scales: {
                             x: {
                                 grid: { color: 'rgba(255,255,255,0.05)' },
-                                ticks: { color: '#8B949E', font: { family: 'JetBrains Mono', size: 10 } }
+                                ticks: { 
+                                    color: '#8B949E', 
+                                    font: { family: 'JetBrains Mono', size: 10 },
+                                    autoSkip: true,
+                                    maxTicksLimit: 24,
+                                    maxRotation: 45,
+                                    minRotation: 0
+                                }
                             },
                             y: {
                                 type: 'linear',

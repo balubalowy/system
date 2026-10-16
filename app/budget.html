@@ -220,6 +220,34 @@
         .toggle-switch input:checked + .toggle-slider { background: #2BBF71; }
         .toggle-switch input:checked + .toggle-slider::after { left: 16px; }
 
+        .horizon-selector {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+        .horizon-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            font-family: var(--font-sans);
+            font-size: 0.72rem;
+            padding: 3px 8px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .horizon-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+        .horizon-btn.active {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+            color: #fff;
+            font-weight: 600;
+        }
+
         @media (max-width: 768px) {
             .expense-grid { grid-template-columns: 1fr; height: auto; }
             .expense-sidebar { max-height: 200px; }
@@ -309,6 +337,6 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="js/ui/sidebar.js"></script>
     <script type="module" src="js/core/global.js"></script>
-    <script type="module" src="js/budget/budget.js"></script>
+    <script type="module" src="js/budget/budget.js?v=20.4"></script>
         </body>
 </html>

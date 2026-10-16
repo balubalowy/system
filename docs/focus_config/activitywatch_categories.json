@@ -1,0 +1,95 @@
+{
+  "categories": [
+    {
+      "id": 1,
+      "name": ["Praca", "Hossa ProCapital"],
+      "rule": {
+        "type": "regex",
+        "regex": "stooq|biznesradar|seekingalpha|bloomberg|tikr|gpw\\.pl|knf\\.gov|espi|pap\\.pl|tradingview|investing\\.com|dcf|wacc|hossa|equity|rekomendacj",
+        "ignore_case": true
+      },
+      "data": {
+        "color": "#30D158",
+        "score": 10
+      }
+    },
+    {
+      "id": 2,
+      "name": ["Praca", "Modelowanie (Excel / VBA)"],
+      "rule": {
+        "type": "regex",
+        "regex": "EXCEL\\.EXE|\\.xlsx|\\.xlsm|VBA",
+        "ignore_case": true
+      },
+      "data": {
+        "color": "#28CD41",
+        "score": 10
+      }
+    },
+    {
+      "id": 3,
+      "name": ["Studia AG2", "Kod i Analiza Danych"],
+      "rule": {
+        "type": "regex",
+        "regex": "Code\\.exe|python|jupyter|rstudio|gretl|colab|kaggle|pandas|numpy|statsmodels|scikit|sql|powerbi|PBIDesktop",
+        "ignore_case": true
+      },
+      "data": {
+        "color": "#0A84FF",
+        "score": 8
+      }
+    },
+    {
+      "id": 4,
+      "name": ["Studia AG2", "Notatki i Uczelnia"],
+      "rule": {
+        "type": "regex",
+        "regex": "obsidian|overleaf|latex|texstudio|usos|ue\\.wroc\\.pl|eportal|teams|SZABLON_NOTATEK|ekonometria|statystyka|mikroekonomia|makroekonomia",
+        "ignore_case": true
+      },
+      "data": {
+        "color": "#5E5CE6",
+        "score": 8
+      }
+    },
+    {
+      "id": 5,
+      "name": ["System i Finanse"],
+      "rule": {
+        "type": "regex",
+        "regex": "B-Core|budget\\.html|alior|xtb|obligacje|nbp\\.pl",
+        "ignore_case": true
+      },
+      "data": {
+        "color": "#BF5AF2",
+        "score": 5
+      }
+    },
+    {
+      "id": 6,
+      "name": ["Komunikacja"],
+      "rule": {
+        "type": "regex",
+        "regex": "Caprine|messenger|outlook|gmail|thunderbird|discord|slack|whatsapp",
+        "ignore_case": true
+      },
+      "data": {
+        "color": "#FF9F0A",
+        "score": 0
+      }
+    },
+    {
+      "id": 7,
+      "name": ["Rozpraszacze"],
+      "rule": {
+        "type": "regex",
+        "regex": "facebook\\.com|instagram\\.com|tiktok\\.com|twitter\\.com|x\\.com|wykop\\.pl|reddit\\.com|youtube\\.com/shorts|netflix|twitch",
+        "ignore_case": true
+      },
+      "data": {
+        "color": "#FF375F",
+        "score": -10
+      }
+    }
+  ]
+}
