@@ -152,20 +152,13 @@ export function initBudgetActions(getState) {
             document.getElementById('inv-balance').style.borderColor = !balance ? 'var(--accent-warning)' : '';
             return;
         }
-        db.ref(`${USER_NODE}investments/${category}`).push().set({
-            name,
-            balance: parseFloat(balance),
-            updatedAt: Date.now()
-        });
+        db.ref(`${USER_NODE}investments/${category}`).push().set({ name, balance: parseFloat(balance), updatedAt: Date.now() });
     };
 
     window.updateInvestment = function(category, key) {
         const val = document.getElementById(`update-bal-${key}`)?.value;
         if (!val) return;
-        db.ref(`${USER_NODE}investments/${category}/${key}`).update({
-            balance: parseFloat(val),
-            updatedAt: Date.now()
-        });
+        db.ref(`${USER_NODE}investments/${category}/${key}`).update({ balance: parseFloat(val), updatedAt: Date.now() });
     };
 
     window.toggleStatus = function(dbNode, category, key, currentRealized) {
@@ -173,19 +166,12 @@ export function initBudgetActions(getState) {
         const { allExpenses, allIncomes } = getState();
         const sourceData = dbNode === 'expenses' ? allExpenses : allIncomes;
         const item = sourceData[category]?.[key];
-
-        let op;
-        if (newRealized && item?.recurring) {
-            op = rolloverRecurringItem(dbNode, category, key, item);
-        } else if (!newRealized && item) {
-            op = revertRecurringRollover(dbNode, category, key, item, sourceData[category]);
-        } else {
-            op = db.ref(`${USER_NODE}${dbNode}/${category}/${key}`).update({ realized: newRealized });
-        }
-
-        op.then(() => {
-            if (newRealized) dismissNotification(`expense-${key}`);
-        });
+        const op = (newRealized && item?.recurring)
+            ? rolloverRecurringItem(dbNode, category, key, item)
+            : (!newRealized && item)
+                ? revertRecurringRollover(dbNode, category, key, item, sourceData[category])
+                : db.ref(`${USER_NODE}${dbNode}/${category}/${key}`).update({ realized: newRealized });
+        op.then(() => { if (newRealized) dismissNotification(`expense-${key}`); });
     };
 
     window.deleteItem = function(dbNode, category, key) {
@@ -196,9 +182,7 @@ export function initBudgetActions(getState) {
         if (e.target.id === 'txn-date') {
             const today = new Date().toISOString().split('T')[0];
             const realizedCheckbox = document.getElementById('txn-realized');
-            if (realizedCheckbox) {
-                realizedCheckbox.checked = e.target.value <= today;
-            }
+            if (realizedCheckbox) realizedCheckbox.checked = e.target.value <= today;
         }
     });
 }
