@@ -53,9 +53,10 @@ export function renderInvestmentView(container, { catName, color, items, dbNode 
 function buildTransactionRows(items, color, dbNode, catName) {
     return items.map(([key, txn]) => {
         const isRealized = txn.realized !== false;
-        const recurLabel = txn.recurring ? RECURRING_LABELS[txn.recurring] || txn.recurring : '';
+        const recurKey = txn.recurring || txn.recurringOrigin;
+        const recurLabel = recurKey ? RECURRING_LABELS[recurKey] || recurKey : '';
         let recurDetails = recurLabel;
-        if (recurLabel) {
+        if (recurLabel && txn.recurring) {
             if (txn.recurCount) recurDetails += ` (x${txn.recurCount})`;
             else if (txn.recurEnd) recurDetails += ` (do ${txn.recurEnd})`;
         }

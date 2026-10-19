@@ -6,7 +6,7 @@ import { EXPENSE_CATS, INCOME_CATS, INV_CATS } from './constants.js';
 import { getFlatData } from './calculations.js';
 import { renderSummaryView } from './summary_view.js';
 import { renderInvestmentView, renderTransactionView } from './transaction_view.js';
-import { initBudgetActions } from './actions.js';
+import { initBudgetActions, syncRealizedRecurringItems } from './actions.js';
 
 let allExpenses = {};
 let allIncomes = {};
@@ -129,7 +129,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    db.ref(USER_NODE + 'expenses').on('value', snap => { allExpenses = snap.val() || {}; loaded++; checkRender(); });
-    db.ref(USER_NODE + 'incomes').on('value', snap => { allIncomes = snap.val() || {}; loaded++; checkRender(); });
+    db.ref(USER_NODE + 'expenses').on('value', snap => {
+        allExpenses = snap.val() || {};
+        syncRealizedRecurringItems('expenses', allExpenses);
+        loaded++;
+        checkRender();
+    });
+    db.ref(USER_NODE + 'incomes').on('value', snap => {
+        allIncomes = snap.val() || {};
+        syncRealizedRecurringItems('incomes', allIncomes);
+        loaded++;
+        checkRender();
+    });
     db.ref(USER_NODE + 'investments').on('value', snap => { allInvestments = snap.val() || {}; loaded++; checkRender(); });
 });

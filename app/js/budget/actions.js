@@ -2,6 +2,7 @@
 // Obsługa akcji użytkownika na elementach budżetu (CRUD, zmiana statusu, edycja)
 import { db, USER_NODE } from '../core/firebase.js';
 import { dismissNotification } from '../notifications/notifications.js';
+import { buildRolloverUpdates, buildRevertUpdates } from './calculations.js';
 
 function readTransactionFormData() {
     const name = document.getElementById('txn-name').value.trim();
@@ -68,6 +69,42 @@ function populateEditForm(txn) {
     }
 }
 
+const rolledOverKeys = new Set();
+
+// Zamyka zrealizowaną ratę w historii i tworzy nowy wpis Planowane na kolejny okres
+function rolloverRecurringItem(dbNode, category, key, item) {
+    const lockId = `${dbNode}/${category}/${key}`;
+    if (rolledOverKeys.has(lockId)) return Promise.resolve();
+    rolledOverKeys.add(lockId);
+
+    const { nextItem, updates } = buildRolloverUpdates(item);
+    if (nextItem) {
+        const nextRef = db.ref(`${USER_NODE}${dbNode}/${category}`).push();
+        updates.spawnedKey = nextRef.key;
+        nextRef.set(nextItem);
+    }
+    return db.ref(`${USER_NODE}${dbNode}/${category}/${key}`).update(updates);
+}
+
+// Przywraca cykliczność i usuwa wygenerowany przyszły wpis przy cofnięciu statusu na Planowane
+function revertRecurringRollover(dbNode, category, key, item, catData) {
+    rolledOverKeys.delete(`${dbNode}/${category}/${key}`);
+    if (item.spawnedKey && catData?.[item.spawnedKey]?.realized === false) {
+        db.ref(`${USER_NODE}${dbNode}/${category}/${item.spawnedKey}`).remove();
+    }
+    return db.ref(`${USER_NODE}${dbNode}/${category}/${key}`).update(buildRevertUpdates(item));
+}
+
+export function syncRealizedRecurringItems(dbNode, dataObj) {
+    Object.entries(dataObj || {}).forEach(([category, items]) => {
+        Object.entries(items || {}).forEach(([key, item]) => {
+            if (item && item.realized !== false && item.recurring) {
+                rolloverRecurringItem(dbNode, category, key, item);
+            }
+        });
+    });
+}
+
 export function initBudgetActions(getState) {
     window.editState = null;
 
@@ -87,8 +124,11 @@ export function initBudgetActions(getState) {
         if (!data) return;
 
         if (window.editState) {
+            const { dbNode: editNode, category: editCat, key: editKey } = window.editState;
             delete data.createdAt;
-            db.ref(`${USER_NODE}${window.editState.dbNode}/${window.editState.category}/${window.editState.key}`).update(data);
+            db.ref(`${USER_NODE}${editNode}/${editCat}/${editKey}`).update(data).then(() => {
+                if (data.realized && data.recurring) rolloverRecurringItem(editNode, editCat, editKey, data);
+            });
             window.editState = null;
             const btn = document.getElementById('btn-add-txn');
             if (btn) {
@@ -96,7 +136,10 @@ export function initBudgetActions(getState) {
                 btn.style.background = 'var(--accent-primary)';
             }
         } else {
-            db.ref(`${USER_NODE}${dbNode}/${category}`).push().set(data);
+            const newRef = db.ref(`${USER_NODE}${dbNode}/${category}`).push();
+            newRef.set(data).then(() => {
+                if (data.realized && data.recurring) rolloverRecurringItem(dbNode, category, newRef.key, data);
+            });
         }
         clearTransactionForm();
     };
@@ -127,7 +170,20 @@ export function initBudgetActions(getState) {
 
     window.toggleStatus = function(dbNode, category, key, currentRealized) {
         const newRealized = !currentRealized;
-        db.ref(`${USER_NODE}${dbNode}/${category}/${key}`).update({ realized: newRealized }).then(() => {
+        const { allExpenses, allIncomes } = getState();
+        const sourceData = dbNode === 'expenses' ? allExpenses : allIncomes;
+        const item = sourceData[category]?.[key];
+
+        let op;
+        if (newRealized && item?.recurring) {
+            op = rolloverRecurringItem(dbNode, category, key, item);
+        } else if (!newRealized && item) {
+            op = revertRecurringRollover(dbNode, category, key, item, sourceData[category]);
+        } else {
+            op = db.ref(`${USER_NODE}${dbNode}/${category}/${key}`).update({ realized: newRealized });
+        }
+
+        op.then(() => {
             if (newRealized) dismissNotification(`expense-${key}`);
         });
     };
